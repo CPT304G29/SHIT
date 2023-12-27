@@ -8,7 +8,7 @@ This repository contains the source code for a web-based inventory management sy
 
 ## Code Structure
 - [index.html](https://github.com/julianganjs/inventory-management-system/blob/main/index.html): The main code for the website.
-- [assets](https://github.com/julianganjs/inventory-management-system/tree/main/assets): Contains all the needed styles, libraries, fonts and frameworks needed for the website to work and look properly.
+- [assets](https://github.com/julianganjs/inventory-management-system/tree/main/assets): Contains all the styles, libraries, fonts and frameworks needed for the website to work and look properly.
 - [DB.txt](https://github.com/julianganjs/inventory-management-system/blob/main/DB.txt): An existing database file in JSON format to be imported into the inventory system.
 
 ## Usage
