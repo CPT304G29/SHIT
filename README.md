@@ -16,7 +16,7 @@ This repository contains the source code for a web-based inventory management sy
 2. Download [index.html](https://github.com/julianganjs/inventory-management-system/blob/main/index.html), [assets](https://github.com/julianganjs/inventory-management-system/tree/main/assets) and [DB.txt](https://github.com/julianganjs/inventory-management-system/blob/main/DB.txt) into the same directory.
 3. Open index.html using your default browser.
 4. Select `LOAD DATA` if you wish to import an existing database file or `NEW DATA` to create a new entry.
-5. Select `SAVE DATA` if you wish to export the edited database into a local file.
+5. Select `SAVE DATA` if you wish to export the edited data into a local file.
 
 ## Examples
 - ### Main Screen (w/o Data)
