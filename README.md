@@ -1,1 +1,1 @@
-# inventory-management-system
+# Web-Based Inventory Management System
