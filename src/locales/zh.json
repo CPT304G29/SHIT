@@ -1,0 +1,49 @@
+{
+  "app": {
+    "title": "智能库存管理系统"
+  },
+  "nav": {
+    "inventory": "库存",
+    "charts": "图表",
+    "calendar": "日历",
+    "messages": "消息",
+    "files": "文件"
+  },
+  "theme": {
+    "toggle": "切换主题"
+  },
+  "lang": {
+    "en": "English",
+    "zh": "中文",
+    "ja": "日本語"
+  },
+  "table": {
+    "itemName": "商品名称",
+    "quantity": "数量",
+    "category": "分类",
+    "unitPrice": "单价",
+    "totalPrice": "总价",
+    "actions": "操作",
+    "searchPlaceholder": "搜索库存...",
+    "emptyState": "库存为空。添加商品开始使用。",
+    "addItem": "添加商品",
+    "editItem": "编辑商品",
+    "deleteItem": "删除商品",
+    "save": "保存",
+    "cancel": "取消",
+    "deleteConfirm": "确定要删除此商品吗？",
+    "itemAdded": "商品添加成功",
+    "itemUpdated": "商品更新成功",
+    "itemDeleted": "商品删除成功"
+  },
+  "form": {
+    "itemName": "商品名称",
+    "quantity": "数量",
+    "category": "分类",
+    "unitPrice": "单价",
+    "totalPrice": "总价",
+    "placeholder": "请输入",
+    "required": "此字段为必填项"
+  },
+  "comingSoon": "即将推出"
+}
