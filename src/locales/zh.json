@@ -53,6 +53,12 @@
     "totalValue": "总价值",
     "categories": "分类数"
   },
+  "chart": {
+    "categoryQty": "分类数量",
+    "categoryValue": "分类价值",
+    "stockLevels": "库存水平",
+    "priceScatter": "价格与数量"
+  },
   "comingSoon": "即将推出",
   "item": {
     "blazerFemale": "女式西装外套",

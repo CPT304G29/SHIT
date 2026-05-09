@@ -51,9 +51,7 @@ export function InventoryTable({ onEdit, onDelete, onAdd }: InventoryTableProps)
       {
         accessorKey: 'nameKey',
         header: t('table.itemName'),
-        cell: ({ getValue }) => (
-          <span style={{ fontWeight: 600 }}>{t(getValue<string>())}</span>
-        ),
+        cell: ({ getValue }) => <span style={{ fontWeight: 600 }}>{t(getValue<string>())}</span>,
       },
       {
         accessorKey: 'quantity',
@@ -68,9 +66,7 @@ export function InventoryTable({ onEdit, onDelete, onAdd }: InventoryTableProps)
       {
         accessorKey: 'categoryKey',
         header: t('table.category'),
-        cell: ({ getValue }) => (
-          <span className={categoryBadge}>{t(getValue<string>())}</span>
-        ),
+        cell: ({ getValue }) => <span className={categoryBadge}>{t(getValue<string>())}</span>,
       },
       {
         accessorKey: 'unitPrice',
@@ -188,17 +184,15 @@ export function InventoryTable({ onEdit, onDelete, onAdd }: InventoryTableProps)
             {tableInstance.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
-                  const align = (header.column.columnDef.meta as any)?.align;
+                  const align = (
+                    header.column.columnDef.meta as Record<string, unknown> | undefined
+                  )?.align as string | undefined;
                   const isSortable = header.column.getCanSort();
                   return (
                     <th
                       key={header.id}
                       className={`${th} ${align === 'right' ? thRight : ''}`}
-                      onClick={
-                        isSortable
-                          ? header.column.getToggleSortingHandler()
-                          : undefined
-                      }
+                      onClick={isSortable ? header.column.getToggleSortingHandler() : undefined}
                       style={{
                         cursor: isSortable ? 'pointer' : 'default',
                       }}
@@ -210,10 +204,7 @@ export function InventoryTable({ onEdit, onDelete, onAdd }: InventoryTableProps)
                           gap: 4,
                         }}
                       >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        {flexRender(header.column.columnDef.header, header.getContext())}
                         {isSortable && (
                           <ArrowUpDown
                             size={12}
@@ -233,16 +224,11 @@ export function InventoryTable({ onEdit, onDelete, onAdd }: InventoryTableProps)
             {tableInstance.getRowModel().rows.map((row) => (
               <tr key={row.id} className={tr}>
                 {row.getVisibleCells().map((cell) => {
-                  const align = (cell.column.columnDef.meta as any)?.align;
+                  const align = (cell.column.columnDef.meta as Record<string, unknown> | undefined)
+                    ?.align as string | undefined;
                   return (
-                    <td
-                      key={cell.id}
-                      className={`${td} ${align === 'right' ? tdRight : ''}`}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                    <td key={cell.id} className={`${td} ${align === 'right' ? tdRight : ''}`}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   );
                 })}

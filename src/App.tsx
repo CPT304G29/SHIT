@@ -4,11 +4,14 @@ import { lightTheme, darkTheme } from '@/styles/theme.css';
 import { Shell } from '@/components/layout/Shell';
 import { useThemeTransition } from '@/hooks/useThemeTransition';
 import { InventoryTable } from '@/features/inventory/InventoryTable';
+import { ChartsPage } from '@/features/charts/ChartsPage';
 import { InventoryForm } from '@/features/inventory/InventoryForm';
 import { DeleteConfirmation } from '@/features/inventory/DeleteConfirmation';
 import { ToastContainer, type ToastItem } from '@/components/Toast';
 import { useInventoryStore } from '@/features/inventory/inventory.store';
 import type { InventoryItem, InventoryFormData } from '@/features/inventory/inventory.types';
+
+type Page = 'inventory' | 'charts';
 
 function App() {
   const { theme, isTransitioning, toggleTheme } = useThemeTransition();
@@ -17,6 +20,7 @@ function App() {
   const updateItem = useInventoryStore((s) => s.updateItem);
   const deleteItem = useInventoryStore((s) => s.deleteItem);
 
+  const [page, setPage] = useState<Page>('inventory');
   const [formOpen, setFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -70,8 +74,17 @@ function App() {
 
   return (
     <div className={theme === 'light' ? lightTheme : darkTheme}>
-      <Shell theme={theme} isTransitioning={isTransitioning} onToggleTheme={toggleTheme}>
-        <InventoryTable onEdit={handleEdit} onDelete={handleDelete} onAdd={handleAdd} />
+      <Shell
+        theme={theme}
+        isTransitioning={isTransitioning}
+        onToggleTheme={toggleTheme}
+        activePage={page}
+        onNavigate={(p) => setPage(p as Page)}
+      >
+        {page === 'inventory' && (
+          <InventoryTable onEdit={handleEdit} onDelete={handleDelete} onAdd={handleAdd} />
+        )}
+        {page === 'charts' && <ChartsPage />}
       </Shell>
 
       <InventoryForm

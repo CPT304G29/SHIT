@@ -1,0 +1,67 @@
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useInventoryStore } from '@/features/inventory/inventory.store';
+import { formatCurrency } from '@/features/inventory/inventory.utils';
+import { useCurrentTheme } from '@/hooks/useCurrentTheme';
+import { ChartCard } from './ChartCard';
+import { CategoryDonut } from './CategoryDonut';
+import { ValueBarChart } from './ValueBarChart';
+import { StockBarChart } from './StockBarChart';
+import { PriceScatter } from './PriceScatter';
+import { groupByCategory, valueByCategory, topItemsByQuantity, scatterData } from './chart.utils';
+import { page, grid } from './ChartsPage.css';
+
+export function ChartsPage() {
+  const { t, i18n } = useTranslation();
+  const items = useInventoryStore((s) => s.items);
+  const theme = useCurrentTheme();
+  const isDark = theme === 'dark';
+
+  const categoryQty = useMemo(
+    () => groupByCategory(items).map((d) => ({ ...d, name: t(d.name) })),
+    [items, t]
+  );
+  const categoryValue = useMemo(
+    () => valueByCategory(items).map((d) => ({ ...d, name: t(d.name) })),
+    [items, t]
+  );
+  const topItems = useMemo(
+    () => topItemsByQuantity(items, 10).map((d) => ({ ...d, name: t(d.name) })),
+    [items, t]
+  );
+  const scatter = useMemo(
+    () => scatterData(items).map((d) => ({ ...d, name: t(d.name), category: t(d.category) })),
+    [items, t]
+  );
+
+  const formatValue = (v: number) => formatCurrency(v, i18n.language);
+
+  if (items.length === 0) {
+    return (
+      <div className={page}>
+        <div style={{ color: '#888', fontSize: 14, padding: '80px 0', textAlign: 'center' }}>
+          {t('table.emptyState')}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={page}>
+      <div className={grid}>
+        <ChartCard title={t('chart.categoryQty')}>
+          <CategoryDonut data={categoryQty} isDark={isDark} />
+        </ChartCard>
+        <ChartCard title={t('chart.categoryValue')}>
+          <ValueBarChart data={categoryValue} formatValue={formatValue} isDark={isDark} />
+        </ChartCard>
+        <ChartCard title={t('chart.stockLevels')}>
+          <StockBarChart data={topItems} isDark={isDark} />
+        </ChartCard>
+        <ChartCard title={t('chart.priceScatter')}>
+          <PriceScatter data={scatter} isDark={isDark} />
+        </ChartCard>
+      </div>
+    </div>
+  );
+}
