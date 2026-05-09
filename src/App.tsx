@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { lightTheme, darkTheme } from '@/styles/theme.css';
-import { ThemeToggle } from '@/components/ThemeToggle';
-import { LanguageSwitch } from '@/components/LanguageSwitch';
+import { Shell } from '@/components/layout/Shell';
 import { useThemeTransition } from '@/hooks/useThemeTransition';
 
 function App() {
   const { theme, isTransitioning, toggleTheme } = useThemeTransition();
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -19,14 +18,12 @@ function App() {
 
   return (
     <div className={theme === 'light' ? lightTheme : darkTheme}>
-      <div style={{ padding: 40 }}>
-        <h1>{t('app.title')}</h1>
-        <p>Current theme: {theme}</p>
-        <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-          <ThemeToggle theme={theme} isTransitioning={isTransitioning} onToggle={toggleTheme} />
-          <LanguageSwitch />
+      <Shell theme={theme} isTransitioning={isTransitioning} onToggleTheme={toggleTheme}>
+        <div style={{ padding: 40 }}>
+          <h1>Content area</h1>
+          <p>Inventory table will be rendered here.</p>
         </div>
-      </div>
+      </Shell>
     </div>
   );
 }
