@@ -45,5 +45,27 @@
     "placeholder": "値を入力",
     "required": "必須項目です"
   },
-  "comingSoon": "近日公開"
+  "comingSoon": "近日公開",
+  "item": {
+    "blazerFemale": "ブレザー（女性用）",
+    "bomberJacket": "ボンバージャケット",
+    "briefsMale": "ブリーフ（男性用）",
+    "checkeredFlannel": "チェック柄フランネル",
+    "denimJeans": "デニムジーンズ",
+    "hoodie": "パーカー",
+    "jujutsuKaisenTee": "呪術廻戦Tシャツ",
+    "longSleeveShirt": "長袖シャツ",
+    "nikeAirForce": "ナイキ エアフォース ワン",
+    "poloShirt": "ポロシャツ",
+    "slacks": "スラックス",
+    "winniePoohSocks": "くまのプーさん靴下"
+  },
+  "category": {
+    "outerwear": "アウター",
+    "underwear": "下着",
+    "pants": "パンツ",
+    "shirt": "シャツ",
+    "shoes": "靴",
+    "socks": "靴下"
+  }
 }
