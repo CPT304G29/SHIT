@@ -10,15 +10,29 @@ interface ShellProps {
   theme: Theme;
   isTransitioning: boolean;
   onToggleTheme: (event: React.MouseEvent<HTMLElement>) => void;
+  activePage: string;
+  onNavigate: (page: string) => void;
 }
 
-export function Shell({ children, theme, isTransitioning, onToggleTheme }: ShellProps) {
+export function Shell({
+  children,
+  theme,
+  isTransitioning,
+  onToggleTheme,
+  activePage,
+  onNavigate,
+}: ShellProps) {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const sidebarWidth = sidebarExpanded ? 200 : 64;
 
   return (
     <div className={appShell}>
-      <Sidebar expanded={sidebarExpanded} onExpand={setSidebarExpanded} />
+      <Sidebar
+        expanded={sidebarExpanded}
+        onExpand={setSidebarExpanded}
+        activePage={activePage}
+        onNavigate={onNavigate}
+      />
       <div
         style={{
           flex: 1,

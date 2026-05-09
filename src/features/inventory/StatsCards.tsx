@@ -11,10 +11,7 @@ export function StatsCards() {
   const stats = useMemo(() => {
     const totalSku = items.length;
     const totalQty = items.reduce((sum, item) => sum + item.quantity, 0);
-    const totalValue = items.reduce(
-      (sum, item) => sum + item.quantity * item.unitPrice,
-      0
-    );
+    const totalValue = items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
     const categorySet = new Set(items.map((item) => item.categoryKey));
     return {
       totalSku,
@@ -25,8 +22,14 @@ export function StatsCards() {
   }, [items]);
 
   const statsList = [
-    { label: t('stats.totalSku'), value: new Intl.NumberFormat(i18n.language).format(stats.totalSku) },
-    { label: t('stats.totalQty'), value: new Intl.NumberFormat(i18n.language).format(stats.totalQty) },
+    {
+      label: t('stats.totalSku'),
+      value: new Intl.NumberFormat(i18n.language).format(stats.totalSku),
+    },
+    {
+      label: t('stats.totalQty'),
+      value: new Intl.NumberFormat(i18n.language).format(stats.totalQty),
+    },
     { label: t('stats.totalValue'), value: formatCurrency(stats.totalValue, i18n.language) },
     { label: t('stats.categories'), value: String(stats.categoryCount) },
   ];

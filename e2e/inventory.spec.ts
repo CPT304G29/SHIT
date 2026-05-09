@@ -6,7 +6,7 @@ test.describe('Inventory System', () => {
   });
 
   test('page loads with title and inventory table', async ({ page }) => {
-    await expect(page.locator('text=Inventory')).toBeVisible();
+    await expect(page.locator('text=Overview')).toBeVisible();
     await expect(page.locator('table')).toBeVisible();
   });
 
@@ -23,12 +23,12 @@ test.describe('Inventory System', () => {
 
     const zhOption = page.getByRole('menuitem', { name: /中文/i });
     await zhOption.click();
-    await expect(page.locator('text=库存')).toBeVisible();
+    await expect(page.locator('text=总库存量')).toBeVisible();
 
     await langTrigger.click();
     const jaOption = page.getByRole('menuitem', { name: /日本語/i });
     await jaOption.click();
-    await expect(page.locator('text=在庫')).toBeVisible();
+    await expect(page.locator('text=総数量')).toBeVisible();
   });
 
   test('add new item flow', async ({ page }) => {
