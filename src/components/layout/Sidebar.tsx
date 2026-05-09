@@ -2,7 +2,29 @@ import { useState } from 'react';
 import { LayoutList, BarChart3, Calendar, MessageSquare, FolderOpen } from 'lucide-react';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { useTranslation } from 'react-i18next';
-import { sidebar, navItem, navItemActive } from './Sidebar.css';
+import {
+  sidebar,
+  sidebarExpanded,
+  brand,
+  brandMark,
+  brandText,
+  brandTextVisible,
+  sectionLabel,
+  sectionLabelVisible,
+  navList,
+  navItem,
+  navItemExpanded,
+  navItemHover,
+  navItemActive,
+  iconBox,
+  navLabel,
+  navLabelVisible,
+  divider,
+  dividerVisible,
+  bottomArea,
+  versionText,
+  versionTextVisible,
+} from './Sidebar.css';
 
 const navItems = [
   { id: 'inventory', icon: LayoutList, labelKey: 'nav.inventory', active: true },
@@ -12,60 +34,107 @@ const navItems = [
   { id: 'files', icon: FolderOpen, labelKey: 'nav.files', active: false },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  expanded: boolean;
+  onExpand: (expanded: boolean) => void;
+}
+
+export function Sidebar({ expanded, onExpand }: SidebarProps) {
   const { t } = useTranslation();
   const [activeId, setActiveId] = useState('inventory');
 
   return (
     <Tooltip.Provider delayDuration={200}>
-      <nav className={sidebar} aria-label="Main navigation">
-        {navItems.map(({ id, icon: Icon, labelKey, active }) => {
-          const isActive = activeId === id;
-          const isDisabled = !active;
+      <nav
+        className={`${sidebar} ${expanded ? sidebarExpanded : ''}`}
+        aria-label="Main navigation"
+        onMouseEnter={() => onExpand(true)}
+        onMouseLeave={() => onExpand(false)}
+      >
+        {/* Brand */}
+        <div className={brand}>
+          <div className={brandMark}>U</div>
+          <span className={`${brandText} ${expanded ? brandTextVisible : ''}`}>
+            UNIQLO
+          </span>
+        </div>
 
-          return (
-            <Tooltip.Root key={id}>
-              <Tooltip.Trigger asChild>
-                <button
-                  type="button"
-                  aria-label={t(labelKey)}
-                  aria-current={isActive ? 'page' : undefined}
-                  disabled={isDisabled}
-                  onClick={() => {
-                    if (isDisabled) return;
-                    setActiveId(id);
-                  }}
-                  className={`${navItem} ${isActive ? navItemActive : ''}`}
-                  style={{
-                    opacity: isDisabled ? 0.6 : 1,
-                    cursor: isDisabled ? 'not-allowed' : 'pointer',
-                  }}
-                >
-                  <Icon size={20} />
-                </button>
-              </Tooltip.Trigger>
-              <Tooltip.Portal>
-                <Tooltip.Content
-                  side="right"
-                  sideOffset={8}
-                  style={{
-                    backgroundColor: '#1A1A1A',
-                    color: '#FFFFFF',
-                    padding: '6px 10px',
-                    borderRadius: 4,
-                    fontSize: 12,
-                    whiteSpace: 'nowrap',
-                    zIndex: 101,
-                  }}
-                >
+        {/* Section Label */}
+        <div className={`${sectionLabel} ${expanded ? sectionLabelVisible : ''}`}>
+          Main Menu
+        </div>
+
+        {/* Navigation */}
+        <div className={navList}>
+          {navItems.map(({ id, icon: Icon, labelKey, active }) => {
+            const isActive = activeId === id;
+            const isDisabled = !active;
+
+            const button = (
+              <button
+                type="button"
+                aria-label={t(labelKey)}
+                aria-current={isActive ? 'page' : undefined}
+                disabled={isDisabled}
+                onClick={() => {
+                  if (isDisabled) return;
+                  setActiveId(id);
+                }}
+                className={`${navItem} ${navItemHover} ${isActive ? navItemActive : ''} ${expanded ? navItemExpanded : ''}`}
+                style={{
+                  opacity: isDisabled ? 0.4 : 1,
+                  cursor: isDisabled ? 'not-allowed' : 'pointer',
+                }}
+              >
+                <span className={iconBox}>
+                  <Icon size={18} strokeWidth={isActive ? 2.2 : 1.8} />
+                </span>
+                <span className={`${navLabel} ${expanded ? navLabelVisible : ''}`}>
                   {t(labelKey)}
-                  {isDisabled && ` — ${t('comingSoon')}`}
-                  <Tooltip.Arrow style={{ fill: '#1A1A1A' }} />
-                </Tooltip.Content>
-              </Tooltip.Portal>
-            </Tooltip.Root>
-          );
-        })}
+                </span>
+              </button>
+            );
+
+            if (expanded) {
+              return <div key={id}>{button}</div>;
+            }
+
+            return (
+              <Tooltip.Root key={id}>
+                <Tooltip.Trigger asChild>{button}</Tooltip.Trigger>
+                <Tooltip.Portal>
+                  <Tooltip.Content
+                    side="right"
+                    sideOffset={10}
+                    style={{
+                      backgroundColor: '#1A1A1A',
+                      color: '#FFFFFF',
+                      padding: '6px 12px',
+                      borderRadius: 8,
+                      fontSize: 12,
+                      fontWeight: 500,
+                      whiteSpace: 'nowrap',
+                      zIndex: 101,
+                      boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
+                    }}
+                  >
+                    {t(labelKey)}
+                    {isDisabled && ` — ${t('comingSoon')}`}
+                    <Tooltip.Arrow style={{ fill: '#1A1A1A' }} />
+                  </Tooltip.Content>
+                </Tooltip.Portal>
+              </Tooltip.Root>
+            );
+          })}
+        </div>
+
+        {/* Bottom */}
+        <div className={`${divider} ${expanded ? dividerVisible : ''}`} />
+        <div className={bottomArea}>
+          <span className={`${versionText} ${expanded ? versionTextVisible : ''}`}>
+            SHIT v1.0
+          </span>
+        </div>
       </nav>
     </Tooltip.Provider>
   );

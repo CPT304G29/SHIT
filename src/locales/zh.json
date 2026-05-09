@@ -46,6 +46,12 @@
     "placeholder": "请输入",
     "required": "此字段为必填项"
   },
+  "stats": {
+    "totalSku": "商品种类",
+    "totalQty": "总库存量",
+    "totalValue": "总价值",
+    "categories": "分类数"
+  },
   "comingSoon": "即将推出",
   "item": {
     "blazerFemale": "女式西装外套",

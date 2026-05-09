@@ -1,10 +1,10 @@
-import { style } from '@vanilla-extract/css';
+import { style, globalStyle } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
 
 export const container = style({
   display: 'flex',
   flexDirection: 'column',
-  gap: 20,
+  gap: 24,
 });
 
 export const toolbar = style({
@@ -21,7 +21,7 @@ export const searchInput = style({
   backgroundColor: vars.color.bg,
   color: vars.color.text,
   fontSize: 14,
-  width: 300,
+  width: 320,
   outline: 'none',
   transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
   selectors: {
@@ -69,11 +69,6 @@ export const tableWrapper = style({
   overflow: 'hidden',
   boxShadow: vars.shadow.md,
   transition: 'box-shadow 0.3s ease',
-  selectors: {
-    '&:hover': {
-      boxShadow: vars.shadow.lg,
-    },
-  },
 });
 
 export const table = style({
@@ -88,7 +83,7 @@ export const thead = style({
 });
 
 export const th = style({
-  padding: '16px 20px',
+  padding: '14px 20px',
   textAlign: 'left',
   fontSize: 11,
   fontWeight: 600,
@@ -99,11 +94,16 @@ export const th = style({
   cursor: 'pointer',
   userSelect: 'none',
   transition: 'color 0.2s ease',
+  fontFeatureSettings: '"tnum"',
   selectors: {
     '&:hover': {
       color: vars.color.text,
     },
   },
+});
+
+export const thRight = style({
+  textAlign: 'right',
 });
 
 export const tbody = style({});
@@ -123,38 +123,48 @@ export const tr = style({
 });
 
 export const td = style({
-  padding: '18px 20px',
+  padding: '16px 20px',
   color: vars.color.text,
   verticalAlign: 'middle',
   fontWeight: 500,
+  transition: 'color 0.15s ease',
+});
+
+export const tdRight = style({
+  textAlign: 'right',
+  fontFeatureSettings: '"tnum"',
 });
 
 export const tdActions = style({
-  padding: '18px 20px',
+  padding: '16px 20px',
   display: 'flex',
   gap: 4,
   justifyContent: 'flex-end',
+  opacity: 0,
+  transition: 'opacity 0.2s ease',
+});
+
+globalStyle(`${tr}:hover ${tdActions}`, {
+  opacity: 1,
 });
 
 export const actionButton = style({
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  width: 34,
-  height: 34,
+  width: 32,
+  height: 32,
   borderRadius: vars.radius.md,
   color: vars.color.textMuted,
   cursor: 'pointer',
   border: 'none',
   background: 'transparent',
   transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-  opacity: 0.85,
   selectors: {
     '&:hover': {
       color: vars.color.brand,
       backgroundColor: vars.color.surfaceHover,
       transform: 'scale(1.1)',
-      opacity: 1,
     },
   },
 });
@@ -168,4 +178,23 @@ export const emptyState = style({
   gap: 20,
   color: vars.color.textMuted,
   textAlign: 'center',
+});
+
+export const categoryBadge = style({
+  display: 'inline-flex',
+  alignItems: 'center',
+  padding: '4px 10px',
+  borderRadius: 20,
+  fontSize: 12,
+  fontWeight: 500,
+  backgroundColor: vars.color.surface,
+  color: vars.color.textMuted,
+  border: `1px solid ${vars.color.border}`,
+  transition: 'all 0.2s ease',
+});
+
+globalStyle(`${tr}:hover ${categoryBadge}`, {
+  backgroundColor: vars.color.bg,
+  color: vars.color.text,
+  borderColor: vars.color.borderHover,
 });

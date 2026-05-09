@@ -46,6 +46,12 @@
     "placeholder": "Enter value",
     "required": "This field is required"
   },
+  "stats": {
+    "totalSku": "Total SKUs",
+    "totalQty": "Total Quantity",
+    "totalValue": "Total Value",
+    "categories": "Categories"
+  },
   "comingSoon": "Coming Soon",
   "item": {
     "blazerFemale": "Blazer (Female)",
