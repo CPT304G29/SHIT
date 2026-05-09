@@ -1,5 +1,5 @@
-import { useCallback, useRef, useState } from 'react';
-import { themeBg } from '@/styles/theme.css';
+import { useCallback, useState } from 'react';
+import { lightTheme, darkTheme } from '@/styles/theme.css';
 
 export type Theme = 'light' | 'dark';
 
@@ -24,13 +24,22 @@ function getInitialTheme(): Theme {
   return 'light';
 }
 
+function applyDomTheme(nextTheme: Theme) {
+  document.documentElement.setAttribute('data-theme', nextTheme);
+  document.body.classList.remove(lightTheme, darkTheme);
+  document.body.classList.add(nextTheme === 'light' ? lightTheme : darkTheme);
+}
+
 export function useThemeTransition(): UseThemeTransitionReturn {
-  const [theme, setTheme] = useState<Theme>(() => getInitialTheme());
+  const [theme, setTheme] = useState<Theme>(() => {
+    const initial = getInitialTheme();
+    applyDomTheme(initial);
+    return initial;
+  });
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const circleRef = useRef<HTMLDivElement | null>(null);
 
   const toggleTheme = useCallback(
-    (event: React.MouseEvent<HTMLElement>) => {
+    async (event: React.MouseEvent<HTMLElement>) => {
       if (isTransitioning) return;
 
       const target = event.currentTarget;
@@ -38,67 +47,44 @@ export function useThemeTransition(): UseThemeTransitionReturn {
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
 
-      const maxRadius = Math.hypot(
-        Math.max(centerX, window.innerWidth - centerX),
-        Math.max(centerY, window.innerHeight - centerY)
-      );
-
       const nextTheme: Theme = theme === 'light' ? 'dark' : 'light';
 
-      // Use the NEW theme background color. As the circle expands,
-      // it covers the page with the new theme color while the underlying
-      // page simultaneously transitions via CSS. Because the circle color
-      // matches the new theme, the expansion feels seamless — there is no
-      // harsh contrast between the mask and the destination state.
-      const circleColor = themeBg[nextTheme];
+      document.documentElement.style.setProperty('--vt-x', `${centerX}px`);
+      document.documentElement.style.setProperty('--vt-y', `${centerY}px`);
 
-      const circle = document.createElement('div');
-      circle.style.cssText = `
-        position: fixed;
-        left: ${centerX}px;
-        top: ${centerY}px;
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        background: ${circleColor};
-        transform: translate(-50%, -50%) scale(0);
-        z-index: 9999;
-        pointer-events: none;
-        will-change: transform;
-      `;
-      document.body.appendChild(circle);
-      circleRef.current = circle;
-      setIsTransitioning(true);
-
-      // Switch theme immediately on the next frame so CSS transitions
-      // start in parallel with the circle animation.
-      requestAnimationFrame(() => {
-        document.documentElement.setAttribute('data-theme', nextTheme);
+      if (!document.startViewTransition) {
+        applyDomTheme(nextTheme);
         setTheme(nextTheme);
         try {
           localStorage.setItem(STORAGE_KEY, nextTheme);
         } catch {
           // ignore
         }
+        return;
+      }
+
+      setIsTransitioning(true);
+
+      const transition = document.startViewTransition(() => {
+        applyDomTheme(nextTheme);
       });
 
-      const animation = circle.animate(
-        [
-          { transform: 'translate(-50%, -50%) scale(0)' },
-          { transform: `translate(-50%, -50%) scale(${maxRadius / 50})` },
-        ],
-        {
-          duration: 600,
-          easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
-          fill: 'forwards',
-        }
-      );
+      setTheme(nextTheme);
+      try {
+        localStorage.setItem(STORAGE_KEY, nextTheme);
+      } catch {
+        // ignore
+      }
 
-      animation.onfinish = () => {
-        circle.remove();
-        circleRef.current = null;
+      try {
+        await transition.finished;
+      } catch {
+        // ignore transition errors (e.g. interrupted)
+      } finally {
         setIsTransitioning(false);
-      };
+        document.documentElement.style.removeProperty('--vt-x');
+        document.documentElement.style.removeProperty('--vt-y');
+      }
     },
     [theme, isTransitioning]
   );
