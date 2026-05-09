@@ -29,7 +29,7 @@ globalStyle('body', {
   backgroundColor: vars.color.bg,
   lineHeight: 1.5,
   minHeight: '100vh',
-  transition: 'background-color 0.3s ease, color 0.3s ease',
+  transition: 'background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease',
 });
 
 globalStyle('button', {
