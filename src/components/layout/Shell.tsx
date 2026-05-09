@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { appShell } from '@/styles/global.css';
@@ -13,24 +13,33 @@ interface ShellProps {
 }
 
 export function Shell({ children, theme, isTransitioning, onToggleTheme }: ShellProps) {
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const sidebarWidth = sidebarExpanded ? 200 : 64;
+
   return (
     <div className={appShell}>
-      <Sidebar />
+      <Sidebar expanded={sidebarExpanded} onExpand={setSidebarExpanded} />
       <div
         style={{
           flex: 1,
-          marginLeft: 64,
+          marginLeft: sidebarWidth,
           display: 'flex',
           flexDirection: 'column',
           minHeight: '100vh',
+          transition: 'margin-left 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       >
-        <Header theme={theme} isTransitioning={isTransitioning} onToggleTheme={onToggleTheme} />
+        <Header
+          theme={theme}
+          isTransitioning={isTransitioning}
+          onToggleTheme={onToggleTheme}
+          sidebarWidth={sidebarWidth}
+        />
         <main
           style={{
             flex: 1,
             marginTop: 64,
-            padding: 24,
+            padding: '28px 32px',
             backgroundColor: vars.color.surface,
             transition: 'background-color 0.3s ease',
           }}

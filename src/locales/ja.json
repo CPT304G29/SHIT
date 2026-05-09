@@ -46,6 +46,12 @@
     "placeholder": "値を入力",
     "required": "必須項目です"
   },
+  "stats": {
+    "totalSku": "SKU総数",
+    "totalQty": "総数量",
+    "totalValue": "総額",
+    "categories": "カテゴリ数"
+  },
   "comingSoon": "近日公開",
   "item": {
     "blazerFemale": "ブレザー（女性用）",
