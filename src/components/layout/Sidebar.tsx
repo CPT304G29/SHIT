@@ -28,6 +28,7 @@ export function Sidebar() {
               <Tooltip.Trigger asChild>
                 <button
                   type="button"
+                  aria-label={t(labelKey)}
                   aria-current={isActive ? 'page' : undefined}
                   disabled={isDisabled}
                   onClick={() => {

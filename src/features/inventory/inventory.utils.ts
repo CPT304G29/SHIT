@@ -5,14 +5,21 @@ export function calculateTotalPrice(quantity: number, unitPrice: number): number
 }
 
 export function formatCurrency(amount: number, locale: string): string {
+  const localeMap: Record<string, string> = {
+    en: 'en-MY',
+    zh: 'zh-CN',
+    ja: 'ja-JP',
+  };
   const currencyMap: Record<string, string> = {
     en: 'MYR',
     zh: 'CNY',
     ja: 'JPY',
   };
+
+  const resolvedLocale = localeMap[locale] ?? 'en-MY';
   const currency = currencyMap[locale] ?? 'MYR';
 
-  return new Intl.NumberFormat(locale, {
+  return new Intl.NumberFormat(resolvedLocale, {
     style: 'currency',
     currency,
     minimumFractionDigits: currency === 'JPY' ? 0 : 2,
