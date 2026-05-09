@@ -47,6 +47,7 @@
     "required": "此字段为必填项"
   },
   "stats": {
+    "overview": "概览",
     "totalSku": "商品种类",
     "totalQty": "总库存量",
     "totalValue": "总价值",

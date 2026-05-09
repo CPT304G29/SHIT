@@ -1,9 +1,8 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Package, Boxes, Wallet, Tags } from 'lucide-react';
 import { useInventoryStore } from './inventory.store';
 import { formatCurrency } from './inventory.utils';
-import { cardsGrid, card, cardIcon, cardValue, cardLabel } from './StatsCards.css';
+import { section, sectionTitle, statsRow, statItem, statValue, statLabel } from './StatsCards.css';
 
 export function StatsCards() {
   const { t, i18n } = useTranslation();
@@ -25,44 +24,24 @@ export function StatsCards() {
     };
   }, [items]);
 
-  const cards = [
-    {
-      icon: Package,
-      label: t('stats.totalSku'),
-      value: new Intl.NumberFormat(i18n.language).format(stats.totalSku),
-      color: '#E50012',
-    },
-    {
-      icon: Boxes,
-      label: t('stats.totalQty'),
-      value: new Intl.NumberFormat(i18n.language).format(stats.totalQty),
-      color: '#1E8E3E',
-    },
-    {
-      icon: Wallet,
-      label: t('stats.totalValue'),
-      value: formatCurrency(stats.totalValue, i18n.language),
-      color: '#0066CC',
-    },
-    {
-      icon: Tags,
-      label: t('stats.categories'),
-      value: String(stats.categoryCount),
-      color: '#7C3AED',
-    },
+  const statsList = [
+    { label: t('stats.totalSku'), value: new Intl.NumberFormat(i18n.language).format(stats.totalSku) },
+    { label: t('stats.totalQty'), value: new Intl.NumberFormat(i18n.language).format(stats.totalQty) },
+    { label: t('stats.totalValue'), value: formatCurrency(stats.totalValue, i18n.language) },
+    { label: t('stats.categories'), value: String(stats.categoryCount) },
   ];
 
   return (
-    <div className={cardsGrid}>
-      {cards.map(({ icon: Icon, label, value, color }) => (
-        <div key={label} className={card}>
-          <div className={cardIcon} style={{ backgroundColor: `${color}12`, color }}>
-            <Icon size={20} strokeWidth={2} />
+    <div className={section}>
+      <div className={sectionTitle}>{t('stats.overview')}</div>
+      <div className={statsRow}>
+        {statsList.map(({ label, value }) => (
+          <div key={label} className={statItem}>
+            <div className={statValue}>{value}</div>
+            <div className={statLabel}>{label}</div>
           </div>
-          <div className={cardValue}>{value}</div>
-          <div className={cardLabel}>{label}</div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
