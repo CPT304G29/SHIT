@@ -34,7 +34,7 @@ export function LanguageSwitch() {
               borderRadius: 4,
               border: 'none',
               background: active ? vars.color.surface : 'transparent',
-              color: active ? vars.color.brand : vars.color.textMuted,
+              color: active ? vars.color.text : vars.color.textMuted,
               fontSize: 12,
               fontWeight: active ? 600 : 400,
               cursor: 'pointer',

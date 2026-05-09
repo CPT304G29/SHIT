@@ -78,8 +78,11 @@ export function InventoryForm({ open, item, onClose, onSubmit }: InventoryFormPr
           </Dialog.Title>
           <form onSubmit={handleSubmit}>
             <div className={field}>
-              <label className={label}>{t('form.itemName')}</label>
+              <label htmlFor="itemname" className={label}>
+                {t('form.itemName')}
+              </label>
               <input
+                id="itemname"
                 className={input}
                 value={nameKey}
                 onChange={(e) => setNameKey(e.target.value)}
@@ -88,8 +91,11 @@ export function InventoryForm({ open, item, onClose, onSubmit }: InventoryFormPr
               />
             </div>
             <div className={field}>
-              <label className={label}>{t('form.quantity')}</label>
+              <label htmlFor="quantity" className={label}>
+                {t('form.quantity')}
+              </label>
               <input
+                id="quantity"
                 className={input}
                 type="number"
                 min={0}
@@ -101,8 +107,11 @@ export function InventoryForm({ open, item, onClose, onSubmit }: InventoryFormPr
               />
             </div>
             <div className={field}>
-              <label className={label}>{t('form.category')}</label>
+              <label htmlFor="category" className={label}>
+                {t('form.category')}
+              </label>
               <input
+                id="category"
                 className={input}
                 value={categoryKey}
                 onChange={(e) => setCategoryKey(e.target.value)}
@@ -111,8 +120,11 @@ export function InventoryForm({ open, item, onClose, onSubmit }: InventoryFormPr
               />
             </div>
             <div className={field}>
-              <label className={label}>{t('form.unitPrice')}</label>
+              <label htmlFor="unitprice" className={label}>
+                {t('form.unitPrice')}
+              </label>
               <input
+                id="unitprice"
                 className={input}
                 type="number"
                 min={0}
@@ -124,8 +136,15 @@ export function InventoryForm({ open, item, onClose, onSubmit }: InventoryFormPr
               />
             </div>
             <div className={field}>
-              <label className={label}>{t('form.totalPrice')}</label>
-              <input className={`${input} ${inputDisabled}`} value={total / 100} disabled />
+              <label htmlFor="totalprice" className={label}>
+                {t('form.totalPrice')}
+              </label>
+              <input
+                id="totalprice"
+                className={`${input} ${inputDisabled}`}
+                value={total / 100}
+                disabled
+              />
             </div>
             <div className={actions}>
               <button type="button" className={btnSecondary} onClick={onClose}>
