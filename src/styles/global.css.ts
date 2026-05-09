@@ -67,3 +67,32 @@ globalStyle(':focus-visible', {
   outline: `2px solid ${vars.color.brand}`,
   outlineOffset: '2px',
 });
+
+// Selection
+globalStyle('::selection', {
+  backgroundColor: vars.color.brand,
+  color: vars.color.textInverse,
+});
+
+// Scrollbar (WebKit)
+globalStyle('::-webkit-scrollbar', {
+  width: '6px',
+  height: '6px',
+});
+
+globalStyle('::-webkit-scrollbar-track', {
+  background: 'transparent',
+});
+
+globalStyle('::-webkit-scrollbar-thumb', {
+  backgroundColor: vars.color.borderHover,
+  borderRadius: '3px',
+});
+
+globalStyle('::-webkit-scrollbar-thumb:hover', {
+  backgroundColor: vars.color.textMuted,
+});
+
+globalStyle('::-webkit-scrollbar-corner', {
+  background: 'transparent',
+});

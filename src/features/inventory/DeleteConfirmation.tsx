@@ -1,7 +1,7 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { useTranslation } from 'react-i18next';
 import type { InventoryItem } from './inventory.types';
-import { overlay, content, title, actions, btnPrimary, btnSecondary } from './InventoryForm.css';
+import { overlay, content, title, actions, btnDanger, btnSecondary } from './InventoryForm.css';
 
 interface DeleteConfirmationProps {
   open: boolean;
@@ -28,8 +28,7 @@ export function DeleteConfirmation({ open, onClose, onConfirm }: DeleteConfirmat
             </button>
             <button
               type="button"
-              className={btnPrimary}
-              style={{ backgroundColor: '#E50012' }}
+              className={btnDanger}
               onClick={() => {
                 onConfirm();
                 onClose();

@@ -6,31 +6,41 @@ export const header = style({
   top: 0,
   left: 64,
   right: 0,
-  height: 56,
+  height: 64,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  padding: '0 24px',
+  padding: '0 28px',
   backgroundColor: vars.color.bg,
   borderBottom: `1px solid ${vars.color.border}`,
   zIndex: 99,
   transition: 'background-color 0.3s ease, border-color 0.3s ease',
+  backdropFilter: 'blur(12px)',
+  WebkitBackdropFilter: 'blur(12px)',
 });
 
 export const headerTitle = style({
-  fontSize: 16,
-  fontWeight: 600,
+  fontSize: 20,
+  fontWeight: 700,
   color: vars.color.text,
-  letterSpacing: '-0.01em',
+  letterSpacing: '-0.02em',
+  lineHeight: 1.2,
 });
 
 export const headerActions = style({
   display: 'flex',
   alignItems: 'center',
-  gap: 12,
+  gap: 8,
 });
 
 export const logo = style({
   height: 28,
   width: 'auto',
+  opacity: 0.95,
+  transition: 'opacity 0.2s ease',
+  selectors: {
+    '&:hover': {
+      opacity: 1,
+    },
+  },
 });

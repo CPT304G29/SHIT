@@ -29,7 +29,7 @@ export function Shell({ children, theme, isTransitioning, onToggleTheme }: Shell
         <main
           style={{
             flex: 1,
-            marginTop: 56,
+            marginTop: 64,
             padding: 24,
             backgroundColor: vars.color.surface,
             transition: 'background-color 0.3s ease',

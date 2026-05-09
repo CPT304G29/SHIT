@@ -19,7 +19,7 @@ export function ToastContainer({ toasts, onRemove }: ToastContainerProps) {
     <div
       style={{
         position: 'fixed',
-        top: 72,
+        top: 80,
         right: 24,
         zIndex: 300,
         display: 'flex',
@@ -54,13 +54,16 @@ function Toast({ toast, onRemove }: { toast: ToastItem; onRemove: (id: string) =
         alignItems: 'center',
         gap: 10,
         padding: '12px 16px',
-        borderRadius: 8,
-        backgroundColor: toast.type === 'success' ? '#1E8E3E' : '#E50012',
+        borderRadius: 12,
+        backgroundColor: toast.type === 'success' ? 'rgba(30, 142, 62, 0.92)' : 'rgba(229, 0, 18, 0.92)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
         color: '#FFFFFF',
         fontSize: 14,
         fontWeight: 500,
-        boxShadow: vars.shadow.md,
+        boxShadow: vars.shadow.lg,
         minWidth: 240,
+        border: `1px solid ${toast.type === 'success' ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.2)'}`,
       }}
     >
       {toast.type === 'success' ? <Check size={16} /> : <X size={16} />}

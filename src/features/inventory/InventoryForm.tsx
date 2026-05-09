@@ -42,15 +42,15 @@ export function InventoryForm({ open, item, onClose, onSubmit }: InventoryFormPr
   useEffect(() => {
     if (open) {
       if (item) {
-        setNameKey(item.nameKey);
+        setNameKey(t(item.nameKey));
         setQuantity(String(item.quantity));
-        setCategoryKey(item.categoryKey);
+        setCategoryKey(t(item.categoryKey));
         setUnitPrice(String(item.unitPrice / 100));
       } else {
         reset();
       }
     }
-  }, [open, item, reset]);
+  }, [open, item, reset, t]);
 
   const qtyNum = Number(quantity) || 0;
   const priceNum = Math.round((Number(unitPrice) || 0) * 100);

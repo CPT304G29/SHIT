@@ -4,7 +4,7 @@ import { vars } from '@/styles/theme.css';
 export const container = style({
   display: 'flex',
   flexDirection: 'column',
-  gap: 16,
+  gap: 20,
 });
 
 export const toolbar = style({
@@ -15,18 +15,19 @@ export const toolbar = style({
 });
 
 export const searchInput = style({
-  padding: '8px 12px',
-  borderRadius: vars.radius.md,
+  padding: '10px 14px 10px 38px',
+  borderRadius: vars.radius.lg,
   border: `1px solid ${vars.color.border}`,
   backgroundColor: vars.color.bg,
   color: vars.color.text,
   fontSize: 14,
-  width: 280,
+  width: 300,
   outline: 'none',
-  transition: 'border-color 0.2s ease',
+  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
   selectors: {
     '&:focus': {
       borderColor: vars.color.brand,
+      boxShadow: `0 0 0 3px ${vars.color.ring}`,
     },
     '&::placeholder': {
       color: vars.color.textMuted,
@@ -38,26 +39,41 @@ export const addButton = style({
   display: 'inline-flex',
   alignItems: 'center',
   gap: 8,
-  padding: '8px 16px',
-  borderRadius: vars.radius.md,
+  padding: '10px 18px',
+  borderRadius: vars.radius.lg,
   backgroundColor: vars.color.brand,
   color: vars.color.textInverse,
   fontSize: 14,
   fontWeight: 600,
   cursor: 'pointer',
-  transition: 'background-color 0.2s ease',
+  border: 'none',
+  boxShadow: '0 2px 8px rgba(229, 0, 18, 0.25)',
+  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
   selectors: {
     '&:hover': {
       backgroundColor: vars.color.brandHover,
+      transform: 'translateY(-1px)',
+      boxShadow: '0 4px 14px rgba(229, 0, 18, 0.35)',
+    },
+    '&:active': {
+      transform: 'translateY(0)',
+      boxShadow: '0 1px 4px rgba(229, 0, 18, 0.2)',
     },
   },
 });
 
 export const tableWrapper = style({
   backgroundColor: vars.color.bg,
-  borderRadius: vars.radius.lg,
+  borderRadius: vars.radius.xl,
   border: `1px solid ${vars.color.border}`,
   overflow: 'hidden',
+  boxShadow: vars.shadow.md,
+  transition: 'box-shadow 0.3s ease',
+  selectors: {
+    '&:hover': {
+      boxShadow: vars.shadow.lg,
+    },
+  },
 });
 
 export const table = style({
@@ -72,17 +88,17 @@ export const thead = style({
 });
 
 export const th = style({
-  padding: '14px 16px',
+  padding: '16px 20px',
   textAlign: 'left',
   fontSize: 11,
   fontWeight: 600,
   textTransform: 'uppercase',
-  letterSpacing: '0.05em',
+  letterSpacing: '0.08em',
   color: vars.color.textMuted,
   whiteSpace: 'nowrap',
   cursor: 'pointer',
   userSelect: 'none',
-  transition: 'color 0.15s ease',
+  transition: 'color 0.2s ease',
   selectors: {
     '&:hover': {
       color: vars.color.text,
@@ -94,27 +110,29 @@ export const tbody = style({});
 
 export const tr = style({
   borderBottom: `1px solid ${vars.color.border}`,
-  transition: 'background-color 0.15s ease',
+  transition: 'background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
   selectors: {
     '&:last-child': {
       borderBottom: 'none',
     },
     '&:hover': {
       backgroundColor: vars.color.surfaceHover,
+      boxShadow: `inset 3px 0 0 0 ${vars.color.brand}`,
     },
   },
 });
 
 export const td = style({
-  padding: '16px',
+  padding: '18px 20px',
   color: vars.color.text,
   verticalAlign: 'middle',
+  fontWeight: 500,
 });
 
 export const tdActions = style({
-  padding: '16px',
+  padding: '18px 20px',
   display: 'flex',
-  gap: 8,
+  gap: 4,
   justifyContent: 'flex-end',
 });
 
@@ -122,16 +140,21 @@ export const actionButton = style({
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  width: 32,
-  height: 32,
+  width: 34,
+  height: 34,
   borderRadius: vars.radius.md,
   color: vars.color.textMuted,
   cursor: 'pointer',
-  transition: 'color 0.15s ease, background-color 0.15s ease',
+  border: 'none',
+  background: 'transparent',
+  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+  opacity: 0.85,
   selectors: {
     '&:hover': {
       color: vars.color.brand,
-      backgroundColor: vars.color.surface,
+      backgroundColor: vars.color.surfaceHover,
+      transform: 'scale(1.1)',
+      opacity: 1,
     },
   },
 });
@@ -141,8 +164,8 @@ export const emptyState = style({
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  padding: '80px 24px',
-  gap: 16,
+  padding: '100px 24px',
+  gap: 20,
   color: vars.color.textMuted,
   textAlign: 'center',
 });

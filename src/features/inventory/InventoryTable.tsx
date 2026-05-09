@@ -135,10 +135,11 @@ export function InventoryTable({ onEdit, onDelete, onAdd }: InventoryTableProps)
             size={16}
             style={{
               position: 'absolute',
-              left: 12,
+              left: 14,
               top: '50%',
               transform: 'translateY(-50%)',
-              color: 'var(--color-text-muted)',
+              color: '#888888',
+              opacity: 0.7,
             }}
           />
           <input

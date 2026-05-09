@@ -10,8 +10,8 @@ export const trigger = style({
   display: 'flex',
   alignItems: 'center',
   gap: 6,
-  padding: '6px 10px',
-  borderRadius: vars.radius.md,
+  padding: '7px 12px',
+  borderRadius: vars.radius.lg,
   border: `1px solid ${vars.color.border}`,
   background: vars.color.surface,
   color: vars.color.text,
@@ -19,11 +19,12 @@ export const trigger = style({
   fontWeight: 500,
   cursor: 'pointer',
   lineHeight: 1,
-  transition: 'border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease',
+  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
   ':hover': {
     borderColor: vars.color.borderHover,
     background: vars.color.surfaceHover,
     boxShadow: vars.shadow.sm,
+    transform: 'translateY(-1px)',
   },
   ':focus-visible': {
     outline: `2px solid ${vars.color.brand}`,
@@ -36,12 +37,12 @@ export const content = style({
   zIndex: 999,
   background: vars.color.bg,
   border: `1px solid ${vars.color.border}`,
-  borderRadius: vars.radius.lg,
+  borderRadius: vars.radius.xl,
   boxShadow: vars.shadow.lg,
-  padding: 8,
-  minWidth: 160,
+  padding: 10,
+  minWidth: 170,
   marginTop: 6,
-  animation: `${slideDown} 0.18s cubic-bezier(0.16, 1, 0.3, 1)`,
+  animation: `${slideDown} 0.2s cubic-bezier(0.16, 1, 0.3, 1)`,
 });
 
 export const header = style({
@@ -60,17 +61,17 @@ export const item = style({
   alignItems: 'center',
   justifyContent: 'space-between',
   gap: 12,
-  padding: '9px 12px',
-  borderRadius: vars.radius.md,
+  padding: '10px 14px',
+  borderRadius: vars.radius.lg,
   fontSize: 14,
   cursor: 'pointer',
   color: vars.color.text,
   background: 'transparent',
   outline: 'none',
-  transition: 'background-color 0.15s ease, color 0.15s ease, transform 0.1s ease',
+  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
   ':hover': {
     background: vars.color.surfaceHover,
-    transform: 'translateX(1px)',
+    transform: 'translateX(2px)',
   },
 });
 
