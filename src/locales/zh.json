@@ -13,6 +13,7 @@
     "toggle": "切换主题"
   },
   "lang": {
+    "select": "语言",
     "en": "English",
     "zh": "中文",
     "ja": "日本語"

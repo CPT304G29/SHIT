@@ -34,6 +34,8 @@ function App() {
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
+    document.body.classList.remove(lightTheme, darkTheme);
+    document.body.classList.add(theme === 'light' ? lightTheme : darkTheme);
   }, [theme]);
 
   useEffect(() => {

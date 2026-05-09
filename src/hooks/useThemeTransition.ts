@@ -45,9 +45,12 @@ export function useThemeTransition(): UseThemeTransitionReturn {
 
       const nextTheme: Theme = theme === 'light' ? 'dark' : 'light';
 
-      // Use the OLD theme background color so the circle masks the page
-      // while the new theme renders underneath.
-      const circleColor = themeBg[theme];
+      // Use the NEW theme background color. As the circle expands,
+      // it covers the page with the new theme color while the underlying
+      // page simultaneously transitions via CSS. Because the circle color
+      // matches the new theme, the expansion feels seamless — there is no
+      // harsh contrast between the mask and the destination state.
+      const circleColor = themeBg[nextTheme];
 
       const circle = document.createElement('div');
       circle.style.cssText = `
@@ -61,14 +64,14 @@ export function useThemeTransition(): UseThemeTransitionReturn {
         transform: translate(-50%, -50%) scale(0);
         z-index: 9999;
         pointer-events: none;
-        will-change: transform, opacity;
+        will-change: transform;
       `;
       document.body.appendChild(circle);
       circleRef.current = circle;
       setIsTransitioning(true);
 
-      // Switch theme immediately on the next frame so the new theme renders
-      // underneath the expanding circle mask.
+      // Switch theme immediately on the next frame so CSS transitions
+      // start in parallel with the circle animation.
       requestAnimationFrame(() => {
         document.documentElement.setAttribute('data-theme', nextTheme);
         setTheme(nextTheme);
@@ -81,19 +84,11 @@ export function useThemeTransition(): UseThemeTransitionReturn {
 
       const animation = circle.animate(
         [
-          { transform: 'translate(-50%, -50%) scale(0)', opacity: 1 },
-          {
-            transform: `translate(-50%, -50%) scale(${maxRadius / 50})`,
-            opacity: 1,
-            offset: 0.85,
-          },
-          {
-            transform: `translate(-50%, -50%) scale(${maxRadius / 50})`,
-            opacity: 0,
-          },
+          { transform: 'translate(-50%, -50%) scale(0)' },
+          { transform: `translate(-50%, -50%) scale(${maxRadius / 50})` },
         ],
         {
-          duration: 700,
+          duration: 600,
           easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
           fill: 'forwards',
         }
