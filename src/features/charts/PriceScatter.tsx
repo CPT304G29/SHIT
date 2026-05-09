@@ -1,4 +1,13 @@
-import { ScatterChart, Scatter, XAxis, YAxis, Tooltip, ResponsiveContainer, ZAxis } from 'recharts';
+import {
+  ScatterChart,
+  Scatter,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  ZAxis,
+  CartesianGrid,
+} from 'recharts';
 import type { ScatterDatum } from './chart.utils';
 
 interface PriceScatterProps {
@@ -39,9 +48,11 @@ function CustomTooltip({
 
 export function PriceScatter({ data, isDark }: PriceScatterProps) {
   const tickColor = isDark ? '#888888' : '#888888';
+  const gridColor = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)';
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <ScatterChart margin={{ top: 8, right: 8, left: -12, bottom: 8 }}>
+      <ScatterChart margin={{ top: 8, right: 8, left: 8, bottom: 8 }}>
+        <CartesianGrid stroke={gridColor} strokeDasharray="3 3" />
         <XAxis
           type="number"
           dataKey="x"

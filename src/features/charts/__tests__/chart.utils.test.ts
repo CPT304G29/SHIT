@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { groupByCategory, valueByCategory, topItemsByQuantity, scatterData } from '../chart.utils';
+import {
+  groupByCategory,
+  valueByCategory,
+  topItemsByQuantity,
+  topItemsByValue,
+  avgPriceByCategory,
+  scatterData,
+} from '../chart.utils';
 import type { InventoryItem } from '@/features/inventory/inventory.types';
 
 const items: InventoryItem[] = [
@@ -66,6 +73,34 @@ describe('topItemsByQuantity', () => {
 
   it('respects limit', () => {
     expect(topItemsByQuantity(items, 1)).toHaveLength(1);
+  });
+});
+
+describe('topItemsByValue', () => {
+  it('returns items sorted by total value desc', () => {
+    const result = topItemsByValue(items, 2);
+    expect(result).toHaveLength(2);
+    expect(result[0].name).toBe('item.b');
+    expect(result[0].value).toBe(20 * 200);
+    expect(result[1].name).toBe('item.a');
+    expect(result[1].value).toBe(10 * 100);
+  });
+
+  it('respects limit', () => {
+    expect(topItemsByValue(items, 1)).toHaveLength(1);
+  });
+});
+
+describe('avgPriceByCategory', () => {
+  it('returns average unit price per category', () => {
+    const result = avgPriceByCategory(items);
+    expect(result).toHaveLength(2);
+    expect(result.find((d) => d.name === 'category.x')?.value).toBe(150);
+    expect(result.find((d) => d.name === 'category.y')?.value).toBe(50);
+  });
+
+  it('returns empty array for empty input', () => {
+    expect(avgPriceByCategory([])).toEqual([]);
   });
 });
 

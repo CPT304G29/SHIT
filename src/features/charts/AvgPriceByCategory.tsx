@@ -5,14 +5,14 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-  Cell,
   CartesianGrid,
+  Cell,
 } from 'recharts';
 import type { CategoryDatum } from './chart.utils';
 
 const COLORS = ['#E50012', '#FF6B7A', '#FF9AA3', '#FFB8BE', '#FFD1D5', '#FFE8EA'];
 
-interface ValueBarChartProps {
+interface AvgPriceByCategoryProps {
   data: CategoryDatum[];
   formatValue: (value: number) => string;
   isDark?: boolean;
@@ -49,7 +49,7 @@ function CustomTooltip({
   return null;
 }
 
-export function ValueBarChart({ data, formatValue, isDark }: ValueBarChartProps) {
+export function AvgPriceByCategory({ data, formatValue, isDark }: AvgPriceByCategoryProps) {
   const tickColor = isDark ? '#888888' : '#888888';
   const gridColor = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)';
   return (
@@ -57,7 +57,7 @@ export function ValueBarChart({ data, formatValue, isDark }: ValueBarChartProps)
       <BarChart data={data} margin={{ top: 8, right: 8, left: 8, bottom: 0 }}>
         <defs>
           {data.map((_, i) => (
-            <linearGradient key={`grad-${i}`} id={`grad-${i}`} x1="0" y1="0" x2="0" y2="1">
+            <linearGradient key={`avgGrad-${i}`} id={`avgGrad-${i}`} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor={COLORS[i % COLORS.length]} stopOpacity={0.9} />
               <stop offset="100%" stopColor={COLORS[i % COLORS.length]} stopOpacity={0.3} />
             </linearGradient>
@@ -84,7 +84,7 @@ export function ValueBarChart({ data, formatValue, isDark }: ValueBarChartProps)
         />
         <Bar dataKey="value" radius={[6, 6, 0, 0]}>
           {data.map((_, index) => (
-            <Cell key={`cell-${index}`} fill={`url(#grad-${index})`} />
+            <Cell key={`cell-${index}`} fill={`url(#avgGrad-${index})`} />
           ))}
         </Bar>
       </BarChart>

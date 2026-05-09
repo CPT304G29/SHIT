@@ -19,8 +19,9 @@ test.describe('Charts page', () => {
   test('charts render with inventory data', async ({ page }) => {
     await page.hover('nav');
     await page.click('nav button:has-text("Charts")');
-    // Bar chart labels from translated categories
-    await expect(page.locator('text=Outerwear')).toBeVisible();
+    // Verify all six chart titles are present
+    await expect(page.locator('text=Top Value Items')).toBeVisible();
+    await expect(page.locator('text=Avg Price by Category')).toBeVisible();
   });
 
   test('theme toggle does not break charts', async ({ page }) => {

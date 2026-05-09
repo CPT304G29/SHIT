@@ -48,6 +48,31 @@ export function topItemsByQuantity(items: InventoryItem[], limit = 10): ItemDatu
     .slice(0, limit);
 }
 
+export function topItemsByValue(items: InventoryItem[], limit = 8): ItemDatum[] {
+  return items
+    .map((item) => ({
+      name: item.nameKey,
+      quantity: item.quantity,
+      value: item.quantity * item.unitPrice,
+      unitPrice: item.unitPrice,
+    }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, limit);
+}
+
+export function avgPriceByCategory(items: InventoryItem[]): CategoryDatum[] {
+  const sums = new Map<string, number>();
+  const counts = new Map<string, number>();
+  for (const item of items) {
+    sums.set(item.categoryKey, (sums.get(item.categoryKey) ?? 0) + item.unitPrice);
+    counts.set(item.categoryKey, (counts.get(item.categoryKey) ?? 0) + 1);
+  }
+  return Array.from(sums.entries()).map(([name, total]) => ({
+    name,
+    value: Math.round(total / (counts.get(name) ?? 1)),
+  }));
+}
+
 export function scatterData(items: InventoryItem[]): ScatterDatum[] {
   return items.map((item) => ({
     x: item.unitPrice / 100,

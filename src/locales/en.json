@@ -57,7 +57,9 @@
     "categoryQty": "Quantity by Category",
     "categoryValue": "Value by Category",
     "stockLevels": "Stock Levels",
-    "priceScatter": "Price vs Quantity"
+    "priceScatter": "Price vs Quantity",
+    "topValue": "Top Value Items",
+    "avgPrice": "Avg Price by Category"
   },
   "comingSoon": "Coming Soon",
   "item": {

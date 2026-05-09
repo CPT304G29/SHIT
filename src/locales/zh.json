@@ -57,7 +57,9 @@
     "categoryQty": "分类数量",
     "categoryValue": "分类价值",
     "stockLevels": "库存水平",
-    "priceScatter": "价格与数量"
+    "priceScatter": "价格与数量",
+    "topValue": "最高价值商品",
+    "avgPrice": "分类平均单价"
   },
   "comingSoon": "即将推出",
   "item": {
