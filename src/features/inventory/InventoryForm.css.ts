@@ -1,12 +1,22 @@
-import { style } from '@vanilla-extract/css';
+import { style, keyframes } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
+
+const fadeIn = keyframes({
+  from: { opacity: 0 },
+  to: { opacity: 1 },
+});
+
+const scaleIn = keyframes({
+  from: { opacity: 0, transform: 'translate(-50%, -50%) scale(0.96)' },
+  to: { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' },
+});
 
 export const overlay = style({
   position: 'fixed',
   inset: 0,
   backgroundColor: 'rgba(0, 0, 0, 0.4)',
   zIndex: 200,
-  animation: 'fadeIn 0.2s ease',
+  animation: `${fadeIn} 0.2s ease`,
 });
 
 export const content = style({
@@ -22,7 +32,7 @@ export const content = style({
   boxShadow: vars.shadow.lg,
   zIndex: 201,
   padding: 24,
-  animation: 'scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+  animation: `${scaleIn} 0.3s cubic-bezier(0.16, 1, 0.3, 1)`,
 });
 
 export const title = style({
