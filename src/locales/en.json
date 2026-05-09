@@ -1,0 +1,49 @@
+{
+  "app": {
+    "title": "Smart Handling Inventory Tracker"
+  },
+  "nav": {
+    "inventory": "Inventory",
+    "charts": "Charts",
+    "calendar": "Calendar",
+    "messages": "Messages",
+    "files": "Files"
+  },
+  "theme": {
+    "toggle": "Toggle theme"
+  },
+  "lang": {
+    "en": "English",
+    "zh": "中文",
+    "ja": "日本語"
+  },
+  "table": {
+    "itemName": "Item Name",
+    "quantity": "Quantity",
+    "category": "Category",
+    "unitPrice": "Unit Price",
+    "totalPrice": "Total Price",
+    "actions": "Actions",
+    "searchPlaceholder": "Search inventory...",
+    "emptyState": "Your inventory is empty. Add an item to get started.",
+    "addItem": "Add New Item",
+    "editItem": "Edit Item",
+    "deleteItem": "Delete Item",
+    "save": "Save",
+    "cancel": "Cancel",
+    "deleteConfirm": "Are you sure you want to delete this item?",
+    "itemAdded": "Item added successfully",
+    "itemUpdated": "Item updated successfully",
+    "itemDeleted": "Item deleted successfully"
+  },
+  "form": {
+    "itemName": "Item Name",
+    "quantity": "Quantity",
+    "category": "Category",
+    "unitPrice": "Unit Price",
+    "totalPrice": "Total Price",
+    "placeholder": "Enter value",
+    "required": "This field is required"
+  },
+  "comingSoon": "Coming Soon"
+}

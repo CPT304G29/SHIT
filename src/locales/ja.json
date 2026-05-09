@@ -1,0 +1,49 @@
+{
+  "app": {
+    "title": "スマート在庫管理システム"
+  },
+  "nav": {
+    "inventory": "在庫",
+    "charts": "チャート",
+    "calendar": "カレンダー",
+    "messages": "メッセージ",
+    "files": "ファイル"
+  },
+  "theme": {
+    "toggle": "テーマ切り替え"
+  },
+  "lang": {
+    "en": "English",
+    "zh": "中文",
+    "ja": "日本語"
+  },
+  "table": {
+    "itemName": "商品名",
+    "quantity": "数量",
+    "category": "カテゴリ",
+    "unitPrice": "単価",
+    "totalPrice": "合計金額",
+    "actions": "操作",
+    "searchPlaceholder": "在庫を検索...",
+    "emptyState": "在庫は空です。商品を追加して始めましょう。",
+    "addItem": "商品を追加",
+    "editItem": "商品を編集",
+    "deleteItem": "商品を削除",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "deleteConfirm": "この商品を削除してもよろしいですか？",
+    "itemAdded": "商品が追加されました",
+    "itemUpdated": "商品が更新されました",
+    "itemDeleted": "商品が削除されました"
+  },
+  "form": {
+    "itemName": "商品名",
+    "quantity": "数量",
+    "category": "カテゴリ",
+    "unitPrice": "単価",
+    "totalPrice": "合計金額",
+    "placeholder": "値を入力",
+    "required": "必須項目です"
+  },
+  "comingSoon": "近日公開"
+}
