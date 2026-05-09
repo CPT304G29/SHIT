@@ -7,8 +7,20 @@
     <title>Smart Handling Inventory Tracker</title>
     <style>
       /* View Transition: circular reveal from toggle button */
+      ::view-transition-group(root) {
+        animation: none;
+      }
+
+      ::view-transition-image-pair(root) {
+        isolation: auto;
+      }
+
+      ::view-transition-old(root) {
+        display: none;
+      }
+
       ::view-transition-new(root) {
-        animation: reveal 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: reveal 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
         clip-path: circle(0% at var(--vt-x, 50%) var(--vt-y, 50%));
       }
 
@@ -16,11 +28,6 @@
         to {
           clip-path: circle(150% at var(--vt-x, 50%) var(--vt-y, 50%));
         }
-      }
-
-      ::view-transition-old(root) {
-        animation: none;
-        opacity: 0;
       }
 
       @media (prefers-reduced-motion: reduce) {
