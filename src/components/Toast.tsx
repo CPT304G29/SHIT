@@ -55,7 +55,8 @@ function Toast({ toast, onRemove }: { toast: ToastItem; onRemove: (id: string) =
         gap: 10,
         padding: '12px 16px',
         borderRadius: 12,
-        backgroundColor: toast.type === 'success' ? 'rgba(30, 142, 62, 0.92)' : 'rgba(229, 0, 18, 0.92)',
+        backgroundColor:
+          toast.type === 'success' ? 'rgba(30, 142, 62, 0.92)' : 'rgba(229, 0, 18, 0.92)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
         color: '#FFFFFF',

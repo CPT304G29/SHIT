@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { LayoutList, BarChart3, Calendar, MessageSquare, FolderOpen } from 'lucide-react';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { useTranslation } from 'react-i18next';
@@ -27,21 +26,22 @@ import {
 } from './Sidebar.css';
 
 const navItems = [
-  { id: 'inventory', icon: LayoutList, labelKey: 'nav.inventory', active: true },
-  { id: 'charts', icon: BarChart3, labelKey: 'nav.charts', active: false },
-  { id: 'calendar', icon: Calendar, labelKey: 'nav.calendar', active: false },
-  { id: 'messages', icon: MessageSquare, labelKey: 'nav.messages', active: false },
-  { id: 'files', icon: FolderOpen, labelKey: 'nav.files', active: false },
+  { id: 'inventory', icon: LayoutList, labelKey: 'nav.inventory' },
+  { id: 'charts', icon: BarChart3, labelKey: 'nav.charts' },
+  { id: 'calendar', icon: Calendar, labelKey: 'nav.calendar' },
+  { id: 'messages', icon: MessageSquare, labelKey: 'nav.messages' },
+  { id: 'files', icon: FolderOpen, labelKey: 'nav.files' },
 ];
 
 interface SidebarProps {
   expanded: boolean;
   onExpand: (expanded: boolean) => void;
+  activePage: string;
+  onNavigate: (page: string) => void;
 }
 
-export function Sidebar({ expanded, onExpand }: SidebarProps) {
+export function Sidebar({ expanded, onExpand, activePage, onNavigate }: SidebarProps) {
   const { t } = useTranslation();
-  const [activeId, setActiveId] = useState('inventory');
 
   return (
     <Tooltip.Provider delayDuration={200}>
@@ -54,21 +54,17 @@ export function Sidebar({ expanded, onExpand }: SidebarProps) {
         {/* Brand */}
         <div className={brand}>
           <div className={brandMark}>U</div>
-          <span className={`${brandText} ${expanded ? brandTextVisible : ''}`}>
-            UNIQLO
-          </span>
+          <span className={`${brandText} ${expanded ? brandTextVisible : ''}`}>UNIQLO</span>
         </div>
 
         {/* Section Label */}
-        <div className={`${sectionLabel} ${expanded ? sectionLabelVisible : ''}`}>
-          Main Menu
-        </div>
+        <div className={`${sectionLabel} ${expanded ? sectionLabelVisible : ''}`}>Main Menu</div>
 
         {/* Navigation */}
         <div className={navList}>
-          {navItems.map(({ id, icon: Icon, labelKey, active }) => {
-            const isActive = activeId === id;
-            const isDisabled = !active;
+          {navItems.map(({ id, icon: Icon, labelKey }) => {
+            const isActive = activePage === id;
+            const isDisabled = id !== 'inventory' && id !== 'charts';
 
             const button = (
               <button
@@ -78,7 +74,7 @@ export function Sidebar({ expanded, onExpand }: SidebarProps) {
                 disabled={isDisabled}
                 onClick={() => {
                   if (isDisabled) return;
-                  setActiveId(id);
+                  onNavigate(id);
                 }}
                 className={`${navItem} ${navItemHover} ${isActive ? navItemActive : ''} ${expanded ? navItemExpanded : ''}`}
                 style={{
@@ -131,9 +127,7 @@ export function Sidebar({ expanded, onExpand }: SidebarProps) {
         {/* Bottom */}
         <div className={`${divider} ${expanded ? dividerVisible : ''}`} />
         <div className={bottomArea}>
-          <span className={`${versionText} ${expanded ? versionTextVisible : ''}`}>
-            SHIT v1.0
-          </span>
+          <span className={`${versionText} ${expanded ? versionTextVisible : ''}`}>SHIT v1.0</span>
         </div>
       </nav>
     </Tooltip.Provider>

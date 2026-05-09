@@ -53,6 +53,14 @@
     "totalValue": "総額",
     "categories": "カテゴリ数"
   },
+  "chart": {
+    "categoryQty": "カテゴリ別数量",
+    "categoryValue": "カテゴリ別金額",
+    "stockLevels": "在庫レベル",
+    "priceScatter": "価格と数量",
+    "topValue": "高額商品",
+    "avgPrice": "カテゴリ別平均単価"
+  },
   "comingSoon": "近日公開",
   "item": {
     "blazerFemale": "ブレザー（女性用）",

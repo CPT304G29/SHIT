@@ -13,7 +13,8 @@ export const header = style({
   backgroundColor: vars.color.bg,
   borderBottom: `1px solid ${vars.color.border}`,
   zIndex: 99,
-  transition: 'left 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, border-color 0.3s ease',
+  transition:
+    'left 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, border-color 0.3s ease',
   backdropFilter: 'blur(12px)',
   WebkitBackdropFilter: 'blur(12px)',
 });

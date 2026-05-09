@@ -10,8 +10,7 @@ export const sidebar = style({
   flexDirection: 'column',
   alignItems: 'center',
   padding: '24px 0',
-  background:
-    'linear-gradient(180deg, #E50012 0%, #D40010 50%, #C40010 100%)',
+  background: 'linear-gradient(180deg, #E50012 0%, #D40010 50%, #C40010 100%)',
   zIndex: 100,
   boxShadow: '4px 0 24px rgba(0, 0, 0, 0.12)',
   borderTopRightRadius: 20,
@@ -59,8 +58,7 @@ export const brandText = style({
   overflow: 'hidden',
   maxWidth: 0,
   opacity: 0,
-  transition:
-    'max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease',
+  transition: 'max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease',
 });
 
 export const brandTextVisible = style({
@@ -81,8 +79,7 @@ export const sectionLabel = style({
   overflow: 'hidden',
   maxWidth: 0,
   opacity: 0,
-  transition:
-    'max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease',
+  transition: 'max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease',
 });
 
 export const sectionLabelVisible = style({
@@ -157,8 +154,7 @@ export const navLabel = style({
   overflow: 'hidden',
   maxWidth: 0,
   opacity: 0,
-  transition:
-    'max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease',
+  transition: 'max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease',
 });
 
 export const navLabelVisible = style({
@@ -196,8 +192,7 @@ export const versionText = style({
   overflow: 'hidden',
   maxWidth: 0,
   opacity: 0,
-  transition:
-    'max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease',
+  transition: 'max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease',
 });
 
 export const versionTextVisible = style({
