@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { lightTheme, darkTheme } from '@/styles/theme.css';
 import { Shell } from '@/components/layout/Shell';
@@ -6,12 +6,13 @@ import { useThemeTransition } from '@/hooks/useThemeTransition';
 import { InventoryTable } from '@/features/inventory/InventoryTable';
 import { InventoryForm } from '@/features/inventory/InventoryForm';
 import { DeleteConfirmation } from '@/features/inventory/DeleteConfirmation';
+import { ToastContainer, type ToastItem } from '@/components/Toast';
 import { useInventoryStore } from '@/features/inventory/inventory.store';
 import type { InventoryItem, InventoryFormData } from '@/features/inventory/inventory.types';
 
 function App() {
   const { theme, isTransitioning, toggleTheme } = useThemeTransition();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const addItem = useInventoryStore((s) => s.addItem);
   const updateItem = useInventoryStore((s) => s.updateItem);
   const deleteItem = useInventoryStore((s) => s.deleteItem);
@@ -20,6 +21,16 @@ function App() {
   const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deletingItem, setDeletingItem] = useState<InventoryItem | null>(null);
+  const [toasts, setToasts] = useState<ToastItem[]>([]);
+
+  const addToast = useCallback((message: string, type: ToastItem['type'] = 'success') => {
+    const id = `${Date.now()}-${Math.random()}`;
+    setToasts((prev) => [...prev, { id, message, type }]);
+  }, []);
+
+  const removeToast = useCallback((id: string) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -47,14 +58,17 @@ function App() {
   const handleFormSubmit = (data: InventoryFormData) => {
     if (editingItem) {
       updateItem(editingItem.id, data);
+      addToast(t('table.itemUpdated'));
     } else {
       addItem(data);
+      addToast(t('table.itemAdded'));
     }
   };
 
   const handleConfirmDelete = () => {
     if (deletingItem) {
       deleteItem(deletingItem.id);
+      addToast(t('table.itemDeleted'));
     }
   };
 
@@ -77,6 +91,8 @@ function App() {
         onClose={() => setDeleteOpen(false)}
         onConfirm={handleConfirmDelete}
       />
+
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
     </div>
   );
 }
