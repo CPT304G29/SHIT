@@ -1,9 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { LanguageSwitch } from '@/components/LanguageSwitch';
-import { UniqloLogo } from '@/components/UniqloLogo';
 import type { Theme } from '@/hooks/useThemeTransition';
-import { header, headerTitle, headerActions } from './Header.css';
+import { header, headerTitle, headerActions, logo } from './Header.css';
 
 interface HeaderProps {
   theme: Theme;
@@ -20,7 +19,7 @@ export function Header({ theme, isTransitioning, onToggleTheme }: HeaderProps) {
       <div className={headerActions}>
         <ThemeToggle theme={theme} isTransitioning={isTransitioning} onToggle={onToggleTheme} />
         <LanguageSwitch />
-        <UniqloLogo />
+        <img src="/uniqlo_logo.svg" alt="UNIQLO" className={logo} />
       </div>
     </header>
   );
