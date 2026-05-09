@@ -33,7 +33,6 @@ function renderActiveShape(props: ActiveShapeProps) {
     fill,
     payload,
     percent,
-    value,
     textColor = '#1A1A1A',
     mutedColor = '#666666',
   } = props;
@@ -85,28 +84,6 @@ function renderActiveShape(props: ActiveShapeProps) {
         fontSize={11}
       >
         {`${(percent * 100).toFixed(1)}%`}
-      </text>
-      <text
-        x={cx}
-        y={cy - 6}
-        dy={0}
-        textAnchor="middle"
-        fill={mutedColor}
-        fontSize={12}
-        fontWeight={500}
-      >
-        Total
-      </text>
-      <text
-        x={cx}
-        y={cy + 14}
-        dy={0}
-        textAnchor="middle"
-        fill={textColor}
-        fontSize={20}
-        fontWeight={600}
-      >
-        {value}
       </text>
     </g>
   );

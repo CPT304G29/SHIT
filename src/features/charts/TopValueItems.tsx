@@ -1,8 +1,9 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import type { ItemDatum } from './chart.utils';
 
-interface StockBarChartProps {
+interface TopValueItemsProps {
   data: ItemDatum[];
+  formatValue: (value: number) => string;
   isDark?: boolean;
 }
 
@@ -29,23 +30,23 @@ function CustomTooltip({
         }}
       >
         <div style={{ marginBottom: 4, color: '#888', fontSize: 11 }}>{item.name}</div>
-        <div>Qty: {item.quantity}</div>
+        <div>{item.value}</div>
       </div>
     );
   }
   return null;
 }
 
-export function StockBarChart({ data, isDark }: StockBarChartProps) {
+export function TopValueItems({ data, formatValue, isDark }: TopValueItemsProps) {
   const tickColor = isDark ? '#888888' : '#666666';
   const gridColor = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)';
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <BarChart data={data} layout="vertical" margin={{ top: 4, right: 16, left: 4, bottom: 4 }}>
+      <BarChart data={data} layout="vertical" margin={{ top: 4, right: 24, left: 4, bottom: 4 }}>
         <defs>
-          <linearGradient id="stockGrad" x1="0" y1="0" x2="1" y2="0">
+          <linearGradient id="topValueGrad" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%" stopColor="#E50012" stopOpacity={0.9} />
-            <stop offset="100%" stopColor="#FF6B7A" stopOpacity={0.6} />
+            <stop offset="100%" stopColor="#FF6B7A" stopOpacity={0.5} />
           </linearGradient>
         </defs>
         <CartesianGrid horizontal stroke={gridColor} strokeDasharray="3 3" />
@@ -54,6 +55,7 @@ export function StockBarChart({ data, isDark }: StockBarChartProps) {
           tickLine={false}
           axisLine={false}
           tick={{ fontSize: 11, fill: tickColor }}
+          tickFormatter={(v: number) => formatValue(v)}
         />
         <YAxis
           dataKey="name"
@@ -67,7 +69,7 @@ export function StockBarChart({ data, isDark }: StockBarChartProps) {
           content={<CustomTooltip />}
           cursor={{ fill: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)' }}
         />
-        <Bar dataKey="quantity" fill="url(#stockGrad)" radius={[0, 6, 6, 0]} barSize={16} />
+        <Bar dataKey="value" fill="url(#topValueGrad)" radius={[0, 6, 6, 0]} barSize={14} />
       </BarChart>
     </ResponsiveContainer>
   );

@@ -8,8 +8,17 @@ import { CategoryDonut } from './CategoryDonut';
 import { ValueBarChart } from './ValueBarChart';
 import { StockBarChart } from './StockBarChart';
 import { PriceScatter } from './PriceScatter';
-import { groupByCategory, valueByCategory, topItemsByQuantity, scatterData } from './chart.utils';
-import { page, grid } from './ChartsPage.css';
+import { TopValueItems } from './TopValueItems';
+import { AvgPriceByCategory } from './AvgPriceByCategory';
+import {
+  groupByCategory,
+  valueByCategory,
+  topItemsByQuantity,
+  topItemsByValue,
+  avgPriceByCategory,
+  scatterData,
+} from './chart.utils';
+import { page, grid, wide, narrow, medium } from './ChartsPage.css';
 
 export function ChartsPage() {
   const { t, i18n } = useTranslation();
@@ -29,8 +38,21 @@ export function ChartsPage() {
     () => topItemsByQuantity(items, 10).map((d) => ({ ...d, name: t(d.name) })),
     [items, t]
   );
+  const topValues = useMemo(
+    () => topItemsByValue(items, 8).map((d) => ({ ...d, name: t(d.name) })),
+    [items, t]
+  );
+  const avgPrices = useMemo(
+    () => avgPriceByCategory(items).map((d) => ({ ...d, name: t(d.name) })),
+    [items, t]
+  );
   const scatter = useMemo(
-    () => scatterData(items).map((d) => ({ ...d, name: t(d.name), category: t(d.category) })),
+    () =>
+      scatterData(items).map((d) => ({
+        ...d,
+        name: t(d.name),
+        category: t(d.category),
+      })),
     [items, t]
   );
 
@@ -39,7 +61,14 @@ export function ChartsPage() {
   if (items.length === 0) {
     return (
       <div className={page}>
-        <div style={{ color: '#888', fontSize: 14, padding: '80px 0', textAlign: 'center' }}>
+        <div
+          style={{
+            color: '#888',
+            fontSize: 14,
+            padding: '80px 0',
+            textAlign: 'center',
+          }}
+        >
           {t('table.emptyState')}
         </div>
       </div>
@@ -49,18 +78,36 @@ export function ChartsPage() {
   return (
     <div className={page}>
       <div className={grid}>
-        <ChartCard title={t('chart.categoryQty')}>
-          <CategoryDonut data={categoryQty} isDark={isDark} />
-        </ChartCard>
-        <ChartCard title={t('chart.categoryValue')}>
-          <ValueBarChart data={categoryValue} formatValue={formatValue} isDark={isDark} />
-        </ChartCard>
-        <ChartCard title={t('chart.stockLevels')}>
-          <StockBarChart data={topItems} isDark={isDark} />
-        </ChartCard>
-        <ChartCard title={t('chart.priceScatter')}>
-          <PriceScatter data={scatter} isDark={isDark} />
-        </ChartCard>
+        <div className={narrow}>
+          <ChartCard title={t('chart.categoryQty')}>
+            <CategoryDonut data={categoryQty} isDark={isDark} />
+          </ChartCard>
+        </div>
+        <div className={wide}>
+          <ChartCard title={t('chart.categoryValue')}>
+            <ValueBarChart data={categoryValue} formatValue={formatValue} isDark={isDark} />
+          </ChartCard>
+        </div>
+        <div className={medium}>
+          <ChartCard title={t('chart.stockLevels')}>
+            <StockBarChart data={topItems} isDark={isDark} />
+          </ChartCard>
+        </div>
+        <div className={medium}>
+          <ChartCard title={t('chart.priceScatter')}>
+            <PriceScatter data={scatter} isDark={isDark} />
+          </ChartCard>
+        </div>
+        <div className={narrow}>
+          <ChartCard title={t('chart.topValue')}>
+            <TopValueItems data={topValues} formatValue={formatValue} isDark={isDark} />
+          </ChartCard>
+        </div>
+        <div className={wide}>
+          <ChartCard title={t('chart.avgPrice')}>
+            <AvgPriceByCategory data={avgPrices} formatValue={formatValue} isDark={isDark} />
+          </ChartCard>
+        </div>
       </div>
     </div>
   );
