@@ -45,5 +45,27 @@
     "placeholder": "Enter value",
     "required": "This field is required"
   },
-  "comingSoon": "Coming Soon"
+  "comingSoon": "Coming Soon",
+  "item": {
+    "blazerFemale": "Blazer (Female)",
+    "bomberJacket": "Bomber Jacket",
+    "briefsMale": "Briefs (Male)",
+    "checkeredFlannel": "Checkered Flannel",
+    "denimJeans": "Denim Jeans",
+    "hoodie": "Hoodie",
+    "jujutsuKaisenTee": "Jujutsu Kaisen Tee Shirt",
+    "longSleeveShirt": "Long Sleeve Shirt",
+    "nikeAirForce": "Nike Air Force One",
+    "poloShirt": "Polo Shirt",
+    "slacks": "Slacks",
+    "winniePoohSocks": "Winnie the Pooh Socks"
+  },
+  "category": {
+    "outerwear": "Outerwear",
+    "underwear": "Underwear",
+    "pants": "Pants",
+    "shirt": "Shirt",
+    "shoes": "Shoes",
+    "socks": "Socks"
+  }
 }

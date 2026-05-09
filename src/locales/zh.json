@@ -45,5 +45,27 @@
     "placeholder": "请输入",
     "required": "此字段为必填项"
   },
-  "comingSoon": "即将推出"
+  "comingSoon": "即将推出",
+  "item": {
+    "blazerFemale": "女式西装外套",
+    "bomberJacket": "飞行员夹克",
+    "briefsMale": "男士内裤",
+    "checkeredFlannel": "格纹法兰绒衬衫",
+    "denimJeans": "牛仔牛仔裤",
+    "hoodie": "连帽衫",
+    "jujutsuKaisenTee": "咒术回战T恤",
+    "longSleeveShirt": "长袖衬衫",
+    "nikeAirForce": "耐克空军一号",
+    "poloShirt": "Polo衫",
+    "slacks": "休闲裤",
+    "winniePoohSocks": "维尼熊袜子"
+  },
+  "category": {
+    "outerwear": "外套",
+    "underwear": "内衣",
+    "pants": "裤子",
+    "shirt": "衬衫",
+    "shoes": "鞋子",
+    "socks": "袜子"
+  }
 }
