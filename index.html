@@ -6,6 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Smart Handling Inventory Tracker</title>
     <style>
+      /* View Transition: circular reveal from toggle button */
+      ::view-transition-new(root) {
+        animation: reveal 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        clip-path: circle(0% at var(--vt-x, 50%) var(--vt-y, 50%));
+      }
+
+      @keyframes reveal {
+        to {
+          clip-path: circle(150% at var(--vt-x, 50%) var(--vt-y, 50%));
+        }
+      }
+
+      ::view-transition-old(root) {
+        animation: none;
+        opacity: 0;
+      }
+
       @media (prefers-reduced-motion: reduce) {
         *,
         *::before,
@@ -13,6 +30,11 @@
           animation-duration: 0.01ms !important;
           animation-iteration-count: 1 !important;
           transition-duration: 0.01ms !important;
+        }
+
+        ::view-transition-new(root),
+        ::view-transition-old(root) {
+          animation: none !important;
         }
       }
     </style>
