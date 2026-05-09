@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
+import { themeBg } from '@/styles/theme.css';
 
 export type Theme = 'light' | 'dark';
 
@@ -43,9 +44,11 @@ export function useThemeTransition(): UseThemeTransitionReturn {
       );
 
       const nextTheme: Theme = theme === 'light' ? 'dark' : 'light';
-      const circleColor = nextTheme === 'dark' ? '#0A0A0A' : '#FFFFFF';
 
-      // Create transition circle
+      // Use the OLD theme background color so the circle masks the page
+      // while the new theme renders underneath.
+      const circleColor = themeBg[theme];
+
       const circle = document.createElement('div');
       circle.style.cssText = `
         position: fixed;
@@ -58,25 +61,15 @@ export function useThemeTransition(): UseThemeTransitionReturn {
         transform: translate(-50%, -50%) scale(0);
         z-index: 9999;
         pointer-events: none;
-        will-change: transform;
+        will-change: transform, opacity;
       `;
       document.body.appendChild(circle);
       circleRef.current = circle;
       setIsTransitioning(true);
 
-      const animation = circle.animate(
-        [
-          { transform: 'translate(-50%, -50%) scale(0)' },
-          { transform: `translate(-50%, -50%) scale(${maxRadius / 50})` },
-        ],
-        {
-          duration: 600,
-          easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
-          fill: 'forwards',
-        }
-      );
-
-      animation.onfinish = () => {
+      // Switch theme immediately on the next frame so the new theme renders
+      // underneath the expanding circle mask.
+      requestAnimationFrame(() => {
         document.documentElement.setAttribute('data-theme', nextTheme);
         setTheme(nextTheme);
         try {
@@ -84,6 +77,29 @@ export function useThemeTransition(): UseThemeTransitionReturn {
         } catch {
           // ignore
         }
+      });
+
+      const animation = circle.animate(
+        [
+          { transform: 'translate(-50%, -50%) scale(0)', opacity: 1 },
+          {
+            transform: `translate(-50%, -50%) scale(${maxRadius / 50})`,
+            opacity: 1,
+            offset: 0.85,
+          },
+          {
+            transform: `translate(-50%, -50%) scale(${maxRadius / 50})`,
+            opacity: 0,
+          },
+        ],
+        {
+          duration: 700,
+          easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+          fill: 'forwards',
+        }
+      );
+
+      animation.onfinish = () => {
         circle.remove();
         circleRef.current = null;
         setIsTransitioning(false);

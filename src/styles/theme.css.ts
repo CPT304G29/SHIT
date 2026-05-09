@@ -37,6 +37,11 @@ export const [lightTheme, vars] = createTheme({
   },
 });
 
+export const themeBg: Record<'light' | 'dark', string> = {
+  light: '#FFFFFF',
+  dark: '#0A0A0A',
+};
+
 export const darkTheme = createTheme(vars, {
   color: {
     brand: '#FF3344',

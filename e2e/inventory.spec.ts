@@ -18,12 +18,16 @@ test.describe('Inventory System', () => {
   });
 
   test('language switch changes text', async ({ page }) => {
-    const zhButton = page.getByRole('button', { name: /中文/i });
-    await zhButton.click();
+    const langTrigger = page.getByRole('button', { name: /select language/i });
+    await langTrigger.click();
+
+    const zhOption = page.getByRole('menuitem', { name: /中文/i });
+    await zhOption.click();
     await expect(page.locator('text=库存')).toBeVisible();
 
-    const jaButton = page.getByRole('button', { name: /日本語/i });
-    await jaButton.click();
+    await langTrigger.click();
+    const jaOption = page.getByRole('menuitem', { name: /日本語/i });
+    await jaOption.click();
     await expect(page.locator('text=在庫')).toBeVisible();
   });
 
