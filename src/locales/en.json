@@ -47,6 +47,7 @@
     "required": "This field is required"
   },
   "stats": {
+    "overview": "Overview",
     "totalSku": "Total SKUs",
     "totalQty": "Total Quantity",
     "totalValue": "Total Value",

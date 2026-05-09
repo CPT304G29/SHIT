@@ -47,6 +47,7 @@
     "required": "必須項目です"
   },
   "stats": {
+    "overview": "概要",
     "totalSku": "SKU総数",
     "totalQty": "総数量",
     "totalValue": "総額",
