@@ -53,6 +53,12 @@
     "totalValue": "Total Value",
     "categories": "Categories"
   },
+  "chart": {
+    "categoryQty": "Quantity by Category",
+    "categoryValue": "Value by Category",
+    "stockLevels": "Stock Levels",
+    "priceScatter": "Price vs Quantity"
+  },
   "comingSoon": "Coming Soon",
   "item": {
     "blazerFemale": "Blazer (Female)",
