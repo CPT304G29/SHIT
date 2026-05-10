@@ -62,6 +62,38 @@
     "avgPrice": "分类平均单价"
   },
   "comingSoon": "即将推出",
+  "messages": {
+    "title": "消息",
+    "subtitle": "根据库存自动生成的智能提醒",
+    "empty": "暂无消息，库存状态良好。",
+    "filter": {
+      "all": "全部",
+      "unread": "未读",
+      "critical": "严重"
+    },
+    "actions": {
+      "markRead": "标为已读",
+      "markUnread": "标为未读",
+      "dismiss": "忽略",
+      "markAllRead": "全部标为已读"
+    },
+    "type": {
+      "outOfStock": "缺货",
+      "lowStock": "库存不足",
+      "highValue": "高价值提醒"
+    },
+    "severity": {
+      "critical": "严重",
+      "warning": "警告",
+      "info": "信息"
+    },
+    "body": {
+      "outOfStock": "{{name}} 已缺货，需要立即补货。",
+      "lowStock": "{{name}} 仅剩 {{quantity}} 件。",
+      "highValue": "{{name}} 在当前库存中价值占比较高。"
+    },
+    "unreadBadge": "{{count}} 条未读"
+  },
   "item": {
     "blazerFemale": "女式西装外套",
     "bomberJacket": "飞行员夹克",
