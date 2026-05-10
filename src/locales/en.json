@@ -66,6 +66,13 @@
     "title": "Messages",
     "subtitle": "Smart alerts derived from your inventory",
     "empty": "No messages. Your inventory looks healthy.",
+    "searchPlaceholder": "Search by item name…",
+    "bulk": {
+      "label_one": "{{count}} selected",
+      "label_other": "{{count}} selected",
+      "select": "Select message",
+      "clear": "Clear selection"
+    },
     "filter": {
       "all": "All",
       "unread": "Unread",

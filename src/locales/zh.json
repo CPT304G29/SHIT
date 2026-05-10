@@ -66,6 +66,12 @@
     "title": "消息",
     "subtitle": "根据库存自动生成的智能提醒",
     "empty": "暂无消息，库存状态良好。",
+    "searchPlaceholder": "按商品名称搜索…",
+    "bulk": {
+      "label": "已选 {{count}} 条",
+      "select": "选择消息",
+      "clear": "取消选择"
+    },
     "filter": {
       "all": "全部",
       "unread": "未读",

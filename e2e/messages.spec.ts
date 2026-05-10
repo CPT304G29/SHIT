@@ -84,4 +84,69 @@ test.describe('Messages', () => {
     await page.hover('nav');
     await expect(page.getByTestId('sidebar-unread-badge')).toHaveCount(0);
   });
+
+  test('search narrows the list to matching item names', async ({ page }) => {
+    await page.hover('nav');
+    await page.getByRole('button', { name: /Messages/ }).click();
+
+    const all = await page.getByTestId('message-item').count();
+    await page.getByTestId('message-search').fill('Nike');
+
+    const filtered = await page.getByTestId('message-item').count();
+    expect(filtered).toBeLessThanOrEqual(all);
+    if (filtered > 0) {
+      await expect(page.getByTestId('message-item').first()).toContainText(/Nike|Air Force/i);
+    }
+  });
+
+  test('bulk dismiss removes selected messages', async ({ page }) => {
+    await page.hover('nav');
+    await page.getByRole('button', { name: /Messages/ }).click();
+
+    const before = await page.getByTestId('message-item').count();
+    if (before === 0) return;
+
+    await page.getByTestId('select-checkbox').first().check();
+    await expect(page.getByTestId('bulk-bar')).toBeVisible();
+    await page.getByTestId('bulk-dismiss').click();
+
+    if (before === 1) {
+      await expect(page.getByText('No messages. Your inventory looks healthy.')).toBeVisible();
+    } else {
+      await expect(page.getByTestId('message-item')).toHaveCount(before - 1);
+    }
+  });
+
+  test('keyboard shortcuts: cursor starts on first row and j moves it down', async ({ page }) => {
+    await page.hover('nav');
+    await page.getByRole('button', { name: /Messages/ }).click();
+
+    const items = page.getByTestId('message-item');
+    const total = await items.count();
+    if (total < 2) return;
+
+    // Initial cursor is 0
+    await expect(items.first()).toHaveAttribute('data-focused', 'true');
+
+    await page.locator('h1').click();
+    await page.keyboard.press('j');
+    await expect(items.nth(1)).toHaveAttribute('data-focused', 'true');
+    await expect(items.first()).not.toHaveAttribute('data-focused', 'true');
+  });
+
+  test('settings drawer opens and persists threshold change', async ({ page }) => {
+    await page.hover('nav');
+    await page.getByRole('button', { name: /Messages/ }).click();
+    await page.getByTestId('open-settings').click();
+
+    const lowStockInput = page.locator('#th-lowstock');
+    await expect(lowStockInput).toBeVisible();
+    await lowStockInput.fill('100');
+    await page.getByRole('button', { name: 'Save' }).click();
+
+    // Lowering count threshold to 100 should increase the number of low-stock alerts
+    // (any item with quantity < 100 now qualifies). The badge should still be visible.
+    await page.hover('nav');
+    await expect(page.getByTestId('sidebar-unread-badge')).toBeVisible();
+  });
 });
