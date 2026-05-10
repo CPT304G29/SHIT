@@ -75,7 +75,13 @@
       "markRead": "既読にする",
       "markUnread": "未読にする",
       "dismiss": "却下",
-      "markAllRead": "すべて既読にする"
+      "markAllRead": "すべて既読にする",
+      "snooze": "スヌーズ",
+      "snoozeFor": {
+        "1h": "1 時間スヌーズ",
+        "24h": "24 時間スヌーズ",
+        "7d": "7 日間スヌーズ"
+      }
     },
     "type": {
       "outOfStock": "在庫切れ",

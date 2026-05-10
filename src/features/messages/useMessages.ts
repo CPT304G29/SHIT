@@ -3,9 +3,11 @@ import { useInventoryStore } from '@/features/inventory/inventory.store';
 import { deriveMessages } from './messages.derive';
 import { useMessagesStore } from './messages.store';
 import { useMessagesSettingsStore } from './messages.settings.store';
+import { useNow } from './useNow';
 import type { Message } from './messages.types';
 
-export function useMessages(now: number = Date.now()): Message[] {
+export function useMessages(): Message[] {
+  const now = useNow();
   const items = useInventoryStore((s) => s.items);
   const read = useMessagesStore((s) => s.read);
   const dismissed = useMessagesStore((s) => s.dismissed);

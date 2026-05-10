@@ -75,7 +75,13 @@
       "markRead": "Mark as read",
       "markUnread": "Mark as unread",
       "dismiss": "Dismiss",
-      "markAllRead": "Mark all as read"
+      "markAllRead": "Mark all as read",
+      "snooze": "Snooze",
+      "snoozeFor": {
+        "1h": "Snooze for 1 hour",
+        "24h": "Snooze for 24 hours",
+        "7d": "Snooze for 7 days"
+      }
     },
     "type": {
       "outOfStock": "Out of stock",
