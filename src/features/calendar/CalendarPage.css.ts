@@ -259,6 +259,19 @@ export const dayButtonMuted = style({
   opacity: 0.72,
 });
 
+export const dayButtonDisabled = style({
+  opacity: 0.42,
+  cursor: 'not-allowed',
+  backgroundColor: vars.color.surface,
+  selectors: {
+    '&:hover': {
+      transform: 'none',
+      boxShadow: 'none',
+      borderColor: vars.color.border,
+    },
+  },
+});
+
 export const dayButtonSelected = style({
   borderColor: vars.color.brand,
   boxShadow: `0 0 0 1px ${vars.color.brand}`,
