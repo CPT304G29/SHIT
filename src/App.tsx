@@ -11,6 +11,7 @@ import { DeleteConfirmation } from '@/features/inventory/DeleteConfirmation';
 import { ToastContainer, type ToastItem } from '@/components/Toast';
 import { useInventoryStore } from '@/features/inventory/inventory.store';
 import { useMessages } from '@/features/messages/useMessages';
+import { useTrackInventoryHistory } from '@/features/messages/useTrackInventoryHistory';
 import type { InventoryItem, InventoryFormData } from '@/features/inventory/inventory.types';
 
 type Page = 'inventory' | 'charts' | 'messages';
@@ -56,6 +57,7 @@ function App() {
     document.documentElement.lang = i18n.language;
   }, [i18n.language]);
 
+  useTrackInventoryHistory();
   const messages = useMessages();
   const seenCriticalIdsRef = useRef<Set<string>>(new Set());
   const initializedRef = useRef(false);

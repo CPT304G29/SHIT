@@ -5,6 +5,7 @@ import { useInventoryStore } from '@/features/inventory/inventory.store';
 import { formatCurrency } from '@/features/inventory/inventory.utils';
 import type { Message } from './messages.types';
 import { useMessagesStore } from './messages.store';
+import { useRapidDropPercent } from './useMessages';
 import { overlay } from '@/features/inventory/InventoryForm.css';
 import {
   drawer,
@@ -40,6 +41,7 @@ export function MessageDetailDrawer({
   );
   const updateItem = useInventoryStore((s) => s.updateItem);
   const markRead = useMessagesStore((s) => s.markRead);
+  const dropPercent = useRapidDropPercent(message?.itemId ?? '');
 
   const open = !!message;
 
@@ -74,7 +76,7 @@ export function MessageDetailDrawer({
   const body = t(`messages.body.${message.type}`, {
     name: itemName,
     quantity: message.quantity,
-    percent: '0',
+    percent: dropPercent,
   });
 
   return (
