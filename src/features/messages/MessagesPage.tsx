@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, X, RotateCcw } from 'lucide-react';
+import { Check, X, RotateCcw, Settings } from 'lucide-react';
 import { useMessages } from './useMessages';
 import { useMessagesStore } from './messages.store';
+import { MessagesSettings } from './MessagesSettings';
 import type { Message, MessageFilter } from './messages.types';
 import {
   page,
@@ -27,6 +28,7 @@ import {
   itemActions,
   iconButton,
   empty,
+  settingsButton,
 } from './MessagesPage.css';
 
 const FILTERS: MessageFilter[] = ['all', 'unread', 'critical'];
@@ -40,6 +42,7 @@ export function MessagesPage() {
   const dismiss = useMessagesStore((s) => s.dismiss);
 
   const [filter, setFilter] = useState<MessageFilter>('all');
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const visible = useMemo(() => {
     if (filter === 'unread') return messages.filter((m) => !m.read);
@@ -79,6 +82,16 @@ export function MessagesPage() {
         >
           {t('messages.actions.markAllRead')}
         </button>
+        <button
+          type="button"
+          className={settingsButton}
+          onClick={() => setSettingsOpen(true)}
+          aria-label={t('messages.settings.title')}
+          data-testid="open-settings"
+        >
+          <Settings size={14} aria-hidden="true" />
+          {t('messages.settings.button')}
+        </button>
       </div>
 
       {visible.length === 0 ? (
@@ -95,6 +108,8 @@ export function MessagesPage() {
           ))}
         </ul>
       )}
+
+      <MessagesSettings open={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </div>
   );
 }

@@ -221,3 +221,59 @@ export const empty = style({
   fontSize: 14,
   padding: '80px 0',
 });
+
+export const settingsRow = style({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: vars.space.sm,
+  marginBottom: vars.space.md,
+});
+
+export const settingsHelp = style({
+  fontSize: 12,
+  color: vars.color.textMuted,
+  lineHeight: 1.5,
+});
+
+export const toggleRow = style({
+  display: 'flex',
+  alignItems: 'center',
+  gap: vars.space.sm,
+  fontSize: 14,
+  color: vars.color.text,
+  cursor: 'pointer',
+  userSelect: 'none',
+});
+
+export const toggle = style({
+  width: 16,
+  height: 16,
+  cursor: 'pointer',
+  accentColor: vars.color.brand,
+});
+
+export const settingsButton = style({
+  appearance: 'none',
+  border: `1px solid ${vars.color.border}`,
+  background: vars.color.bg,
+  padding: '6px 12px',
+  fontSize: 13,
+  fontWeight: 500,
+  color: vars.color.text,
+  borderRadius: vars.radius.md,
+  cursor: 'pointer',
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 6,
+  transition: 'background-color 120ms, border-color 120ms',
+  ':hover': {
+    backgroundColor: vars.color.surfaceHover,
+    borderColor: vars.color.borderHover,
+  },
+  selectors: {
+    '&:focus-visible': {
+      outline: `2px solid ${vars.color.ring}`,
+      outlineOffset: 2,
+    },
+  },
+});

@@ -80,7 +80,21 @@
     "type": {
       "outOfStock": "在庫切れ",
       "lowStock": "在庫不足",
-      "highValue": "高額アラート"
+      "highValue": "高額アラート",
+      "rapidDecrease": "急激な在庫減少"
+    },
+    "settings": {
+      "button": "設定",
+      "title": "通知設定",
+      "lowStock": "在庫不足の閾値（点）",
+      "lowStockHelp": "数量がこの値を下回るとアラートが発生します。",
+      "highValue": "高額の閾値（金額）",
+      "highValueHelp": "在庫総額がこの値を超えるとアラートが発生します。",
+      "rapidDecrease": "急減アラートの割合（%）",
+      "rapidDecreaseHelp": "直近のスナップショット比でこの割合以上減少した場合に通知します。",
+      "enableTypes": "有効化するアラート",
+      "save": "保存",
+      "reset": "デフォルトに戻す"
     },
     "severity": {
       "critical": "重要",
@@ -90,7 +104,8 @@
     "body": {
       "outOfStock": "{{name}} は在庫切れです。早急に補充してください。",
       "lowStock": "{{name}} の残りは {{quantity}} 点です。",
-      "highValue": "{{name}} は現在、高額な在庫項目です。"
+      "highValue": "{{name}} は現在、高額な在庫項目です。",
+      "rapidDecrease": "{{name}} は最近 {{percent}}% 減少しました。在庫を確認してください。"
     },
     "unreadBadge": "{{count}} 件未読"
   },

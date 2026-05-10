@@ -1,11 +1,30 @@
 import type { InventoryItem } from '@/features/inventory/inventory.types';
+import type { DerivedMessage } from './messages.types';
 import {
-  HIGH_VALUE_THRESHOLD,
-  LOW_STOCK_THRESHOLD,
-  type DerivedMessage,
-} from './messages.types';
+  DEFAULT_THRESHOLDS,
+  type MessageThresholds,
+} from './messages.settings.store';
 
-export function deriveMessages(items: InventoryItem[]): DerivedMessage[] {
+export interface DeriveOptions {
+  thresholds?: MessageThresholds;
+  enabledTypes?: {
+    outOfStock?: boolean;
+    lowStock?: boolean;
+    highValue?: boolean;
+  };
+}
+
+export function deriveMessages(
+  items: InventoryItem[],
+  options: DeriveOptions = {}
+): DerivedMessage[] {
+  const thresholds = options.thresholds ?? DEFAULT_THRESHOLDS;
+  const enabled = {
+    outOfStock: options.enabledTypes?.outOfStock ?? true,
+    lowStock: options.enabledTypes?.lowStock ?? true,
+    highValue: options.enabledTypes?.highValue ?? true,
+  };
+
   const out: DerivedMessage[] = [];
 
   for (const item of items) {
@@ -18,14 +37,14 @@ export function deriveMessages(items: InventoryItem[]): DerivedMessage[] {
       createdAt: item.updatedAt,
     };
 
-    if (item.quantity === 0) {
+    if (enabled.outOfStock && item.quantity === 0) {
       out.push({
         ...base,
         id: `outOfStock:${item.id}`,
         type: 'outOfStock',
         severity: 'critical',
       });
-    } else if (item.quantity < LOW_STOCK_THRESHOLD) {
+    } else if (enabled.lowStock && item.quantity > 0 && item.quantity < thresholds.lowStock) {
       out.push({
         ...base,
         id: `lowStock:${item.id}`,
@@ -34,7 +53,7 @@ export function deriveMessages(items: InventoryItem[]): DerivedMessage[] {
       });
     }
 
-    if (totalValue >= HIGH_VALUE_THRESHOLD) {
+    if (enabled.highValue && totalValue >= thresholds.highValue) {
       out.push({
         ...base,
         id: `highValue:${item.id}`,
@@ -44,7 +63,9 @@ export function deriveMessages(items: InventoryItem[]): DerivedMessage[] {
     }
   }
 
-  return out.sort((a, b) => severityRank(b.severity) - severityRank(a.severity) || b.createdAt - a.createdAt);
+  return out.sort(
+    (a, b) => severityRank(b.severity) - severityRank(a.severity) || b.createdAt - a.createdAt
+  );
 }
 
 function severityRank(s: DerivedMessage['severity']): number {
