@@ -64,7 +64,7 @@ export function Sidebar({ expanded, onExpand, activePage, onNavigate }: SidebarP
         <div className={navList}>
           {navItems.map(({ id, icon: Icon, labelKey }) => {
             const isActive = activePage === id;
-            const isDisabled = id !== 'inventory' && id !== 'charts';
+            const isDisabled = id !== 'inventory' && id !== 'charts' && id !== 'calendar';
 
             const button = (
               <button
