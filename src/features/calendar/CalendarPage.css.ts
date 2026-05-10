@@ -140,7 +140,7 @@ export const layout = style({
   display: 'grid',
   gridTemplateColumns: 'minmax(0, 1.6fr) minmax(360px, 1fr)',
   gap: 20,
-  alignItems: 'start',
+  alignItems: 'stretch',
   '@media': {
     '(max-width: 1180px)': {
       gridTemplateColumns: '1fr',
@@ -157,6 +157,7 @@ export const calendarCard = style({
   display: 'flex',
   flexDirection: 'column',
   gap: 18,
+  height: '100%',
 });
 
 export const calendarHeader = style({
@@ -319,6 +320,8 @@ export const detailsColumn = style({
   display: 'flex',
   flexDirection: 'column',
   gap: 20,
+  minHeight: 0,
+  height: '100%',
 });
 
 export const tableCard = style({
@@ -327,6 +330,10 @@ export const tableCard = style({
   border: `1px solid ${vars.color.border}`,
   boxShadow: vars.shadow.sm,
   overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100%',
+  minHeight: 0,
 });
 
 export const tableHeader = style({
@@ -350,12 +357,79 @@ export const tableSubtitle = style({
 
 export const tableWrap = style({
   overflowX: 'auto',
+  flex: 1,
+  minHeight: 0,
+});
+
+export const tableFooter = style({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: 12,
+  padding: '14px 20px 18px',
+  borderTop: `1px solid ${vars.color.border}`,
+  backgroundColor: vars.color.bg,
+  '@media': {
+    '(max-width: 720px)': {
+      flexDirection: 'column',
+      alignItems: 'stretch',
+    },
+  },
+});
+
+export const tableFooterHint = style({
+  fontSize: 12,
+  color: vars.color.textMuted,
+});
+
+export const pagination = style({
+  display: 'flex',
+  alignItems: 'center',
+  gap: 10,
+  marginLeft: 'auto',
+  '@media': {
+    '(max-width: 720px)': {
+      marginLeft: 0,
+      justifyContent: 'space-between',
+    },
+  },
+});
+
+export const pageIndicator = style({
+  fontSize: 12,
+  color: vars.color.textMuted,
+  fontVariantNumeric: 'tabular-nums',
+  minWidth: 72,
+  textAlign: 'center',
+});
+
+export const pageButton = style({
+  minWidth: 88,
+  height: 34,
+  padding: '0 14px',
+  borderRadius: 999,
+  backgroundColor: vars.color.surface,
+  color: vars.color.text,
+  fontSize: 12,
+  fontWeight: 600,
+  transition: 'all 0.2s ease',
+  selectors: {
+    '&:hover:not(:disabled)': {
+      backgroundColor: vars.color.surfaceHover,
+    },
+    '&:disabled': {
+      opacity: 0.4,
+      cursor: 'not-allowed',
+    },
+  },
 });
 
 export const detailTable = style({
   width: '100%',
   borderCollapse: 'collapse',
   minWidth: 760,
+  height: '100%',
+  tableLayout: 'fixed',
 });
 
 export const tableHeadCell = style({
@@ -377,6 +451,7 @@ export const tableCell = style({
   color: vars.color.text,
   fontVariantNumeric: 'tabular-nums',
   whiteSpace: 'nowrap',
+  verticalAlign: 'middle',
 });
 
 export const tableCellStrong = style({
@@ -385,6 +460,11 @@ export const tableCellStrong = style({
 
 export const tableCellMuted = style({
   color: vars.color.textMuted,
+});
+
+export const tableCellBlank = style({
+  color: 'transparent',
+  userSelect: 'none',
 });
 
 export const badge = style({

@@ -92,7 +92,11 @@
     "amount": "金額",
     "time": "時間",
     "noActivity": "この日付の在庫活動はありません。",
-    "syntheticHint": "現在の在庫構成から導出"
+    "syntheticHint": "現在の在庫構成から導出",
+    "previousPage": "前へ",
+    "nextPage": "次へ",
+    "pageIndicator": "{{current}} / {{total}} ページ",
+    "pageSummary": "{{total}} 件中 {{start}}-{{end}} 件を表示"
   },
   "comingSoon": "近日公開",
   "item": {
