@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import {
   useReactTable,
   getCoreRowModel,
@@ -38,13 +38,21 @@ interface InventoryTableProps {
   onEdit: (item: InventoryItem) => void;
   onDelete: (item: InventoryItem) => void;
   onAdd: () => void;
+  highlightItemId?: string | null;
 }
 
-export function InventoryTable({ onEdit, onDelete, onAdd }: InventoryTableProps) {
+export function InventoryTable({ onEdit, onDelete, onAdd, highlightItemId }: InventoryTableProps) {
   const { t, i18n } = useTranslation();
   const items = useInventoryStore((s) => s.items);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
+  const highlightRef = useRef<HTMLTableRowElement | null>(null);
+
+  useEffect(() => {
+    if (highlightItemId && highlightRef.current) {
+      highlightRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [highlightItemId]);
 
   const columns = useMemo<ColumnDef<InventoryItem>[]>(
     () => [
@@ -221,19 +229,38 @@ export function InventoryTable({ onEdit, onDelete, onAdd }: InventoryTableProps)
             ))}
           </thead>
           <tbody className={tbody}>
-            {tableInstance.getRowModel().rows.map((row) => (
-              <tr key={row.id} className={tr}>
-                {row.getVisibleCells().map((cell) => {
-                  const align = (cell.column.columnDef.meta as Record<string, unknown> | undefined)
-                    ?.align as string | undefined;
-                  return (
-                    <td key={cell.id} className={`${td} ${align === 'right' ? tdRight : ''}`}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
+            {tableInstance.getRowModel().rows.map((row) => {
+              const itemId = row.original.id;
+              const isHighlighted = highlightItemId === itemId;
+              return (
+                <tr
+                  key={row.id}
+                  ref={isHighlighted ? highlightRef : undefined}
+                  className={tr}
+                  data-highlighted={isHighlighted || undefined}
+                  style={
+                    isHighlighted
+                      ? {
+                          outline: '2px solid #E50012',
+                          outlineOffset: -2,
+                          transition: 'outline 200ms',
+                        }
+                      : undefined
+                  }
+                >
+                  {row.getVisibleCells().map((cell) => {
+                    const align = (
+                      cell.column.columnDef.meta as Record<string, unknown> | undefined
+                    )?.align as string | undefined;
+                    return (
+                      <td key={cell.id} className={`${td} ${align === 'right' ? tdRight : ''}`}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

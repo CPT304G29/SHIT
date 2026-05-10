@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { lightTheme, darkTheme } from '@/styles/theme.css';
 import { Shell } from '@/components/layout/Shell';
@@ -6,13 +6,17 @@ import { useThemeTransition } from '@/hooks/useThemeTransition';
 import { InventoryTable } from '@/features/inventory/InventoryTable';
 import { ChartsPage } from '@/features/charts/ChartsPage';
 import { CalendarPage } from '@/features/calendar/CalendarPage';
+import { MessagesPage } from '@/features/messages/MessagesPage';
 import { InventoryForm } from '@/features/inventory/InventoryForm';
 import { DeleteConfirmation } from '@/features/inventory/DeleteConfirmation';
 import { ToastContainer, type ToastItem } from '@/components/Toast';
 import { useInventoryStore } from '@/features/inventory/inventory.store';
+import { useAllDerivedMessages } from '@/features/messages/useMessages';
+import { useMessagesStore } from '@/features/messages/messages.store';
+import { useTrackInventoryHistory } from '@/features/messages/useTrackInventoryHistory';
 import type { InventoryItem, InventoryFormData } from '@/features/inventory/inventory.types';
 
-type Page = 'inventory' | 'charts' | 'calendar';
+type Page = 'inventory' | 'charts' | 'calendar' | 'messages';
 
 function App() {
   const { theme, isTransitioning, toggleTheme } = useThemeTransition();
@@ -27,11 +31,25 @@ function App() {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deletingItem, setDeletingItem] = useState<InventoryItem | null>(null);
   const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const [highlightItemId, setHighlightItemId] = useState<string | null>(null);
 
-  const addToast = useCallback((message: string, type: ToastItem['type'] = 'success') => {
-    const id = `${Date.now()}-${Math.random()}`;
-    setToasts((prev) => [...prev, { id, message, type }]);
+  const handleJumpToInventory = useCallback((itemId: string) => {
+    setHighlightItemId(itemId);
+    setPage('inventory');
+    window.setTimeout(() => setHighlightItemId(null), 2500);
   }, []);
+
+  const addToast = useCallback(
+    (
+      message: string,
+      type: ToastItem['type'] = 'success',
+      action?: ToastItem['action']
+    ) => {
+      const id = `${Date.now()}-${Math.random()}`;
+      setToasts((prev) => [...prev, { id, message, type, action }]);
+    },
+    []
+  );
 
   const removeToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -40,6 +58,39 @@ function App() {
   useEffect(() => {
     document.documentElement.lang = i18n.language;
   }, [i18n.language]);
+
+  useTrackInventoryHistory();
+  const allDerived = useAllDerivedMessages();
+  const pruneDismissed = useMessagesStore((s) => s.pruneDismissed);
+  const seenCriticalIdsRef = useRef<Set<string>>(new Set());
+  const initializedRef = useRef(false);
+
+  useEffect(() => {
+    // Auto-clear dismissed entries whose underlying condition has resolved.
+    // This way, if a SKU recovers and later goes critical again, the message
+    // (and its toast) re-fires instead of being permanently muted.
+    pruneDismissed(allDerived.map((m) => m.id));
+
+    const currentCritical = allDerived.filter((m) => m.severity === 'critical');
+    const currentIds = new Set(currentCritical.map((m) => m.id));
+
+    if (!initializedRef.current) {
+      seenCriticalIdsRef.current = currentIds;
+      initializedRef.current = true;
+      return;
+    }
+
+    const newOnes = currentCritical.filter((m) => !seenCriticalIdsRef.current.has(m.id));
+    seenCriticalIdsRef.current = currentIds;
+
+    if (newOnes.length > 0) {
+      const label = t('messages.toast.newCritical', { count: newOnes.length });
+      addToast(label, 'error', {
+        label: t('messages.toast.view'),
+        onClick: () => setPage('messages'),
+      });
+    }
+  }, [allDerived, pruneDismissed, addToast, t]);
 
   const handleAdd = () => {
     setEditingItem(null);
@@ -83,10 +134,16 @@ function App() {
         onNavigate={(p) => setPage(p as Page)}
       >
         {page === 'inventory' && (
-          <InventoryTable onEdit={handleEdit} onDelete={handleDelete} onAdd={handleAdd} />
+          <InventoryTable
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onAdd={handleAdd}
+            highlightItemId={highlightItemId}
+          />
         )}
         {page === 'charts' && <ChartsPage />}
         {page === 'calendar' && <CalendarPage />}
+        {page === 'messages' && <MessagesPage onJumpToInventory={handleJumpToInventory} />}
       </Shell>
 
       <InventoryForm

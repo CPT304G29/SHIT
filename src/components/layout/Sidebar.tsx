@@ -1,6 +1,7 @@
 import { LayoutList, BarChart3, Calendar, MessageSquare, FolderOpen } from 'lucide-react';
 import { LayoutGroup, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { useUnreadCount } from '@/features/messages/useMessages';
 import {
   sidebar,
   sidebarExpanded,
@@ -25,6 +26,8 @@ import {
   bottomArea,
   versionText,
   versionTextVisible,
+  badge,
+  badgeExpanded,
 } from './Sidebar.css';
 
 const navItems = [
@@ -35,6 +38,8 @@ const navItems = [
   { id: 'files', icon: FolderOpen, labelKey: 'nav.files' },
 ];
 
+const ENABLED_PAGES = new Set(['inventory', 'charts', 'calendar', 'messages']);
+
 interface SidebarProps {
   expanded: boolean;
   onExpand: (expanded: boolean) => void;
@@ -44,6 +49,7 @@ interface SidebarProps {
 
 export function Sidebar({ expanded, onExpand, activePage, onNavigate }: SidebarProps) {
   const { t } = useTranslation();
+  const unreadCount = useUnreadCount();
 
   return (
     <nav
@@ -63,13 +69,17 @@ export function Sidebar({ expanded, onExpand, activePage, onNavigate }: SidebarP
         <div className={navList}>
           {navItems.map(({ id, icon: Icon, labelKey }) => {
             const isActive = activePage === id;
-            const isDisabled = id !== 'inventory' && id !== 'charts' && id !== 'calendar';
+            const isDisabled = !ENABLED_PAGES.has(id);
+            const showBadge = id === 'messages' && unreadCount > 0;
+            const ariaLabel = showBadge
+              ? `${t(labelKey)}, ${t('messages.unreadBadge', { count: unreadCount })}`
+              : t(labelKey);
 
             return (
               <div key={id} className={navItemWrap}>
                 <button
                   type="button"
-                  aria-label={t(labelKey)}
+                  aria-label={ariaLabel}
                   aria-current={isActive ? 'page' : undefined}
                   disabled={isDisabled}
                   title={isDisabled ? `${t(labelKey)} - ${t('comingSoon')}` : undefined}
@@ -109,6 +119,15 @@ export function Sidebar({ expanded, onExpand, activePage, onNavigate }: SidebarP
                   >
                     {t(labelKey)}
                   </motion.span>
+                  {showBadge && (
+                    <span
+                      className={`${badge} ${expanded ? badgeExpanded : ''}`}
+                      aria-hidden="true"
+                      data-testid="sidebar-unread-badge"
+                    >
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </span>
+                  )}
                 </button>
               </div>
             );

@@ -95,6 +95,89 @@
     "syntheticHint": "現在の在庫構成から導出"
   },
   "comingSoon": "近日公開",
+  "messages": {
+    "title": "メッセージ",
+    "subtitle": "在庫から自動生成されるアラート",
+    "empty": "メッセージはありません。在庫は良好です。",
+    "searchPlaceholder": "商品名で検索…",
+    "bulk": {
+      "label": "{{count}} 件選択中",
+      "select": "メッセージを選択",
+      "clear": "選択を解除"
+    },
+    "filter": {
+      "all": "すべて",
+      "unread": "未読",
+      "critical": "重要"
+    },
+    "actions": {
+      "markRead": "既読にする",
+      "markUnread": "未読にする",
+      "dismiss": "却下",
+      "markAllRead": "すべて既読にする",
+      "snooze": "スヌーズ",
+      "snoozeFor": {
+        "1h": "1 時間スヌーズ",
+        "24h": "24 時間スヌーズ",
+        "7d": "7 日間スヌーズ"
+      }
+    },
+    "type": {
+      "outOfStock": "在庫切れ",
+      "lowStock": "在庫不足",
+      "highValue": "高額アラート",
+      "rapidDecrease": "急激な在庫減少"
+    },
+    "settings": {
+      "button": "設定",
+      "title": "通知設定",
+      "lowStock": "在庫不足の閾値（点）",
+      "lowStockHelp": "数量がこの値を下回るとアラートが発生します。",
+      "highValue": "高額の閾値（金額）",
+      "highValueHelp": "在庫総額がこの値を超えるとアラートが発生します。",
+      "rapidDecrease": "急減アラートの割合（%）",
+      "rapidDecreaseHelp": "直近のスナップショット比でこの割合以上減少した場合に通知します。",
+      "enableTypes": "有効化するアラート",
+      "save": "保存",
+      "reset": "デフォルトに戻す"
+    },
+    "severity": {
+      "critical": "重要",
+      "warning": "警告",
+      "info": "情報"
+    },
+    "body": {
+      "outOfStock": "{{name}} は在庫切れです。早急に補充してください。",
+      "lowStock": "{{name}} の残りは {{quantity}} 点です。",
+      "highValue": "{{name}} は現在、高額な在庫項目です。",
+      "rapidDecrease": "{{name}} は最近 {{percent}}% 減少しました。在庫を確認してください。"
+    },
+    "unreadBadge": "{{count}} 件未読",
+    "summary": {
+      "title": "重要度の概要",
+      "total": "アクティブ"
+    },
+    "detail": {
+      "message": "メッセージ",
+      "quickRestock": "+{{count}} 補充",
+      "viewInInventory": "在庫で表示"
+    },
+    "toast": {
+      "newCritical": "緊急アラートが {{count}} 件あります",
+      "view": "表示"
+    },
+    "help": {
+      "title": "キーボードショートカット",
+      "next": "次のメッセージ",
+      "prev": "前のメッセージ",
+      "open": "詳細を開く",
+      "toggleRead": "既読 / 未読 切替",
+      "snooze": "24 時間スヌーズ",
+      "dismiss": "却下",
+      "search": "検索にフォーカス",
+      "help": "ヘルプを表示"
+    }
+  },
   "item": {
     "blazerFemale": "ブレザー（女性用）",
     "bomberJacket": "ボンバージャケット",

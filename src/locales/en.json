@@ -95,6 +95,91 @@
     "syntheticHint": "Derived from current inventory structure"
   },
   "comingSoon": "Coming Soon",
+  "messages": {
+    "title": "Messages",
+    "subtitle": "Smart alerts derived from your inventory",
+    "empty": "No messages. Your inventory looks healthy.",
+    "searchPlaceholder": "Search by item name…",
+    "bulk": {
+      "label_one": "{{count}} selected",
+      "label_other": "{{count}} selected",
+      "select": "Select message",
+      "clear": "Clear selection"
+    },
+    "filter": {
+      "all": "All",
+      "unread": "Unread",
+      "critical": "Critical"
+    },
+    "actions": {
+      "markRead": "Mark as read",
+      "markUnread": "Mark as unread",
+      "dismiss": "Dismiss",
+      "markAllRead": "Mark all as read",
+      "snooze": "Snooze",
+      "snoozeFor": {
+        "1h": "Snooze for 1 hour",
+        "24h": "Snooze for 24 hours",
+        "7d": "Snooze for 7 days"
+      }
+    },
+    "type": {
+      "outOfStock": "Out of stock",
+      "lowStock": "Low stock",
+      "highValue": "High-value alert",
+      "rapidDecrease": "Rapid stock decrease"
+    },
+    "settings": {
+      "button": "Settings",
+      "title": "Notification settings",
+      "lowStock": "Low-stock threshold (units)",
+      "lowStockHelp": "Items with quantity below this number trigger a low-stock warning.",
+      "highValue": "High-value threshold (currency)",
+      "highValueHelp": "Items whose total inventory value crosses this number raise a high-value alert.",
+      "rapidDecrease": "Rapid decrease (% drop)",
+      "rapidDecreaseHelp": "If an item's quantity drops by at least this percent compared to a recent snapshot, raise a rapid-decrease alert.",
+      "enableTypes": "Enabled alert types",
+      "save": "Save",
+      "reset": "Reset to defaults"
+    },
+    "severity": {
+      "critical": "Critical",
+      "warning": "Warning",
+      "info": "Info"
+    },
+    "body": {
+      "outOfStock": "{{name}} is out of stock and needs immediate restocking.",
+      "lowStock": "{{name}} has only {{quantity}} units left.",
+      "highValue": "{{name}} now represents a high-value position in your inventory.",
+      "rapidDecrease": "{{name}} dropped by {{percent}}% recently — investigate before it runs out."
+    },
+    "unreadBadge": "{{count}} unread",
+    "summary": {
+      "title": "Severity overview",
+      "total": "Active"
+    },
+    "detail": {
+      "message": "Message",
+      "quickRestock": "Restock +{{count}} units",
+      "viewInInventory": "View in inventory"
+    },
+    "toast": {
+      "newCritical_one": "New critical alert: {{count}} item needs attention",
+      "newCritical_other": "New critical alerts: {{count}} items need attention",
+      "view": "View"
+    },
+    "help": {
+      "title": "Keyboard shortcuts",
+      "next": "Next message",
+      "prev": "Previous message",
+      "open": "Open detail",
+      "toggleRead": "Toggle read / unread",
+      "snooze": "Snooze for 24 hours",
+      "dismiss": "Dismiss",
+      "search": "Focus search",
+      "help": "Show this help"
+    }
+  },
   "item": {
     "blazerFemale": "Blazer (Female)",
     "bomberJacket": "Bomber Jacket",
