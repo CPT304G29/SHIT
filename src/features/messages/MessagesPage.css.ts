@@ -222,6 +222,33 @@ export const empty = style({
   padding: '80px 0',
 });
 
+export const dropdownContent = style({
+  minWidth: 180,
+  backgroundColor: vars.color.bg,
+  border: `1px solid ${vars.color.border}`,
+  borderRadius: vars.radius.lg,
+  boxShadow: vars.shadow.lg,
+  padding: 4,
+  zIndex: 300,
+});
+
+export const dropdownItem = style({
+  fontSize: 13,
+  padding: '8px 12px',
+  borderRadius: vars.radius.md,
+  cursor: 'pointer',
+  color: vars.color.text,
+  outline: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  gap: 8,
+  selectors: {
+    '&[data-highlighted]': {
+      backgroundColor: vars.color.surfaceHover,
+    },
+  },
+});
+
 export const settingsRow = style({
   display: 'flex',
   flexDirection: 'column',

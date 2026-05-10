@@ -75,7 +75,13 @@
       "markRead": "标为已读",
       "markUnread": "标为未读",
       "dismiss": "忽略",
-      "markAllRead": "全部标为已读"
+      "markAllRead": "全部标为已读",
+      "snooze": "暂停提醒",
+      "snoozeFor": {
+        "1h": "暂停 1 小时",
+        "24h": "暂停 24 小时",
+        "7d": "暂停 7 天"
+      }
     },
     "type": {
       "outOfStock": "缺货",

@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, X, RotateCcw, Settings } from 'lucide-react';
+import { Check, X, RotateCcw, Settings, Clock } from 'lucide-react';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useMessages } from './useMessages';
 import { useMessagesStore } from './messages.store';
 import { MessagesSettings } from './MessagesSettings';
@@ -30,6 +31,8 @@ import {
   iconButton,
   empty,
   settingsButton,
+  dropdownContent,
+  dropdownItem,
 } from './MessagesPage.css';
 
 const FILTERS: MessageFilter[] = ['all', 'unread', 'critical'];
@@ -41,6 +44,7 @@ export function MessagesPage() {
   const markUnread = useMessagesStore((s) => s.markUnread);
   const markAllRead = useMessagesStore((s) => s.markAllRead);
   const dismiss = useMessagesStore((s) => s.dismiss);
+  const snooze = useMessagesStore((s) => s.snooze);
 
   const [filter, setFilter] = useState<MessageFilter>('all');
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -107,6 +111,7 @@ export function MessagesPage() {
               message={m}
               onToggleRead={() => (m.read ? markUnread(m.id) : markRead(m.id))}
               onDismiss={() => dismiss(m.id)}
+              onSnooze={(durationMs) => snooze(m.id, Date.now() + durationMs)}
             />
           ))}
         </ul>
@@ -121,14 +126,22 @@ interface MessageRowProps {
   message: Message;
   onToggleRead: () => void;
   onDismiss: () => void;
+  onSnooze: (durationMs: number) => void;
 }
 
-function MessageRow({ message, onToggleRead, onDismiss }: MessageRowProps) {
+const SNOOZE_OPTIONS: Array<{ key: '1h' | '24h' | '7d'; ms: number }> = [
+  { key: '1h', ms: 60 * 60 * 1000 },
+  { key: '24h', ms: 24 * 60 * 60 * 1000 },
+  { key: '7d', ms: 7 * 24 * 60 * 60 * 1000 },
+];
+
+function MessageRow({ message, onToggleRead, onDismiss, onSnooze }: MessageRowProps) {
   const { t } = useTranslation();
   const itemName = t(message.itemNameKey);
   const body = t(`messages.body.${message.type}`, {
     name: itemName,
     quantity: message.quantity,
+    percent: '0',
   });
 
   return (
@@ -161,6 +174,33 @@ function MessageRow({ message, onToggleRead, onDismiss }: MessageRowProps) {
         >
           {message.read ? <RotateCcw size={16} /> : <Check size={16} />}
         </button>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild>
+            <button
+              type="button"
+              className={iconButton}
+              aria-label={t('messages.actions.snooze')}
+              data-testid="snooze"
+            >
+              <Clock size={16} />
+            </button>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content className={dropdownContent} sideOffset={4} align="end">
+              {SNOOZE_OPTIONS.map((opt) => (
+                <DropdownMenu.Item
+                  key={opt.key}
+                  className={dropdownItem}
+                  onSelect={() => onSnooze(opt.ms)}
+                  data-testid={`snooze-${opt.key}`}
+                >
+                  <Clock size={14} aria-hidden="true" />
+                  {t(`messages.actions.snoozeFor.${opt.key}`)}
+                </DropdownMenu.Item>
+              ))}
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
         <button
           type="button"
           className={iconButton}
