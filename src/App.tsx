@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Analytics } from '@vercel/analytics/react';
 import { lightTheme, darkTheme } from '@/styles/theme.css';
 import { Shell } from '@/components/layout/Shell';
 import { useThemeTransition } from '@/hooks/useThemeTransition';
@@ -174,6 +175,7 @@ function App() {
       <ToastContainer toasts={toasts} onRemove={removeToast} />
       <CookieBanner onShowPrivacyPolicy={() => setPage('privacy')} />
       {showEasterEgg && <ParticleGalaxy onClose={() => setShowEasterEgg(false)} />}
+      <Analytics />
     </div>
   );
 }
