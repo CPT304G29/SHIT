@@ -5,6 +5,7 @@ import { Shell } from '@/components/layout/Shell';
 import { useThemeTransition } from '@/hooks/useThemeTransition';
 import { InventoryTable } from '@/features/inventory/InventoryTable';
 import { ChartsPage } from '@/features/charts/ChartsPage';
+import { CalendarPage } from '@/features/calendar/CalendarPage';
 import { MessagesPage } from '@/features/messages/MessagesPage';
 import { PrivacyPolicy } from '@/features/legal/PrivacyPolicy';
 import { CookieBanner } from '@/features/legal/CookieBanner';
@@ -18,7 +19,7 @@ import { useMessagesStore } from '@/features/messages/messages.store';
 import { useTrackInventoryHistory } from '@/features/messages/useTrackInventoryHistory';
 import type { InventoryItem, InventoryFormData } from '@/features/inventory/inventory.types';
 
-type Page = 'inventory' | 'charts' | 'messages' | 'privacy';
+type Page = 'inventory' | 'charts' | 'calendar' | 'messages' | 'privacy';
 
 // Run once at module evaluation so a refused user does not have stale data
 // silently re-persisted by the various stores during the first render pass.
@@ -148,6 +149,7 @@ function App() {
           />
         )}
         {page === 'charts' && <ChartsPage />}
+        {page === 'calendar' && <CalendarPage />}
         {page === 'messages' && <MessagesPage onJumpToInventory={handleJumpToInventory} />}
         {page === 'privacy' && <PrivacyPolicy />}
       </Shell>
