@@ -6,6 +6,10 @@ import { formatCurrency } from '@/features/inventory/inventory.utils';
 import type { Message } from './messages.types';
 import { useMessagesStore } from './messages.store';
 import { useRapidDropPercent } from './useMessages';
+import type { MessageType } from './messages.types';
+
+const RESTOCKABLE_TYPES = new Set<MessageType>(['outOfStock', 'lowStock', 'rapidDecrease']);
+const isRestockableType = (t: MessageType) => RESTOCKABLE_TYPES.has(t);
 import { overlay } from '@/features/inventory/InventoryForm.css';
 import {
   drawer,
@@ -133,7 +137,7 @@ export function MessageDetailDrawer({
           )}
 
           <div className={drawerActions}>
-            {item && (
+            {item && isRestockableType(message.type) && (
               <button
                 type="button"
                 className={drawerPrimary}
