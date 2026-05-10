@@ -18,6 +18,7 @@ import { useAllDerivedMessages } from '@/features/messages/useMessages';
 import { useMessagesStore } from '@/features/messages/messages.store';
 import { useTrackInventoryHistory } from '@/features/messages/useTrackInventoryHistory';
 import type { InventoryItem, InventoryFormData } from '@/features/inventory/inventory.types';
+import { ParticleGalaxy } from '@/components/EasterEgg/ParticleGalaxy';
 
 type Page = 'inventory' | 'charts' | 'calendar' | 'messages' | 'privacy';
 
@@ -39,6 +40,7 @@ function App() {
   const [deletingItem, setDeletingItem] = useState<InventoryItem | null>(null);
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const [highlightItemId, setHighlightItemId] = useState<string | null>(null);
+  const [showEasterEgg, setShowEasterEgg] = useState(false);
 
   const handleJumpToInventory = useCallback((itemId: string) => {
     setHighlightItemId(itemId);
@@ -146,6 +148,7 @@ function App() {
             onDelete={handleDelete}
             onAdd={handleAdd}
             highlightItemId={highlightItemId}
+            onTriggerEasterEgg={() => setShowEasterEgg(true)}
           />
         )}
         {page === 'charts' && <ChartsPage />}
@@ -170,6 +173,7 @@ function App() {
 
       <ToastContainer toasts={toasts} onRemove={removeToast} />
       <CookieBanner onShowPrivacyPolicy={() => setPage('privacy')} />
+      {showEasterEgg && <ParticleGalaxy onClose={() => setShowEasterEgg(false)} />}
     </div>
   );
 }
