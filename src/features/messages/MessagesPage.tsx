@@ -4,6 +4,7 @@ import { Check, X, RotateCcw, Settings } from 'lucide-react';
 import { useMessages } from './useMessages';
 import { useMessagesStore } from './messages.store';
 import { MessagesSettings } from './MessagesSettings';
+import { SeveritySummary } from './SeveritySummary';
 import type { Message, MessageFilter } from './messages.types';
 import {
   page,
@@ -58,6 +59,8 @@ export function MessagesPage() {
         <h1 className={title}>{t('messages.title')}</h1>
         <p className={subtitle}>{t('messages.subtitle')}</p>
       </div>
+
+      <SeveritySummary messages={messages} />
 
       <div className={toolbar} role="toolbar" aria-label={t('messages.title')}>
         <div className={filters} role="tablist" aria-label={t('messages.title')}>
