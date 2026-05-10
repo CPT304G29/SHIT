@@ -42,6 +42,19 @@ vi.mock('recharts', () => {
   };
 });
 
+const mayEvents = Array.from({ length: 12 }, (_, index) => ({
+  id: `may-${index + 1}`,
+  itemId: `item-${index + 1}`,
+  nameKey: index === 0 ? 'item.hoodie' : 'item.longSleeveShirt',
+  categoryKey: index === 0 ? 'category.outerwear' : 'category.shirt',
+  dateKey: '2026-05-08',
+  timestamp: new Date(2026, 4, 8, 9 + index, 0).getTime(),
+  direction: index % 2 === 0 ? 'out' : 'in',
+  quantity: index === 0 ? 3 : 1 + (index % 3),
+  unitPrice: index === 0 ? 6050 : 7900,
+  totalValue: (index === 0 ? 3 : 1 + (index % 3)) * (index === 0 ? 6050 : 7900),
+})) as CalendarDaySummary['events'];
+
 const summaries: CalendarDaySummary[] = [
   {
     dateKey: '2026-04-30',
@@ -70,26 +83,26 @@ const summaries: CalendarDaySummary[] = [
   {
     dateKey: '2026-05-08',
     date: new Date(2026, 4, 8),
-    events: [
-      {
-        id: 'may-1',
-        itemId: 'item-2',
-        nameKey: 'item.hoodie',
-        categoryKey: 'category.outerwear',
-        dateKey: '2026-05-08',
-        timestamp: new Date(2026, 4, 8, 9, 0).getTime(),
-        direction: 'out',
-        quantity: 3,
-        unitPrice: 6050,
-        totalValue: 18150,
-      },
-    ],
-    inboundQty: 0,
-    outboundQty: 3,
-    netQty: -3,
-    totalValue: 18150,
-    dealCount: 1,
-    avgDealPrice: 6050,
+    events: mayEvents,
+    inboundQty: mayEvents
+      .filter((event) => event.direction === 'in')
+      .reduce((sum, event) => sum + event.quantity, 0),
+    outboundQty: mayEvents
+      .filter((event) => event.direction === 'out')
+      .reduce((sum, event) => sum + event.quantity, 0),
+    netQty:
+      mayEvents
+        .filter((event) => event.direction === 'in')
+        .reduce((sum, event) => sum + event.quantity, 0) -
+      mayEvents
+        .filter((event) => event.direction === 'out')
+        .reduce((sum, event) => sum + event.quantity, 0),
+    totalValue: mayEvents.reduce((sum, event) => sum + event.totalValue, 0),
+    dealCount: mayEvents.length,
+    avgDealPrice: Math.round(
+      mayEvents.reduce((sum, event) => sum + event.totalValue, 0) /
+        mayEvents.reduce((sum, event) => sum + event.quantity, 0)
+    ),
   },
 ];
 
@@ -155,5 +168,34 @@ describe('CalendarPage', () => {
     expect(screen.getByText('No inventory activity recorded for this date.')).toBeInTheDocument();
     expect(screen.getAllByText('Net change').length).toBeGreaterThan(0);
     expect(screen.getAllByText('0').length).toBeGreaterThan(0);
+  });
+
+  it('pages detail rows in groups of 10 and pads the last page with blanks', () => {
+    render(<CalendarPage />);
+
+    expect(screen.getByTestId('calendar-page-indicator')).toHaveTextContent('Page 1 / 2');
+    expect(screen.getAllByTestId('calendar-detail-row')).toHaveLength(10);
+    expect(screen.queryAllByTestId('calendar-detail-row-blank')).toHaveLength(0);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Next' }));
+
+    expect(screen.getByTestId('calendar-page-indicator')).toHaveTextContent('Page 2 / 2');
+    expect(screen.getAllByTestId('calendar-detail-row')).toHaveLength(2);
+    expect(screen.getAllByTestId('calendar-detail-row-blank')).toHaveLength(8);
+  });
+
+  it('resets to the first page and keeps 10 visible rows when switching to a quiet day', () => {
+    render(<CalendarPage />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Next' }));
+    expect(screen.getByTestId('calendar-page-indicator')).toHaveTextContent('Page 2 / 2');
+
+    const quietDayButton = screen.getByRole('button', { name: /10 0 IN 0 OUT 0/i });
+    fireEvent.click(quietDayButton);
+
+    expect(screen.getByTestId('calendar-page-indicator')).toHaveTextContent('Page 1 / 1');
+    expect(screen.queryAllByTestId('calendar-detail-row')).toHaveLength(0);
+    expect(screen.getAllByTestId('calendar-detail-row-blank')).toHaveLength(10);
+    expect(screen.getByText('No inventory activity recorded for this date.')).toBeInTheDocument();
   });
 });
