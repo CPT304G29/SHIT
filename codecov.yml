@@ -1,0 +1,30 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 80%
+        threshold: 1%
+      messages:
+        target: 80%
+        paths:
+          - src/features/messages/messages.derive.ts
+          - src/features/messages/messages.store.ts
+          - src/features/messages/messages.settings.store.ts
+          - src/features/messages/messages.history.store.ts
+          - src/features/messages/useMessages.ts
+    patch:
+      default:
+        target: 80%
+        threshold: 1%
+
+ignore:
+  - "src/**/*.css.ts"
+  - "src/**/__tests__/**"
+  - "src/test/**"
+  - "src/main.tsx"
+  - "src/lib/**"
+  - "e2e/**"
+
+comment:
+  layout: "reach, diff, flags, files"
+  behavior: default
