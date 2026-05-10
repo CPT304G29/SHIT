@@ -648,6 +648,7 @@ export function CalendarPage() {
                       />
                     }
                   />
+                  <Legend />
                 </PieChart>
               </ResponsiveContainer>
             </ChartCard>
