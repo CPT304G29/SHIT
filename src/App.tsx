@@ -10,7 +10,8 @@ import { InventoryForm } from '@/features/inventory/InventoryForm';
 import { DeleteConfirmation } from '@/features/inventory/DeleteConfirmation';
 import { ToastContainer, type ToastItem } from '@/components/Toast';
 import { useInventoryStore } from '@/features/inventory/inventory.store';
-import { useMessages } from '@/features/messages/useMessages';
+import { useAllDerivedMessages } from '@/features/messages/useMessages';
+import { useMessagesStore } from '@/features/messages/messages.store';
 import { useTrackInventoryHistory } from '@/features/messages/useTrackInventoryHistory';
 import type { InventoryItem, InventoryFormData } from '@/features/inventory/inventory.types';
 
@@ -58,12 +59,18 @@ function App() {
   }, [i18n.language]);
 
   useTrackInventoryHistory();
-  const messages = useMessages();
+  const allDerived = useAllDerivedMessages();
+  const pruneDismissed = useMessagesStore((s) => s.pruneDismissed);
   const seenCriticalIdsRef = useRef<Set<string>>(new Set());
   const initializedRef = useRef(false);
 
   useEffect(() => {
-    const currentCritical = messages.filter((m) => m.severity === 'critical');
+    // Auto-clear dismissed entries whose underlying condition has resolved.
+    // This way, if a SKU recovers and later goes critical again, the message
+    // (and its toast) re-fires instead of being permanently muted.
+    pruneDismissed(allDerived.map((m) => m.id));
+
+    const currentCritical = allDerived.filter((m) => m.severity === 'critical');
     const currentIds = new Set(currentCritical.map((m) => m.id));
 
     if (!initializedRef.current) {
@@ -82,7 +89,7 @@ function App() {
         onClick: () => setPage('messages'),
       });
     }
-  }, [messages, addToast, t]);
+  }, [allDerived, pruneDismissed, addToast, t]);
 
   const handleAdd = () => {
     setEditingItem(null);
