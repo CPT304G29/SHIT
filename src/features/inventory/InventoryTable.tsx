@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import {
   useReactTable,
   getCoreRowModel,
@@ -39,9 +39,10 @@ interface InventoryTableProps {
   onDelete: (item: InventoryItem) => void;
   onAdd: () => void;
   highlightItemId?: string | null;
+  onTriggerEasterEgg: () => void;
 }
 
-export function InventoryTable({ onEdit, onDelete, onAdd, highlightItemId }: InventoryTableProps) {
+export function InventoryTable({ onEdit, onDelete, onAdd, highlightItemId, onTriggerEasterEgg }: InventoryTableProps) {
   const { t, i18n } = useTranslation();
   const items = useInventoryStore((s) => s.items);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -53,6 +54,17 @@ export function InventoryTable({ onEdit, onDelete, onAdd, highlightItemId }: Inv
       highlightRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }, [highlightItemId]);
+
+  const handleSearchKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter' && globalFilter.toLowerCase().trim() === 'shit') {
+        e.preventDefault();
+        setGlobalFilter('');
+        onTriggerEasterEgg();
+      }
+    },
+    [globalFilter, onTriggerEasterEgg]
+  );
 
   const columns = useMemo<ColumnDef<InventoryItem>[]>(
     () => [
@@ -178,6 +190,7 @@ export function InventoryTable({ onEdit, onDelete, onAdd, highlightItemId }: Inv
             placeholder={t('table.searchPlaceholder')}
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
+            onKeyDown={handleSearchKeyDown}
           />
         </div>
         <button type="button" className={addButton} onClick={onAdd}>
@@ -229,38 +242,24 @@ export function InventoryTable({ onEdit, onDelete, onAdd, highlightItemId }: Inv
             ))}
           </thead>
           <tbody className={tbody}>
-            {tableInstance.getRowModel().rows.map((row) => {
-              const itemId = row.original.id;
-              const isHighlighted = highlightItemId === itemId;
-              return (
-                <tr
-                  key={row.id}
-                  ref={isHighlighted ? highlightRef : undefined}
-                  className={tr}
-                  data-highlighted={isHighlighted || undefined}
-                  style={
-                    isHighlighted
-                      ? {
-                          outline: '2px solid #E50012',
-                          outlineOffset: -2,
-                          transition: 'outline 200ms',
-                        }
-                      : undefined
-                  }
-                >
-                  {row.getVisibleCells().map((cell) => {
-                    const align = (
-                      cell.column.columnDef.meta as Record<string, unknown> | undefined
-                    )?.align as string | undefined;
-                    return (
-                      <td key={cell.id} className={`${td} ${align === 'right' ? tdRight : ''}`}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+            {tableInstance.getRowModel().rows.map((row) => (
+              <tr
+                key={row.id}
+                ref={row.original.id === highlightItemId ? highlightRef : undefined}
+                className={tr}
+                style={row.original.id === highlightItemId ? { backgroundColor: 'rgba(229, 0, 18, 0.1)' } : undefined}
+              >
+                {row.getVisibleCells().map((cell) => {
+                  const align = (cell.column.columnDef.meta as Record<string, unknown> | undefined)
+                    ?.align as string | undefined;
+                  return (
+                    <td key={cell.id} className={`${td} ${align === 'right' ? tdRight : ''}`}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
