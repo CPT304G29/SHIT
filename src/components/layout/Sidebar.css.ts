@@ -199,3 +199,27 @@ export const versionTextVisible = style({
   maxWidth: 100,
   opacity: 1,
 });
+
+export const badge = style({
+  position: 'absolute',
+  top: 6,
+  right: 8,
+  minWidth: 16,
+  height: 16,
+  padding: '0 4px',
+  borderRadius: 8,
+  backgroundColor: '#FFFFFF',
+  color: '#E50012',
+  fontSize: 10,
+  fontWeight: 700,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  letterSpacing: 0,
+  boxShadow: '0 0 0 2px rgba(229, 0, 18, 0.6)',
+});
+
+export const badgeExpanded = style({
+  position: 'static',
+  marginLeft: 'auto',
+});
