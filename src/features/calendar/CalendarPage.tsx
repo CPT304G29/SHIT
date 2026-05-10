@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import {
@@ -84,10 +84,16 @@ import {
   summaryPanel,
   tableCard,
   tableCell,
+  tableCellBlank,
   tableCellMuted,
   tableCellStrong,
+  tableFooter,
+  tableFooterHint,
   tableHeadCell,
   tableHeader,
+  pageButton,
+  pageIndicator,
+  pagination,
   tableSubtitle,
   tableTitle,
   tableWrap,
@@ -96,6 +102,7 @@ import {
 } from './CalendarPage.css';
 
 const PIE_COLORS = ['#E50012', '#FF6B7A', '#FF9AA3', '#FFB8BE', '#FFD1D5', '#FFE8EA'];
+const DETAIL_PAGE_SIZE = 10;
 
 function getSignedToneClass(value: number) {
   if (value > 0) return positive;
@@ -251,6 +258,10 @@ export function CalendarPage() {
   const items = useInventoryStore((state) => state.items);
   const theme = useCurrentTheme();
   const isDark = theme === 'dark';
+  const calendarCardRef = useRef<HTMLDivElement | null>(null);
+  const detailHeaderRef = useRef<HTMLDivElement | null>(null);
+  const detailTableHeadRef = useRef<HTMLTableSectionElement | null>(null);
+  const detailFooterRef = useRef<HTMLDivElement | null>(null);
 
   const [monthDate, setMonthDate] = useState(() => {
     const now = new Date();
@@ -266,6 +277,8 @@ export function CalendarPage() {
   const todayDateKey = useMemo(() => getTodayDateKey(), []);
 
   const [selectedDateKey, setSelectedDateKey] = useState(() => getDefaultDateKey(summaries, monthDate));
+  const [detailPage, setDetailPage] = useState(1);
+  const [detailRowHeight, setDetailRowHeight] = useState<number | null>(null);
 
   useEffect(() => {
     if (selectedDateKey > todayDateKey) {
@@ -281,6 +294,10 @@ export function CalendarPage() {
       setSelectedDateKey(getDefaultDateKey(summaries, monthDate));
     }
   }, [monthDate, selectedDateKey, summaries, summaryMap, todayDateKey]);
+
+  useEffect(() => {
+    setDetailPage(1);
+  }, [selectedDateKey]);
 
   const selectedDay = summaryMap.get(selectedDateKey);
   const selectedDateValue = useMemo(() => parseDateKey(selectedDateKey), [selectedDateKey]);
@@ -305,6 +322,49 @@ export function CalendarPage() {
   );
   const weekdayLabels = useMemo(() => getWeekdayLabels(i18n.language), [i18n.language]);
   const calendarDays = useMemo(() => getCalendarDays(monthDate), [monthDate]);
+  const detailEvents = selectedDay?.events ?? [];
+  const detailTotalPages = Math.max(1, Math.ceil(detailEvents.length / DETAIL_PAGE_SIZE));
+  const detailPageSafe = Math.min(detailPage, detailTotalPages);
+  const currentDetailEvents = detailEvents.slice(
+    (detailPageSafe - 1) * DETAIL_PAGE_SIZE,
+    detailPageSafe * DETAIL_PAGE_SIZE
+  );
+  const detailPlaceholderRows = Math.max(0, DETAIL_PAGE_SIZE - currentDetailEvents.length);
+
+  useEffect(() => {
+    const measure = () => {
+      const calendarHeight = calendarCardRef.current?.getBoundingClientRect().height ?? 0;
+      const detailHeaderHeight = detailHeaderRef.current?.getBoundingClientRect().height ?? 0;
+      const detailHeadHeight = detailTableHeadRef.current?.getBoundingClientRect().height ?? 0;
+      const detailFooterHeight = detailFooterRef.current?.getBoundingClientRect().height ?? 0;
+
+      if (!calendarHeight || !detailHeadHeight) {
+        return;
+      }
+
+      const availableHeight =
+        calendarHeight - detailHeaderHeight - detailHeadHeight - detailFooterHeight - 2;
+      const nextRowHeight = Math.max(44, Math.floor(availableHeight / DETAIL_PAGE_SIZE));
+      setDetailRowHeight(nextRowHeight);
+    };
+
+    measure();
+
+    if (typeof ResizeObserver === 'undefined') {
+      return;
+    }
+
+    const observer = new ResizeObserver(() => {
+      measure();
+    });
+
+    if (calendarCardRef.current) observer.observe(calendarCardRef.current);
+    if (detailHeaderRef.current) observer.observe(detailHeaderRef.current);
+    if (detailTableHeadRef.current) observer.observe(detailTableHeadRef.current);
+    if (detailFooterRef.current) observer.observe(detailFooterRef.current);
+
+    return () => observer.disconnect();
+  }, [detailEvents.length, detailPageSafe, i18n.language, monthDate]);
 
   if (items.length === 0) {
     return <div className={emptyCard}>{t('table.emptyState')}</div>;
@@ -379,10 +439,12 @@ export function CalendarPage() {
       </section>
 
       <section className={layout}>
-        <div className={calendarCard}>
+        <div className={calendarCard} ref={calendarCardRef}>
           <div className={calendarHeader}>
             <div>
-              <div className={monthTitle}>{getMonthLabel(monthDate, i18n.language)}</div>
+              <div className={monthTitle} data-testid="calendar-month-title">
+                {getMonthLabel(monthDate, i18n.language)}
+              </div>
               <div className={monthHint}>{t('calendar.monthHint')}</div>
             </div>
             <div className={monthActions}>
@@ -417,7 +479,7 @@ export function CalendarPage() {
             ))}
           </div>
 
-          <div className={monthGrid}>
+          <div className={monthGrid} data-testid="calendar-grid">
             {calendarDays.map((date) => {
               const dateKey = `${date.getFullYear()}-${`${date.getMonth() + 1}`.padStart(2, '0')}-${`${date.getDate()}`.padStart(2, '0')}`;
               const summary = summaryMap.get(dateKey);
@@ -431,6 +493,9 @@ export function CalendarPage() {
                   key={dateKey}
                   type="button"
                   disabled={isFuture}
+                  data-testid={`calendar-day-${dateKey}`}
+                  data-date-key={dateKey}
+                  data-in-month={isCurrentMonth ? 'true' : 'false'}
                   className={[
                     dayButton,
                     !isCurrentMonth ? dayButtonMuted : '',
@@ -467,64 +532,116 @@ export function CalendarPage() {
 
         <div className={detailsColumn}>
           <div className={tableCard}>
-            <div className={tableHeader}>
+            <div className={tableHeader} ref={detailHeaderRef}>
               <div className={tableTitle}>{t('calendar.detailTitle')}</div>
               <div className={tableSubtitle}>{t('calendar.detailSubtitle')}</div>
             </div>
 
-            {!selectedDay || selectedDay.events.length === 0 ? (
-              <div className={emptyCard}>{t('calendar.noActivity')}</div>
-            ) : (
-              <div className={tableWrap}>
-                <table className={detailTable}>
-                  <thead>
-                    <tr>
-                      <th className={tableHeadCell}>{t('calendar.time')}</th>
-                      <th className={tableHeadCell}>{t('table.itemName')}</th>
-                      <th className={tableHeadCell}>{t('table.category')}</th>
-                      <th className={tableHeadCell}>{t('calendar.direction')}</th>
-                      <th className={tableHeadCell}>{t('table.quantity')}</th>
-                      <th className={tableHeadCell}>{t('table.unitPrice')}</th>
-                      <th className={tableHeadCell}>{t('calendar.amount')}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {selectedDay.events.map((event: InventoryChangeEvent) => (
-                      <tr key={event.id}>
-                        <td className={`${tableCell} ${tableCellMuted}`}>
-                          {formatShortTime(event.timestamp, i18n.language)}
-                        </td>
-                        <td className={`${tableCell} ${tableCellStrong}`}>{t(event.nameKey)}</td>
-                        <td className={tableCell}>{t(event.categoryKey)}</td>
-                        <td className={tableCell}>
-                          <span
-                            className={[
-                              badge,
-                              event.direction === 'in' ? badgeInbound : badgeOutbound,
-                            ].join(' ')}
-                          >
-                            {event.direction === 'in' ? t('calendar.inbound') : t('calendar.outbound')}
-                          </span>
-                        </td>
-                        <td
-                          className={`${tableCell} ${getSignedToneClass(
-                            event.direction === 'in' ? event.quantity : -event.quantity
-                          )}`}
+            <div className={tableWrap}>
+              <table className={detailTable}>
+                <thead ref={detailTableHeadRef}>
+                  <tr>
+                    <th className={tableHeadCell}>{t('calendar.time')}</th>
+                    <th className={tableHeadCell}>{t('table.itemName')}</th>
+                    <th className={tableHeadCell}>{t('table.category')}</th>
+                    <th className={tableHeadCell}>{t('calendar.direction')}</th>
+                    <th className={tableHeadCell}>{t('table.quantity')}</th>
+                    <th className={tableHeadCell}>{t('table.unitPrice')}</th>
+                    <th className={tableHeadCell}>{t('calendar.amount')}</th>
+                  </tr>
+                </thead>
+                <tbody data-testid="calendar-detail-body">
+                  {currentDetailEvents.map((event: InventoryChangeEvent) => (
+                    <tr
+                      key={event.id}
+                      data-testid="calendar-detail-row"
+                      style={detailRowHeight ? { height: `${detailRowHeight}px` } : undefined}
+                    >
+                      <td className={`${tableCell} ${tableCellMuted}`}>
+                        {formatShortTime(event.timestamp, i18n.language)}
+                      </td>
+                      <td className={`${tableCell} ${tableCellStrong}`}>{t(event.nameKey)}</td>
+                      <td className={tableCell}>{t(event.categoryKey)}</td>
+                      <td className={tableCell}>
+                        <span
+                          className={[
+                            badge,
+                            event.direction === 'in' ? badgeInbound : badgeOutbound,
+                          ].join(' ')}
                         >
-                          {event.direction === 'in'
-                            ? formatSignedNumber(event.quantity, i18n.language)
-                            : formatSignedNumber(-event.quantity, i18n.language)}
-                        </td>
-                        <td className={tableCell}>{formatCurrency(event.unitPrice, i18n.language)}</td>
-                        <td className={`${tableCell} ${tableCellStrong}`}>
-                          {formatCurrency(event.totalValue, i18n.language)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                          {event.direction === 'in' ? t('calendar.inbound') : t('calendar.outbound')}
+                        </span>
+                      </td>
+                      <td
+                        className={`${tableCell} ${getSignedToneClass(
+                          event.direction === 'in' ? event.quantity : -event.quantity
+                        )}`}
+                      >
+                        {event.direction === 'in'
+                          ? formatSignedNumber(event.quantity, i18n.language)
+                          : formatSignedNumber(-event.quantity, i18n.language)}
+                      </td>
+                      <td className={tableCell}>{formatCurrency(event.unitPrice, i18n.language)}</td>
+                      <td className={`${tableCell} ${tableCellStrong}`}>
+                        {formatCurrency(event.totalValue, i18n.language)}
+                      </td>
+                    </tr>
+                  ))}
+                  {Array.from({ length: detailPlaceholderRows }, (_, index) => (
+                    <tr
+                      key={`blank-${detailPageSafe}-${index}`}
+                      data-testid="calendar-detail-row-blank"
+                      style={detailRowHeight ? { height: `${detailRowHeight}px` } : undefined}
+                    >
+                      <td className={`${tableCell} ${tableCellBlank}`}>-</td>
+                      <td className={`${tableCell} ${tableCellBlank}`}>-</td>
+                      <td className={`${tableCell} ${tableCellBlank}`}>-</td>
+                      <td className={`${tableCell} ${tableCellBlank}`}>-</td>
+                      <td className={`${tableCell} ${tableCellBlank}`}>-</td>
+                      <td className={`${tableCell} ${tableCellBlank}`}>-</td>
+                      <td className={`${tableCell} ${tableCellBlank}`}>-</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className={tableFooter} ref={detailFooterRef}>
+              <div className={tableFooterHint} data-testid="calendar-empty-state">
+                {detailEvents.length === 0
+                  ? t('calendar.noActivity')
+                  : t('calendar.pageSummary', {
+                      start: (detailPageSafe - 1) * DETAIL_PAGE_SIZE + 1,
+                      end: Math.min(detailPageSafe * DETAIL_PAGE_SIZE, detailEvents.length),
+                      total: detailEvents.length,
+                    })}
               </div>
-            )}
+              <div className={pagination}>
+                <button
+                  type="button"
+                  className={pageButton}
+                  disabled={detailPageSafe <= 1}
+                  onClick={() => setDetailPage((pageNumber) => Math.max(1, pageNumber - 1))}
+                >
+                  {t('calendar.previousPage')}
+                </button>
+                <div className={pageIndicator} data-testid="calendar-page-indicator">
+                  {t('calendar.pageIndicator', {
+                    current: detailPageSafe,
+                    total: detailTotalPages,
+                  })}
+                </div>
+                <button
+                  type="button"
+                  className={pageButton}
+                  disabled={detailPageSafe >= detailTotalPages}
+                  onClick={() =>
+                    setDetailPage((pageNumber) => Math.min(detailTotalPages, pageNumber + 1))
+                  }
+                >
+                  {t('calendar.nextPage')}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
