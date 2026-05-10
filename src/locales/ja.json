@@ -66,6 +66,12 @@
     "title": "メッセージ",
     "subtitle": "在庫から自動生成されるアラート",
     "empty": "メッセージはありません。在庫は良好です。",
+    "searchPlaceholder": "商品名で検索…",
+    "bulk": {
+      "label": "{{count}} 件選択中",
+      "select": "メッセージを選択",
+      "clear": "選択を解除"
+    },
     "filter": {
       "all": "すべて",
       "unread": "未読",

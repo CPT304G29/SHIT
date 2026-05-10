@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Check, X, RotateCcw, Settings, Clock, Keyboard } from 'lucide-react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
@@ -37,6 +37,11 @@ import {
   dropdownContent,
   dropdownItem,
   itemRowFocused,
+  searchInput,
+  bulkBar,
+  bulkLabel,
+  bulkButton,
+  checkbox,
 } from './MessagesPage.css';
 
 const FILTERS: MessageFilter[] = ['all', 'unread', 'critical'];
@@ -52,19 +57,29 @@ export function MessagesPage({ onJumpToInventory }: MessagesPageProps = {}) {
   const markUnread = useMessagesStore((s) => s.markUnread);
   const markAllRead = useMessagesStore((s) => s.markAllRead);
   const dismiss = useMessagesStore((s) => s.dismiss);
+  const dismissMany = useMessagesStore((s) => s.dismissMany);
   const snooze = useMessagesStore((s) => s.snooze);
+  const snoozeMany = useMessagesStore((s) => s.snoozeMany);
 
   const [filter, setFilter] = useState<MessageFilter>('all');
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [detailMessage, setDetailMessage] = useState<Message | null>(null);
   const [cursor, setCursor] = useState(0);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const searchRef = useRef<HTMLInputElement | null>(null);
 
   const visible = useMemo(() => {
-    if (filter === 'unread') return messages.filter((m) => !m.read);
-    if (filter === 'critical') return messages.filter((m) => m.severity === 'critical');
-    return messages;
-  }, [messages, filter]);
+    let list = messages;
+    if (filter === 'unread') list = list.filter((m) => !m.read);
+    else if (filter === 'critical') list = list.filter((m) => m.severity === 'critical');
+    const q = search.trim().toLowerCase();
+    if (q.length > 0) {
+      list = list.filter((m) => t(m.itemNameKey).toLowerCase().includes(q));
+    }
+    return list;
+  }, [messages, filter, search, t]);
 
   const unreadIds = messages.filter((m) => !m.read).map((m) => m.id);
 
@@ -97,6 +112,7 @@ export function MessagesPage({ onJumpToInventory }: MessagesPageProps = {}) {
       if (!m.read) markRead(m.id);
     },
     onShowHelp: () => setHelpOpen(true),
+    onFocusSearch: () => searchRef.current?.focus(),
   });
 
   return (
@@ -109,6 +125,16 @@ export function MessagesPage({ onJumpToInventory }: MessagesPageProps = {}) {
       <SeveritySummary messages={messages} />
 
       <div className={toolbar} role="toolbar" aria-label={t('messages.title')}>
+        <input
+          ref={searchRef}
+          type="search"
+          className={searchInput}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder={t('messages.searchPlaceholder')}
+          aria-label={t('messages.searchPlaceholder')}
+          data-testid="message-search"
+        />
         <div className={filters} role="tablist" aria-label={t('messages.title')}>
           {FILTERS.map((f) => (
             <button
@@ -153,6 +179,56 @@ export function MessagesPage({ onJumpToInventory }: MessagesPageProps = {}) {
         </button>
       </div>
 
+      {selected.size > 0 && (
+        <div className={bulkBar} role="region" aria-label={t('messages.bulk.label')} data-testid="bulk-bar">
+          <span className={bulkLabel}>
+            {t('messages.bulk.label', { count: selected.size })}
+          </span>
+          <button
+            type="button"
+            className={bulkButton}
+            onClick={() => {
+              markAllRead([...selected]);
+              setSelected(new Set());
+            }}
+            data-testid="bulk-mark-read"
+          >
+            {t('messages.actions.markAllRead')}
+          </button>
+          <button
+            type="button"
+            className={bulkButton}
+            onClick={() => {
+              snoozeMany([...selected], Date.now() + 24 * 60 * 60 * 1000);
+              setSelected(new Set());
+            }}
+            data-testid="bulk-snooze"
+          >
+            {t('messages.actions.snoozeFor.24h')}
+          </button>
+          <button
+            type="button"
+            className={bulkButton}
+            onClick={() => {
+              dismissMany([...selected]);
+              setSelected(new Set());
+            }}
+            data-testid="bulk-dismiss"
+          >
+            {t('messages.actions.dismiss')}
+          </button>
+          <button
+            type="button"
+            className={bulkButton}
+            onClick={() => setSelected(new Set())}
+            data-testid="bulk-clear"
+            style={{ marginLeft: 'auto' }}
+          >
+            {t('messages.bulk.clear')}
+          </button>
+        </div>
+      )}
+
       {visible.length === 0 ? (
         <div className={empty}>{t('messages.empty')}</div>
       ) : (
@@ -162,6 +238,15 @@ export function MessagesPage({ onJumpToInventory }: MessagesPageProps = {}) {
               key={m.id}
               message={m}
               focused={i === cursor}
+              selected={selected.has(m.id)}
+              onSelectChange={(next) =>
+                setSelected((prev) => {
+                  const out = new Set(prev);
+                  if (next) out.add(m.id);
+                  else out.delete(m.id);
+                  return out;
+                })
+              }
               onToggleRead={() => (m.read ? markUnread(m.id) : markRead(m.id))}
               onDismiss={() => dismiss(m.id)}
               onSnooze={(durationMs) => snooze(m.id, Date.now() + durationMs)}
@@ -188,6 +273,8 @@ export function MessagesPage({ onJumpToInventory }: MessagesPageProps = {}) {
 interface MessageRowProps {
   message: Message;
   focused: boolean;
+  selected: boolean;
+  onSelectChange: (next: boolean) => void;
   onToggleRead: () => void;
   onDismiss: () => void;
   onSnooze: (durationMs: number) => void;
@@ -200,7 +287,16 @@ const SNOOZE_OPTIONS: Array<{ key: '1h' | '24h' | '7d'; ms: number }> = [
   { key: '7d', ms: 7 * 24 * 60 * 60 * 1000 },
 ];
 
-function MessageRow({ message, focused, onToggleRead, onDismiss, onSnooze, onOpen }: MessageRowProps) {
+function MessageRow({
+  message,
+  focused,
+  selected,
+  onSelectChange,
+  onToggleRead,
+  onDismiss,
+  onSnooze,
+  onOpen,
+}: MessageRowProps) {
   const { t } = useTranslation();
   const dropPercent = useRapidDropPercent(message.itemId);
   const itemName = t(message.itemNameKey);
@@ -217,7 +313,16 @@ function MessageRow({ message, focused, onToggleRead, onDismiss, onSnooze, onOpe
       data-unread={!message.read}
       data-severity={message.severity}
       data-focused={focused || undefined}
+      data-selected={selected || undefined}
     >
+      <input
+        type="checkbox"
+        className={checkbox}
+        checked={selected}
+        onChange={(e) => onSelectChange(e.target.checked)}
+        aria-label={t('messages.bulk.select')}
+        data-testid="select-checkbox"
+      />
       <span
         className={`${severityDot} ${severityDotVariants[message.severity]}`}
         aria-hidden="true"

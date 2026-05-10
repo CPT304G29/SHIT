@@ -401,6 +401,67 @@ export const itemRowFocused = style({
   outlineOffset: 2,
 });
 
+export const searchInput = style({
+  flex: '1 1 200px',
+  minWidth: 160,
+  padding: '8px 12px',
+  borderRadius: vars.radius.md,
+  border: `1px solid ${vars.color.border}`,
+  backgroundColor: vars.color.bg,
+  color: vars.color.text,
+  fontSize: 13,
+  outline: 'none',
+  transition: 'border-color 120ms, box-shadow 120ms',
+  selectors: {
+    '&:focus': {
+      borderColor: vars.color.brand,
+      boxShadow: `0 0 0 3px ${vars.color.ring}`,
+    },
+  },
+});
+
+export const bulkBar = style({
+  display: 'flex',
+  alignItems: 'center',
+  gap: vars.space.sm,
+  padding: '10px 14px',
+  backgroundColor: vars.color.surface,
+  borderRadius: vars.radius.lg,
+  border: `1px solid ${vars.color.border}`,
+  fontSize: 13,
+});
+
+export const bulkLabel = style({
+  fontWeight: 600,
+  color: vars.color.text,
+});
+
+export const bulkButton = style({
+  appearance: 'none',
+  border: `1px solid ${vars.color.border}`,
+  background: vars.color.bg,
+  padding: '5px 10px',
+  fontSize: 12,
+  fontWeight: 500,
+  color: vars.color.text,
+  borderRadius: vars.radius.md,
+  cursor: 'pointer',
+  transition: 'background-color 120ms, border-color 120ms',
+  ':hover': {
+    backgroundColor: vars.color.surfaceHover,
+    borderColor: vars.color.borderHover,
+  },
+});
+
+export const checkbox = style({
+  width: 16,
+  height: 16,
+  marginTop: 4,
+  flexShrink: 0,
+  cursor: 'pointer',
+  accentColor: vars.color.brand,
+});
+
 export const helpList = style({
   listStyle: 'none',
   margin: 0,
