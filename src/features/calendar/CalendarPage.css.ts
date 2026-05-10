@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import { vars } from '@/styles/theme.css';
 
 export const page = style({
@@ -452,6 +452,37 @@ export const tableCell = style({
   fontVariantNumeric: 'tabular-nums',
   whiteSpace: 'nowrap',
   verticalAlign: 'middle',
+});
+
+export const tableRow = style({
+  transition: 'box-shadow 0.24s ease, background-color 0.24s ease',
+});
+
+globalStyle(`${tableRow} td`, {
+  transition:
+    'background-color 0.24s ease, box-shadow 0.24s ease, transform 0.24s ease, border-color 0.24s ease',
+});
+
+globalStyle(`${tableRow}:hover td`, {
+  backgroundColor: vars.color.surface,
+  transform: 'translateY(-1px)',
+});
+
+globalStyle(`${tableRow}:hover td:first-child`, {
+  boxShadow: `inset 3px 0 0 ${vars.color.brand}`,
+});
+
+export const tableCellContent = style({
+  display: 'block',
+  width: '100%',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  transition: 'transform 0.24s ease, opacity 0.24s ease',
+});
+
+globalStyle(`${tableRow}:hover .${tableCellContent}`, {
+  transform: 'translateX(2px)',
 });
 
 export const tableCellStrong = style({
