@@ -27,6 +27,13 @@ function App() {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deletingItem, setDeletingItem] = useState<InventoryItem | null>(null);
   const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const [highlightItemId, setHighlightItemId] = useState<string | null>(null);
+
+  const handleJumpToInventory = useCallback((itemId: string) => {
+    setHighlightItemId(itemId);
+    setPage('inventory');
+    window.setTimeout(() => setHighlightItemId(null), 2500);
+  }, []);
 
   const addToast = useCallback((message: string, type: ToastItem['type'] = 'success') => {
     const id = `${Date.now()}-${Math.random()}`;
@@ -83,10 +90,15 @@ function App() {
         onNavigate={(p) => setPage(p as Page)}
       >
         {page === 'inventory' && (
-          <InventoryTable onEdit={handleEdit} onDelete={handleDelete} onAdd={handleAdd} />
+          <InventoryTable
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onAdd={handleAdd}
+            highlightItemId={highlightItemId}
+          />
         )}
         {page === 'charts' && <ChartsPage />}
-        {page === 'messages' && <MessagesPage />}
+        {page === 'messages' && <MessagesPage onJumpToInventory={handleJumpToInventory} />}
       </Shell>
 
       <InventoryForm
