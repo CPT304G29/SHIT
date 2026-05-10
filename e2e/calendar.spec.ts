@@ -69,4 +69,26 @@ test.describe('Calendar page', () => {
     await expect(page.getByTestId('calendar-empty-state')).toBeVisible();
     await expect(page.getByText('No inventory activity recorded for this date.')).toBeVisible();
   });
+
+  test('detail table keeps 10 visible slots and quiet-day selection resets to a single page', async ({
+    page,
+  }) => {
+    await expect(page.getByTestId('calendar-page-indicator')).toHaveText(/Page 1 \/ \d+/);
+    const filledRows = await page.getByTestId('calendar-detail-row').count();
+    const blankRows = await page.getByTestId('calendar-detail-row-blank').count();
+    expect(filledRows + blankRows).toBe(10);
+
+    const quietPastDay = page
+      .getByTestId('calendar-grid')
+      .locator('button[data-in-month="true"]:not([disabled])')
+      .filter({ hasText: /\b0\b/ })
+      .nth(1);
+
+    await quietPastDay.click();
+
+    await expect(page.getByTestId('calendar-page-indicator')).toHaveText('Page 1 / 1');
+    await expect(page.getByTestId('calendar-detail-row')).toHaveCount(0);
+    await expect(page.getByTestId('calendar-detail-row-blank')).toHaveCount(10);
+    await expect(page.getByRole('button', { name: 'Next', exact: true })).toBeDisabled();
+  });
 });
