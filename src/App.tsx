@@ -7,6 +7,9 @@ import { InventoryTable } from '@/features/inventory/InventoryTable';
 import { ChartsPage } from '@/features/charts/ChartsPage';
 import { CalendarPage } from '@/features/calendar/CalendarPage';
 import { MessagesPage } from '@/features/messages/MessagesPage';
+import { PrivacyPolicy } from '@/features/legal/PrivacyPolicy';
+import { CookieBanner } from '@/features/legal/CookieBanner';
+import { enforceConsentOnBoot } from '@/features/legal/consent.store';
 import { InventoryForm } from '@/features/inventory/InventoryForm';
 import { DeleteConfirmation } from '@/features/inventory/DeleteConfirmation';
 import { ToastContainer, type ToastItem } from '@/components/Toast';
@@ -16,7 +19,11 @@ import { useMessagesStore } from '@/features/messages/messages.store';
 import { useTrackInventoryHistory } from '@/features/messages/useTrackInventoryHistory';
 import type { InventoryItem, InventoryFormData } from '@/features/inventory/inventory.types';
 
-type Page = 'inventory' | 'charts' | 'calendar' | 'messages';
+type Page = 'inventory' | 'charts' | 'calendar' | 'messages' | 'privacy';
+
+// Run once at module evaluation so a refused user does not have stale data
+// silently re-persisted by the various stores during the first render pass.
+enforceConsentOnBoot();
 
 function App() {
   const { theme, isTransitioning, toggleTheme } = useThemeTransition();
@@ -144,6 +151,7 @@ function App() {
         {page === 'charts' && <ChartsPage />}
         {page === 'calendar' && <CalendarPage />}
         {page === 'messages' && <MessagesPage onJumpToInventory={handleJumpToInventory} />}
+        {page === 'privacy' && <PrivacyPolicy />}
       </Shell>
 
       <InventoryForm
@@ -161,6 +169,7 @@ function App() {
       />
 
       <ToastContainer toasts={toasts} onRemove={removeToast} />
+      <CookieBanner onShowPrivacyPolicy={() => setPage('privacy')} />
     </div>
   );
 }
