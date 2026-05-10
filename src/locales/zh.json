@@ -95,6 +95,89 @@
     "syntheticHint": "由当前库存结构推导"
   },
   "comingSoon": "即将推出",
+  "messages": {
+    "title": "消息",
+    "subtitle": "根据库存自动生成的智能提醒",
+    "empty": "暂无消息，库存状态良好。",
+    "searchPlaceholder": "按商品名称搜索…",
+    "bulk": {
+      "label": "已选 {{count}} 条",
+      "select": "选择消息",
+      "clear": "取消选择"
+    },
+    "filter": {
+      "all": "全部",
+      "unread": "未读",
+      "critical": "严重"
+    },
+    "actions": {
+      "markRead": "标为已读",
+      "markUnread": "标为未读",
+      "dismiss": "忽略",
+      "markAllRead": "全部标为已读",
+      "snooze": "暂停提醒",
+      "snoozeFor": {
+        "1h": "暂停 1 小时",
+        "24h": "暂停 24 小时",
+        "7d": "暂停 7 天"
+      }
+    },
+    "type": {
+      "outOfStock": "缺货",
+      "lowStock": "库存不足",
+      "highValue": "高价值提醒",
+      "rapidDecrease": "库存骤降"
+    },
+    "settings": {
+      "button": "设置",
+      "title": "通知设置",
+      "lowStock": "库存不足阈值（件）",
+      "lowStockHelp": "数量低于此值的商品将触发库存不足警告。",
+      "highValue": "高价值阈值（货币）",
+      "highValueHelp": "商品总价值超过此值时会触发高价值提醒。",
+      "rapidDecrease": "骤降阈值（%）",
+      "rapidDecreaseHelp": "若商品数量与最近快照相比下降不低于该百分比，将触发骤降提醒。",
+      "enableTypes": "启用的提醒类型",
+      "save": "保存",
+      "reset": "恢复默认"
+    },
+    "severity": {
+      "critical": "严重",
+      "warning": "警告",
+      "info": "信息"
+    },
+    "body": {
+      "outOfStock": "{{name}} 已缺货，需要立即补货。",
+      "lowStock": "{{name}} 仅剩 {{quantity}} 件。",
+      "highValue": "{{name}} 在当前库存中价值占比较高。",
+      "rapidDecrease": "{{name}} 近期下降了 {{percent}}%，请尽快确认补货安排。"
+    },
+    "unreadBadge": "{{count}} 条未读",
+    "summary": {
+      "title": "严重程度概览",
+      "total": "活跃"
+    },
+    "detail": {
+      "message": "消息内容",
+      "quickRestock": "补货 +{{count}} 件",
+      "viewInInventory": "在库存中查看"
+    },
+    "toast": {
+      "newCritical": "新增 {{count}} 条紧急提醒",
+      "view": "查看"
+    },
+    "help": {
+      "title": "快捷键",
+      "next": "下一条",
+      "prev": "上一条",
+      "open": "打开详情",
+      "toggleRead": "切换已读/未读",
+      "snooze": "暂停 24 小时",
+      "dismiss": "忽略",
+      "search": "聚焦搜索",
+      "help": "显示帮助"
+    }
+  },
   "item": {
     "blazerFemale": "女式西装外套",
     "bomberJacket": "飞行员夹克",
