@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Check, X, RotateCcw, Settings, Clock } from 'lucide-react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { useMessages } from './useMessages';
+import { useMessages, useRapidDropPercent } from './useMessages';
 import { useMessagesStore } from './messages.store';
 import { MessagesSettings } from './MessagesSettings';
 import { SeveritySummary } from './SeveritySummary';
@@ -153,11 +153,12 @@ const SNOOZE_OPTIONS: Array<{ key: '1h' | '24h' | '7d'; ms: number }> = [
 
 function MessageRow({ message, onToggleRead, onDismiss, onSnooze, onOpen }: MessageRowProps) {
   const { t } = useTranslation();
+  const dropPercent = useRapidDropPercent(message.itemId);
   const itemName = t(message.itemNameKey);
   const body = t(`messages.body.${message.type}`, {
     name: itemName,
     quantity: message.quantity,
-    percent: '0',
+    percent: dropPercent,
   });
 
   return (
