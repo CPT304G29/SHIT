@@ -168,5 +168,62 @@
     "shirt": "Shirt",
     "shoes": "Shoes",
     "socks": "Socks"
+  },
+  "legal": {
+    "banner": {
+      "title": "Storage consent",
+      "body": "We store your inventory, settings and language preference in your browser's localStorage. Nothing is sent to a server.",
+      "learnMore": "Read our Privacy Policy",
+      "accept": "Accept",
+      "reject": "Reject and clear"
+    },
+    "policy": {
+      "title": "Privacy Policy",
+      "lastUpdated": "Last updated: {{date}}",
+      "intro": "SHIT is a browser-only inventory dashboard. We do not run a server, do not log you in, do not collect analytics, and never transmit your data off your device.",
+      "collect": {
+        "title": "What we collect",
+        "body": "Nothing. There is no telemetry, no third-party request, no account. Every piece of data the app produces stays in your browser."
+      },
+      "storage": {
+        "title": "What we store on your device",
+        "body": "The app uses your browser's localStorage to remember inventory items, message-inbox state, theme and language across reloads. The exact keys are listed below.",
+        "col": {
+          "key": "Key",
+          "purpose": "Purpose"
+        },
+        "purpose": {
+          "inventory": "Your inventory items (name, quantity, category, price).",
+          "messages": "Read / dismissed / snooze state for individual smart-alert messages.",
+          "messagesSettings": "Your low-stock, high-value and rapid-decrease thresholds plus per-type enable flags.",
+          "messagesHistory": "Up to 8 quantity snapshots per item over a 14-day window — used to detect rapid stock decreases.",
+          "theme": "Whether you prefer light or dark UI.",
+          "language": "Your selected interface language (English / 中文 / 日本語).",
+          "i18next": "Cache used by the i18n library to remember the chosen language across tabs."
+        }
+      },
+      "retention": {
+        "title": "How long we keep it",
+        "body": "Until you reject consent, clear browser storage, or use a different browser/device. Inventory history snapshots are pruned to a 14-day rolling window automatically."
+      },
+      "rights": {
+        "title": "Your rights",
+        "body": "You can review every key on this page, reject consent (which immediately wipes all of the keys above), reset your decision, or clear browser storage manually via your browser's developer tools. There is no account to delete and no server-side data to request."
+      },
+      "consent": {
+        "title": "Your current decision",
+        "status": {
+          "undecided": "You have not made a decision yet.",
+          "accepted": "You accepted storage consent",
+          "rejected": "You rejected storage consent"
+        },
+        "rejectAndClear": "Reject and clear all data",
+        "reset": "Reset decision"
+      },
+      "contact": {
+        "title": "Contact",
+        "body": "This is a coursework demo project. For questions, open an issue at https://github.com/CPT304G29/SHIT/issues."
+      }
+    }
   }
 }
