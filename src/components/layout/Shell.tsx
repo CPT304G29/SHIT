@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { appShell } from '@/styles/global.css';
@@ -22,6 +23,7 @@ export function Shell({
   activePage,
   onNavigate,
 }: ShellProps) {
+  const { t } = useTranslation();
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const sidebarWidth = sidebarExpanded ? 200 : 64;
 
@@ -60,6 +62,38 @@ export function Shell({
         >
           {children}
         </main>
+        <footer
+          style={{
+            backgroundColor: vars.color.surface,
+            borderTop: `1px solid ${vars.color.border}`,
+            padding: '16px 32px',
+            fontSize: 12,
+            color: vars.color.textMuted,
+            display: 'flex',
+            justifyContent: 'space-between',
+            gap: 16,
+            flexWrap: 'wrap',
+          }}
+        >
+          <span>SHIT · {t('app.title')}</span>
+          <button
+            type="button"
+            onClick={() => onNavigate('privacy')}
+            data-testid="footer-privacy-link"
+            style={{
+              background: 'transparent',
+              border: 'none',
+              padding: 0,
+              color: vars.color.textMuted,
+              fontSize: 12,
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              fontFamily: 'inherit',
+            }}
+          >
+            {t('legal.policy.title')}
+          </button>
+        </footer>
       </div>
     </div>
   );
