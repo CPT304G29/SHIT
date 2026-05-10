@@ -183,4 +183,19 @@ describe('CalendarPage', () => {
     expect(screen.getAllByTestId('calendar-detail-row')).toHaveLength(2);
     expect(screen.getAllByTestId('calendar-detail-row-blank')).toHaveLength(8);
   });
+
+  it('resets to the first page and keeps 10 visible rows when switching to a quiet day', () => {
+    render(<CalendarPage />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Next' }));
+    expect(screen.getByTestId('calendar-page-indicator')).toHaveTextContent('Page 2 / 2');
+
+    const quietDayButton = screen.getByRole('button', { name: /10 0 IN 0 OUT 0/i });
+    fireEvent.click(quietDayButton);
+
+    expect(screen.getByTestId('calendar-page-indicator')).toHaveTextContent('Page 1 / 1');
+    expect(screen.queryAllByTestId('calendar-detail-row')).toHaveLength(0);
+    expect(screen.getAllByTestId('calendar-detail-row-blank')).toHaveLength(10);
+    expect(screen.getByText('No inventory activity recorded for this date.')).toBeInTheDocument();
+  });
 });
