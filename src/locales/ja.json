@@ -126,6 +126,17 @@
     "toast": {
       "newCritical": "緊急アラートが {{count}} 件あります",
       "view": "表示"
+    },
+    "help": {
+      "title": "キーボードショートカット",
+      "next": "次のメッセージ",
+      "prev": "前のメッセージ",
+      "open": "詳細を開く",
+      "toggleRead": "既読 / 未読 切替",
+      "snooze": "24 時間スヌーズ",
+      "dismiss": "却下",
+      "search": "検索にフォーカス",
+      "help": "ヘルプを表示"
     }
   },
   "item": {

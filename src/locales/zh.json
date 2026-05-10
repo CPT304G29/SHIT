@@ -126,6 +126,17 @@
     "toast": {
       "newCritical": "新增 {{count}} 条紧急提醒",
       "view": "查看"
+    },
+    "help": {
+      "title": "快捷键",
+      "next": "下一条",
+      "prev": "上一条",
+      "open": "打开详情",
+      "toggleRead": "切换已读/未读",
+      "snooze": "暂停 24 小时",
+      "dismiss": "忽略",
+      "search": "聚焦搜索",
+      "help": "显示帮助"
     }
   },
   "item": {

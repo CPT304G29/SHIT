@@ -396,6 +396,43 @@ export const drawerSecondary = style({
   },
 });
 
+export const itemRowFocused = style({
+  outline: `2px solid ${vars.color.brand}`,
+  outlineOffset: 2,
+});
+
+export const helpList = style({
+  listStyle: 'none',
+  margin: 0,
+  padding: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: vars.space.sm,
+});
+
+export const helpRow = style({
+  display: 'grid',
+  gridTemplateColumns: '120px 1fr',
+  alignItems: 'center',
+  gap: vars.space.md,
+  fontSize: 13,
+});
+
+export const helpKey = style({
+  fontFamily: 'Consolas, "Courier New", monospace',
+  fontSize: 12,
+  fontWeight: 600,
+  padding: '2px 8px',
+  borderRadius: vars.radius.sm,
+  border: `1px solid ${vars.color.border}`,
+  backgroundColor: vars.color.surface,
+  color: vars.color.text,
+});
+
+export const helpDesc = style({
+  color: vars.color.textMuted,
+});
+
 export const dropdownItem = style({
   fontSize: 13,
   padding: '8px 12px',
