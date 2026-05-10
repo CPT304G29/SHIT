@@ -7,6 +7,7 @@ interface ParticleGalaxyProps {
 }
 
 const PARTICLE_COUNT = 12000;
+const TRAIL_COUNT = 500;
 const SETTLE_DURATION = 3;
 const SETTLE_DELAY = 1.2;
 
@@ -85,8 +86,8 @@ export function ParticleGalaxy({ onClose }: ParticleGalaxyProps) {
     camera.position.z = 8;
 
     const aspect = width / height;
-    const logoWidth = aspect > 1.5 ? 12 : 9;
-    const logoHeight = logoWidth * 0.65;
+    const logoWidth = aspect > 1.5 ? 16 : 12;
+    const logoHeight = logoWidth * 0.6;
 
     const targetPositions = generateLogoPoints(logoWidth, logoHeight);
 
@@ -94,6 +95,7 @@ export function ParticleGalaxy({ onClose }: ParticleGalaxyProps) {
     const velocities = new Float32Array(PARTICLE_COUNT * 3);
     const colors = new Float32Array(PARTICLE_COUNT * 3);
     const sizes = new Float32Array(PARTICLE_COUNT);
+    const flowOffsets = new Float32Array(PARTICLE_COUNT);
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
       const i3 = i * 3;
@@ -123,6 +125,7 @@ export function ParticleGalaxy({ onClose }: ParticleGalaxyProps) {
       }
 
       sizes[i] = 0.3 + Math.random() * 0.2;
+      flowOffsets[i] = Math.random() * Math.PI * 2;
     }
 
     const geometry = new THREE.BufferGeometry();
@@ -133,8 +136,10 @@ export function ParticleGalaxy({ onClose }: ParticleGalaxyProps) {
     const vertexShader = `
       attribute float size;
       varying vec3 vColor;
+      varying vec2 vUv;
       void main() {
         vColor = color;
+        vUv = position.xy;
         vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
         gl_PointSize = size * (120.0 / -mvPosition.z);
         gl_Position = projectionMatrix * mvPosition;
@@ -143,12 +148,20 @@ export function ParticleGalaxy({ onClose }: ParticleGalaxyProps) {
 
     const fragmentShader = `
       varying vec3 vColor;
+      varying vec2 vUv;
+      uniform float uTime;
       void main() {
         float dist = length(gl_PointCoord - vec2(0.5));
         if (dist > 0.5) discard;
         float alpha = 1.0 - smoothstep(0.2, 0.5, dist);
         float glow = exp(-dist * 4.0) * 0.5;
-        gl_FragColor = vec4(vColor + glow, alpha * 0.85);
+        
+        float colorShift = sin(uTime * 1.5 + vUv.x * 0.5) * 0.15;
+        vec3 shiftedColor = vColor;
+        shiftedColor.r = min(1.0, vColor.r + colorShift);
+        shiftedColor.g = min(1.0, vColor.g + colorShift * 0.3);
+        
+        gl_FragColor = vec4(shiftedColor + glow, alpha * 0.85);
       }
     `;
 
@@ -159,13 +172,72 @@ export function ParticleGalaxy({ onClose }: ParticleGalaxyProps) {
       transparent: true,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
+      uniforms: {
+        uTime: { value: 0 },
+      },
     });
 
     const particles = new THREE.Points(geometry, material);
     scene.add(particles);
 
+    const trailPositions = new Float32Array(TRAIL_COUNT * 3);
+    const trailColors = new Float32Array(TRAIL_COUNT * 3);
+    const trailSizes = new Float32Array(TRAIL_COUNT);
+    const trailAlphas = new Float32Array(TRAIL_COUNT);
+    let trailIndex = 0;
+
+    for (let i = 0; i < TRAIL_COUNT; i++) {
+      trailPositions[i * 3] = 0;
+      trailPositions[i * 3 + 1] = 0;
+      trailPositions[i * 3 + 2] = -100;
+      trailColors[i * 3] = 1;
+      trailColors[i * 3 + 1] = 0.2;
+      trailColors[i * 3 + 2] = 0.1;
+      trailSizes[i] = 0;
+      trailAlphas[i] = 0;
+    }
+
+    const trailGeometry = new THREE.BufferGeometry();
+    trailGeometry.setAttribute('position', new THREE.BufferAttribute(trailPositions, 3));
+    trailGeometry.setAttribute('color', new THREE.BufferAttribute(trailColors, 3));
+    trailGeometry.setAttribute('size', new THREE.BufferAttribute(trailSizes, 1));
+
+    const trailVertexShader = `
+      attribute float size;
+      varying vec3 vColor;
+      void main() {
+        vColor = color;
+        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+        gl_PointSize = size * (80.0 / -mvPosition.z);
+        gl_Position = projectionMatrix * mvPosition;
+      }
+    `;
+
+    const trailFragmentShader = `
+      varying vec3 vColor;
+      void main() {
+        float dist = length(gl_PointCoord - vec2(0.5));
+        if (dist > 0.5) discard;
+        float alpha = 1.0 - smoothstep(0.0, 0.5, dist);
+        gl_FragColor = vec4(vColor, alpha * 0.6);
+      }
+    `;
+
+    const trailMaterial = new THREE.ShaderMaterial({
+      vertexShader: trailVertexShader,
+      fragmentShader: trailFragmentShader,
+      vertexColors: true,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+
+    const trailParticles = new THREE.Points(trailGeometry, trailMaterial);
+    scene.add(trailParticles);
+
     const mouse = new THREE.Vector2(9999, 9999);
     const mouseWorld = new THREE.Vector3();
+    const prevMouseWorld = new THREE.Vector3();
     const raycaster = new THREE.Raycaster();
 
     const onMouseMove = (event: MouseEvent) => {
@@ -180,13 +252,35 @@ export function ParticleGalaxy({ onClose }: ParticleGalaxyProps) {
     window.addEventListener('mousemove', onMouseMove);
 
     const startTime = performance.now();
-    let breathPhase = 0;
 
     const animate = () => {
       const elapsed = (performance.now() - startTime) / 1000;
       const positions = geometry.attributes.position.array as Float32Array;
+      const settled = elapsed > SETTLE_DELAY + SETTLE_DURATION;
 
-      breathPhase += 0.015;
+      material.uniforms.uTime.value = elapsed;
+
+      const mouseDelta = mouseWorld.distanceTo(prevMouseWorld);
+      if (mouseDelta > 0.01 && settled) {
+        const ti = trailIndex % TRAIL_COUNT;
+        trailPositions[ti * 3] = mouseWorld.x + (Math.random() - 0.5) * 0.1;
+        trailPositions[ti * 3 + 1] = mouseWorld.y + (Math.random() - 0.5) * 0.1;
+        trailPositions[ti * 3 + 2] = (Math.random() - 0.5) * 0.2;
+        trailSizes[ti] = 0.3 + Math.random() * 0.3;
+        trailAlphas[ti] = 1;
+        trailIndex++;
+      }
+      prevMouseWorld.copy(mouseWorld);
+
+      for (let i = 0; i < TRAIL_COUNT; i++) {
+        trailAlphas[i] *= 0.96;
+        trailSizes[i] *= 0.98;
+        if (trailAlphas[i] < 0.01) {
+          trailPositions[i * 3 + 2] = -100;
+        }
+      }
+      trailGeometry.attributes.position.needsUpdate = true;
+      trailGeometry.attributes.size.needsUpdate = true;
 
       for (let i = 0; i < PARTICLE_COUNT; i++) {
         const i3 = i * 3;
@@ -195,10 +289,6 @@ export function ParticleGalaxy({ onClose }: ParticleGalaxyProps) {
         const ty = targetPositions[i3 + 1];
         const tz = targetPositions[i3 + 2];
 
-        const dx = tx - positions[i3];
-        const dy = ty - positions[i3 + 1];
-        const dz = tz - positions[i3 + 2];
-
         const distToMouse = Math.sqrt(
           (positions[i3] - mouseWorld.x) ** 2 +
             (positions[i3 + 1] - mouseWorld.y) ** 2
@@ -206,7 +296,6 @@ export function ParticleGalaxy({ onClose }: ParticleGalaxyProps) {
 
         const repelRadius = 0.8;
         const repelStrength = 0.08;
-        const settled = elapsed > SETTLE_DELAY + SETTLE_DURATION;
 
         if (distToMouse < repelRadius && settled) {
           const repelForce = (1 - distToMouse / repelRadius) * repelStrength;
@@ -224,12 +313,12 @@ export function ParticleGalaxy({ onClose }: ParticleGalaxyProps) {
           velocities[i3 + 2] += (Math.random() - 0.5) * drift;
         } else {
           const progress = Math.min((elapsed - SETTLE_DELAY) / SETTLE_DURATION, 1);
-          const eased = 1 - Math.pow(1 - progress, 4);
-          const springStrength = 0.012 * eased;
+          const eased = progress * progress * (3 - 2 * progress);
+          const lerpFactor = 0.02 + eased * 0.06;
 
-          velocities[i3] += dx * springStrength;
-          velocities[i3 + 1] += dy * springStrength;
-          velocities[i3 + 2] += dz * springStrength;
+          positions[i3] += (tx - positions[i3]) * lerpFactor;
+          positions[i3 + 1] += (ty - positions[i3 + 1]) * lerpFactor;
+          positions[i3 + 2] += (tz - positions[i3 + 2]) * lerpFactor;
         }
 
         const damping = settled ? 0.92 : 0.97;
@@ -242,9 +331,13 @@ export function ParticleGalaxy({ onClose }: ParticleGalaxyProps) {
         positions[i3 + 2] += velocities[i3 + 2];
 
         if (settled) {
-          const breathe = Math.sin(breathPhase + i * 0.003) * 0.001;
-          positions[i3] += breathe;
-          positions[i3 + 1] += breathe * 0.5;
+          const flowX = Math.sin(elapsed * 1.5 + flowOffsets[i]) * 0.002;
+          const flowY = Math.cos(elapsed * 0.8 + flowOffsets[i] * 0.5) * 0.001;
+          positions[i3] += flowX;
+          positions[i3 + 1] += flowY;
+
+          const wave = Math.sin(elapsed * 2 + positions[i3] * 1.5 + positions[i3 + 1] * 1.5) * 0.03;
+          positions[i3 + 2] = targetPositions[i3 + 2] + wave;
         }
       }
 
@@ -276,6 +369,8 @@ export function ParticleGalaxy({ onClose }: ParticleGalaxyProps) {
       renderer.dispose();
       geometry.dispose();
       material.dispose();
+      trailGeometry.dispose();
+      trailMaterial.dispose();
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
