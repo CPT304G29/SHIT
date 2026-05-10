@@ -12,6 +12,10 @@ coverage:
           - src/features/messages/messages.settings.store.ts
           - src/features/messages/messages.history.store.ts
           - src/features/messages/useMessages.ts
+      legal:
+        target: 80%
+        paths:
+          - src/features/legal/consent.store.ts
     patch:
       default:
         target: 80%

@@ -24,8 +24,7 @@ export function CookieBanner({ onShowPrivacyPolicy }: CookieBannerProps) {
   return (
     <div
       className={banner}
-      role="dialog"
-      aria-modal="false"
+      role="region"
       aria-label={t('legal.banner.title')}
       data-testid="cookie-banner"
     >
