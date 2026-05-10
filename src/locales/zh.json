@@ -107,7 +107,11 @@
       "highValue": "{{name}} 在当前库存中价值占比较高。",
       "rapidDecrease": "{{name}} 近期下降了 {{percent}}%，请尽快确认补货安排。"
     },
-    "unreadBadge": "{{count}} 条未读"
+    "unreadBadge": "{{count}} 条未读",
+    "summary": {
+      "title": "严重程度概览",
+      "total": "活跃"
+    }
   },
   "item": {
     "blazerFemale": "女式西装外套",

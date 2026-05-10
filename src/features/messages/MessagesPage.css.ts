@@ -252,6 +252,84 @@ export const toggle = style({
   accentColor: vars.color.brand,
 });
 
+export const summary = style({
+  display: 'grid',
+  gridTemplateColumns: '160px 1fr',
+  alignItems: 'center',
+  gap: vars.space.lg,
+  padding: vars.space.md,
+  backgroundColor: vars.color.surface,
+  borderRadius: vars.radius.lg,
+  '@media': {
+    '(max-width: 600px)': {
+      gridTemplateColumns: '1fr',
+      justifyItems: 'center',
+    },
+  },
+});
+
+export const summaryChart = style({
+  position: 'relative',
+  width: 140,
+  height: 140,
+});
+
+export const summaryTotal = style({
+  position: 'absolute',
+  inset: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  pointerEvents: 'none',
+  fontSize: 24,
+  fontWeight: 700,
+  color: vars.color.text,
+});
+
+export const summaryTotalLabel = style({
+  fontSize: 11,
+  fontWeight: 500,
+  color: vars.color.textMuted,
+  letterSpacing: 0.4,
+  textTransform: 'uppercase',
+});
+
+export const summaryLegend = style({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: vars.space.xs,
+  margin: 0,
+  padding: 0,
+  listStyle: 'none',
+});
+
+export const summaryRow = style({
+  display: 'flex',
+  alignItems: 'center',
+  gap: vars.space.sm,
+  fontSize: 13,
+});
+
+export const summaryDot = style({
+  width: 10,
+  height: 10,
+  borderRadius: '50%',
+  flexShrink: 0,
+});
+
+export const summaryLabel = style({
+  color: vars.color.text,
+  fontWeight: 500,
+});
+
+export const summaryCount = style({
+  marginLeft: 'auto',
+  color: vars.color.textMuted,
+  fontWeight: 600,
+  fontVariantNumeric: 'tabular-nums',
+});
+
 export const settingsButton = style({
   appearance: 'none',
   border: `1px solid ${vars.color.border}`,

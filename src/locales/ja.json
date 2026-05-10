@@ -107,7 +107,11 @@
       "highValue": "{{name}} は現在、高額な在庫項目です。",
       "rapidDecrease": "{{name}} は最近 {{percent}}% 減少しました。在庫を確認してください。"
     },
-    "unreadBadge": "{{count}} 件未読"
+    "unreadBadge": "{{count}} 件未読",
+    "summary": {
+      "title": "重要度の概要",
+      "total": "アクティブ"
+    }
   },
   "item": {
     "blazerFemale": "ブレザー（女性用）",

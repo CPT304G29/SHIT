@@ -107,7 +107,11 @@
       "highValue": "{{name}} now represents a high-value position in your inventory.",
       "rapidDecrease": "{{name}} dropped by {{percent}}% recently — investigate before it runs out."
     },
-    "unreadBadge": "{{count}} unread"
+    "unreadBadge": "{{count}} unread",
+    "summary": {
+      "title": "Severity overview",
+      "total": "Active"
+    }
   },
   "item": {
     "blazerFemale": "Blazer (Female)",
