@@ -3,13 +3,15 @@ import { useEffect } from 'react';
 interface UseMessageKeyboardArgs {
   count: number;
   cursor: number;
-  setCursor: (next: number) => void;
+  setCursor: (updater: number | ((prev: number) => number)) => void;
   onToggleRead: (index: number) => void;
   onDismiss: (index: number) => void;
   onSnooze: (index: number) => void;
   onOpen: (index: number) => void;
   onShowHelp: () => void;
   onFocusSearch?: () => void;
+  /** Called on any recognised keypress so the consumer can flip a "keyboard active" flag */
+  onActivate?: () => void;
   enabled: boolean;
 }
 
@@ -22,6 +24,19 @@ function isTyping(target: EventTarget | null): boolean {
   return false;
 }
 
+const RECOGNISED_KEYS = new Set([
+  'j',
+  'k',
+  'e',
+  'x',
+  's',
+  'Enter',
+  '?',
+  '/',
+  'ArrowDown',
+  'ArrowUp',
+]);
+
 export function useMessageKeyboard({
   count,
   cursor,
@@ -32,6 +47,7 @@ export function useMessageKeyboard({
   onOpen,
   onShowHelp,
   onFocusSearch,
+  onActivate,
   enabled,
 }: UseMessageKeyboardArgs) {
   useEffect(() => {
@@ -40,36 +56,42 @@ export function useMessageKeyboard({
     const handler = (e: KeyboardEvent) => {
       if (isTyping(e.target)) return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (!RECOGNISED_KEYS.has(e.key)) return;
       if (count === 0 && !['?', '/'].includes(e.key)) return;
 
-      const safeIndex = Math.max(0, Math.min(cursor, count - 1));
+      onActivate?.();
+
+      const clamp = (n: number) => Math.max(0, Math.min(n, count - 1));
+      // The component initialises cursor at -1 to indicate "no visible focus".
+      // Once any movement key fires, treat -1 as "just started, land on 0".
+      const activeIndex = clamp(cursor < 0 ? 0 : cursor);
 
       switch (e.key) {
         case 'j':
         case 'ArrowDown':
           e.preventDefault();
-          setCursor(Math.min(safeIndex + 1, count - 1));
+          setCursor((prev) => clamp((prev < 0 ? -1 : prev) + 1));
           break;
         case 'k':
         case 'ArrowUp':
           e.preventDefault();
-          setCursor(Math.max(safeIndex - 1, 0));
+          setCursor((prev) => clamp((prev < 0 ? 1 : prev) - 1));
           break;
         case 'e':
           e.preventDefault();
-          onToggleRead(safeIndex);
+          onToggleRead(activeIndex);
           break;
         case 'x':
           e.preventDefault();
-          onDismiss(safeIndex);
+          onDismiss(activeIndex);
           break;
         case 's':
           e.preventDefault();
-          onSnooze(safeIndex);
+          onSnooze(activeIndex);
           break;
         case 'Enter':
           e.preventDefault();
-          onOpen(safeIndex);
+          onOpen(activeIndex);
           break;
         case '?':
           e.preventDefault();
@@ -86,5 +108,17 @@ export function useMessageKeyboard({
 
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [count, cursor, setCursor, onToggleRead, onDismiss, onSnooze, onOpen, onShowHelp, onFocusSearch, enabled]);
+  }, [
+    count,
+    cursor,
+    setCursor,
+    onToggleRead,
+    onDismiss,
+    onSnooze,
+    onOpen,
+    onShowHelp,
+    onFocusSearch,
+    onActivate,
+    enabled,
+  ]);
 }

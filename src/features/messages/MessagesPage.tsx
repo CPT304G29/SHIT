@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Check, X, RotateCcw, Settings, Clock, Keyboard } from 'lucide-react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
@@ -64,8 +64,8 @@ export function MessagesPage({ onJumpToInventory }: MessagesPageProps = {}) {
   const [filter, setFilter] = useState<MessageFilter>('all');
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [detailMessage, setDetailMessage] = useState<Message | null>(null);
-  const [cursor, setCursor] = useState(0);
-  const [keyboardActive, setKeyboardActive] = useState(false);
+  // -1 means "no cursor visible". First keypress flips it to 0; subsequent j/k move it.
+  const [cursor, setCursor] = useState(-1);
   const [helpOpen, setHelpOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -83,18 +83,6 @@ export function MessagesPage({ onJumpToInventory }: MessagesPageProps = {}) {
   }, [messages, filter, search, t]);
 
   const unreadIds = messages.filter((m) => !m.read).map((m) => m.id);
-
-  useEffect(() => {
-    if (keyboardActive) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.metaKey || e.ctrlKey || e.altKey) return;
-      if (['j', 'k', 'e', 'x', 's', 'Enter', '?', '/', 'ArrowDown', 'ArrowUp'].includes(e.key)) {
-        setKeyboardActive(true);
-      }
-    };
-    window.addEventListener('keydown', onKey, { once: false });
-    return () => window.removeEventListener('keydown', onKey);
-  }, [keyboardActive]);
 
   useMessageKeyboard({
     enabled: !settingsOpen && !detailMessage && !helpOpen,
@@ -250,7 +238,7 @@ export function MessagesPage({ onJumpToInventory }: MessagesPageProps = {}) {
             <MessageRow
               key={m.id}
               message={m}
-              focused={keyboardActive && i === cursor}
+              focused={i === cursor}
               selected={selected.has(m.id)}
               onSelectChange={(next) =>
                 setSelected((prev) => {
