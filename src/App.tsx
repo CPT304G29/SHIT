@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { lightTheme, darkTheme } from '@/styles/theme.css';
 import { Shell } from '@/components/layout/Shell';
@@ -10,6 +10,7 @@ import { InventoryForm } from '@/features/inventory/InventoryForm';
 import { DeleteConfirmation } from '@/features/inventory/DeleteConfirmation';
 import { ToastContainer, type ToastItem } from '@/components/Toast';
 import { useInventoryStore } from '@/features/inventory/inventory.store';
+import { useMessages } from '@/features/messages/useMessages';
 import type { InventoryItem, InventoryFormData } from '@/features/inventory/inventory.types';
 
 type Page = 'inventory' | 'charts' | 'messages';
@@ -35,10 +36,17 @@ function App() {
     window.setTimeout(() => setHighlightItemId(null), 2500);
   }, []);
 
-  const addToast = useCallback((message: string, type: ToastItem['type'] = 'success') => {
-    const id = `${Date.now()}-${Math.random()}`;
-    setToasts((prev) => [...prev, { id, message, type }]);
-  }, []);
+  const addToast = useCallback(
+    (
+      message: string,
+      type: ToastItem['type'] = 'success',
+      action?: ToastItem['action']
+    ) => {
+      const id = `${Date.now()}-${Math.random()}`;
+      setToasts((prev) => [...prev, { id, message, type, action }]);
+    },
+    []
+  );
 
   const removeToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -47,6 +55,32 @@ function App() {
   useEffect(() => {
     document.documentElement.lang = i18n.language;
   }, [i18n.language]);
+
+  const messages = useMessages();
+  const seenCriticalIdsRef = useRef<Set<string>>(new Set());
+  const initializedRef = useRef(false);
+
+  useEffect(() => {
+    const currentCritical = messages.filter((m) => m.severity === 'critical');
+    const currentIds = new Set(currentCritical.map((m) => m.id));
+
+    if (!initializedRef.current) {
+      seenCriticalIdsRef.current = currentIds;
+      initializedRef.current = true;
+      return;
+    }
+
+    const newOnes = currentCritical.filter((m) => !seenCriticalIdsRef.current.has(m.id));
+    seenCriticalIdsRef.current = currentIds;
+
+    if (newOnes.length > 0) {
+      const label = t('messages.toast.newCritical', { count: newOnes.length });
+      addToast(label, 'error', {
+        label: t('messages.toast.view'),
+        onClick: () => setPage('messages'),
+      });
+    }
+  }, [messages, addToast, t]);
 
   const handleAdd = () => {
     setEditingItem(null);

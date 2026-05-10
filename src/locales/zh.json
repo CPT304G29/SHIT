@@ -122,6 +122,10 @@
       "message": "消息内容",
       "quickRestock": "补货 +{{count}} 件",
       "viewInInventory": "在库存中查看"
+    },
+    "toast": {
+      "newCritical": "新增 {{count}} 条紧急提醒",
+      "view": "查看"
     }
   },
   "item": {
