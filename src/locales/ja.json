@@ -117,6 +117,11 @@
     "summary": {
       "title": "重要度の概要",
       "total": "アクティブ"
+    },
+    "detail": {
+      "message": "メッセージ",
+      "quickRestock": "+{{count}} 補充",
+      "viewInInventory": "在庫で表示"
     }
   },
   "item": {

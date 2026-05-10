@@ -6,6 +6,7 @@ import { useMessages } from './useMessages';
 import { useMessagesStore } from './messages.store';
 import { MessagesSettings } from './MessagesSettings';
 import { SeveritySummary } from './SeveritySummary';
+import { MessageDetailDrawer } from './MessageDetailDrawer';
 import type { Message, MessageFilter } from './messages.types';
 import {
   page,
@@ -22,7 +23,7 @@ import {
   itemRowUnread,
   severityDot,
   severityDotVariants,
-  itemMain,
+  itemMainButton,
   itemHeading,
   itemBody,
   severityBadge,
@@ -37,7 +38,11 @@ import {
 
 const FILTERS: MessageFilter[] = ['all', 'unread', 'critical'];
 
-export function MessagesPage() {
+interface MessagesPageProps {
+  onJumpToInventory?: (itemId: string) => void;
+}
+
+export function MessagesPage({ onJumpToInventory }: MessagesPageProps = {}) {
   const { t } = useTranslation();
   const messages = useMessages();
   const markRead = useMessagesStore((s) => s.markRead);
@@ -48,6 +53,7 @@ export function MessagesPage() {
 
   const [filter, setFilter] = useState<MessageFilter>('all');
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [detailMessage, setDetailMessage] = useState<Message | null>(null);
 
   const visible = useMemo(() => {
     if (filter === 'unread') return messages.filter((m) => !m.read);
@@ -112,12 +118,21 @@ export function MessagesPage() {
               onToggleRead={() => (m.read ? markUnread(m.id) : markRead(m.id))}
               onDismiss={() => dismiss(m.id)}
               onSnooze={(durationMs) => snooze(m.id, Date.now() + durationMs)}
+              onOpen={() => {
+                setDetailMessage(m);
+                if (!m.read) markRead(m.id);
+              }}
             />
           ))}
         </ul>
       )}
 
       <MessagesSettings open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      <MessageDetailDrawer
+        message={detailMessage}
+        onClose={() => setDetailMessage(null)}
+        onJumpToInventory={(id) => onJumpToInventory?.(id)}
+      />
     </div>
   );
 }
@@ -127,6 +142,7 @@ interface MessageRowProps {
   onToggleRead: () => void;
   onDismiss: () => void;
   onSnooze: (durationMs: number) => void;
+  onOpen: () => void;
 }
 
 const SNOOZE_OPTIONS: Array<{ key: '1h' | '24h' | '7d'; ms: number }> = [
@@ -135,7 +151,7 @@ const SNOOZE_OPTIONS: Array<{ key: '1h' | '24h' | '7d'; ms: number }> = [
   { key: '7d', ms: 7 * 24 * 60 * 60 * 1000 },
 ];
 
-function MessageRow({ message, onToggleRead, onDismiss, onSnooze }: MessageRowProps) {
+function MessageRow({ message, onToggleRead, onDismiss, onSnooze, onOpen }: MessageRowProps) {
   const { t } = useTranslation();
   const itemName = t(message.itemNameKey);
   const body = t(`messages.body.${message.type}`, {
@@ -155,15 +171,15 @@ function MessageRow({ message, onToggleRead, onDismiss, onSnooze }: MessageRowPr
         className={`${severityDot} ${severityDotVariants[message.severity]}`}
         aria-hidden="true"
       />
-      <div className={itemMain}>
-        <div className={itemHeading}>
+      <button type="button" className={itemMainButton} onClick={onOpen} data-testid="open-detail">
+        <span className={itemHeading}>
           <span>{t(`messages.type.${message.type}`)}</span>
           <span className={`${severityBadge} ${severityBadgeVariants[message.severity]}`}>
             {t(`messages.severity.${message.severity}`)}
           </span>
-        </div>
-        <div className={itemBody}>{body}</div>
-      </div>
+        </span>
+        <span className={itemBody}>{body}</span>
+      </button>
       <div className={itemActions}>
         <button
           type="button"

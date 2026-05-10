@@ -145,6 +145,30 @@ export const itemMain = style({
   gap: 4,
 });
 
+export const itemMainButton = style({
+  flex: 1,
+  minWidth: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 4,
+  appearance: 'none',
+  background: 'transparent',
+  border: 'none',
+  padding: 0,
+  margin: 0,
+  textAlign: 'left',
+  cursor: 'pointer',
+  color: 'inherit',
+  font: 'inherit',
+  borderRadius: vars.radius.sm,
+  selectors: {
+    '&:focus-visible': {
+      outline: `2px solid ${vars.color.ring}`,
+      outlineOffset: 2,
+    },
+  },
+});
+
 export const itemHeading = style({
   display: 'flex',
   alignItems: 'center',
@@ -230,6 +254,146 @@ export const dropdownContent = style({
   boxShadow: vars.shadow.lg,
   padding: 4,
   zIndex: 300,
+});
+
+export const drawer = style({
+  position: 'fixed',
+  top: 0,
+  right: 0,
+  bottom: 0,
+  width: 'min(420px, 100vw)',
+  backgroundColor: vars.color.bg,
+  borderLeft: `1px solid ${vars.color.border}`,
+  boxShadow: vars.shadow.xl,
+  zIndex: 250,
+  padding: vars.space.lg,
+  overflowY: 'auto',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: vars.space.md,
+});
+
+export const drawerHeader = style({
+  display: 'flex',
+  alignItems: 'flex-start',
+  justifyContent: 'space-between',
+  gap: vars.space.md,
+});
+
+export const drawerTitle = style({
+  fontSize: 20,
+  fontWeight: 700,
+  color: vars.color.text,
+  margin: 0,
+  marginBottom: 6,
+  letterSpacing: '-0.01em',
+});
+
+export const drawerClose = style({
+  appearance: 'none',
+  border: 'none',
+  background: 'transparent',
+  padding: 6,
+  borderRadius: vars.radius.md,
+  cursor: 'pointer',
+  color: vars.color.textMuted,
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  transition: 'background-color 120ms, color 120ms',
+  ':hover': {
+    backgroundColor: vars.color.surfaceHover,
+    color: vars.color.text,
+  },
+  selectors: {
+    '&:focus-visible': {
+      outline: `2px solid ${vars.color.ring}`,
+      outlineOffset: 2,
+    },
+  },
+});
+
+export const drawerSection = style({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 4,
+  paddingBottom: vars.space.sm,
+  borderBottom: `1px solid ${vars.color.border}`,
+});
+
+export const drawerLabel = style({
+  fontSize: 11,
+  fontWeight: 600,
+  color: vars.color.textMuted,
+  textTransform: 'uppercase',
+  letterSpacing: 0.5,
+});
+
+export const drawerValue = style({
+  fontSize: 14,
+  color: vars.color.text,
+  lineHeight: 1.5,
+  fontVariantNumeric: 'tabular-nums',
+});
+
+export const drawerActions = style({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: vars.space.sm,
+  marginTop: 'auto',
+});
+
+export const drawerPrimary = style({
+  appearance: 'none',
+  border: 'none',
+  background: vars.color.brand,
+  color: vars.color.textInverse,
+  padding: '10px 16px',
+  borderRadius: vars.radius.lg,
+  fontSize: 14,
+  fontWeight: 600,
+  cursor: 'pointer',
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: 6,
+  transition: 'background-color 120ms, transform 120ms',
+  ':hover': {
+    backgroundColor: vars.color.brandHover,
+  },
+  selectors: {
+    '&:focus-visible': {
+      outline: `2px solid ${vars.color.ring}`,
+      outlineOffset: 2,
+    },
+  },
+});
+
+export const drawerSecondary = style({
+  appearance: 'none',
+  border: `1px solid ${vars.color.border}`,
+  background: vars.color.bg,
+  color: vars.color.text,
+  padding: '10px 16px',
+  borderRadius: vars.radius.lg,
+  fontSize: 14,
+  fontWeight: 500,
+  cursor: 'pointer',
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: 6,
+  transition: 'background-color 120ms, border-color 120ms',
+  ':hover': {
+    backgroundColor: vars.color.surfaceHover,
+    borderColor: vars.color.borderHover,
+  },
+  selectors: {
+    '&:focus-visible': {
+      outline: `2px solid ${vars.color.ring}`,
+      outlineOffset: 2,
+    },
+  },
 });
 
 export const dropdownItem = style({
