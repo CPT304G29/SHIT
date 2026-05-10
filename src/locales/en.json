@@ -62,6 +62,38 @@
     "avgPrice": "Avg Price by Category"
   },
   "comingSoon": "Coming Soon",
+  "messages": {
+    "title": "Messages",
+    "subtitle": "Smart alerts derived from your inventory",
+    "empty": "No messages. Your inventory looks healthy.",
+    "filter": {
+      "all": "All",
+      "unread": "Unread",
+      "critical": "Critical"
+    },
+    "actions": {
+      "markRead": "Mark as read",
+      "markUnread": "Mark as unread",
+      "dismiss": "Dismiss",
+      "markAllRead": "Mark all as read"
+    },
+    "type": {
+      "outOfStock": "Out of stock",
+      "lowStock": "Low stock",
+      "highValue": "High-value alert"
+    },
+    "severity": {
+      "critical": "Critical",
+      "warning": "Warning",
+      "info": "Info"
+    },
+    "body": {
+      "outOfStock": "{{name}} is out of stock and needs immediate restocking.",
+      "lowStock": "{{name}} has only {{quantity}} units left.",
+      "highValue": "{{name}} now represents a high-value position in your inventory."
+    },
+    "unreadBadge": "{{count}} unread"
+  },
   "item": {
     "blazerFemale": "Blazer (Female)",
     "bomberJacket": "Bomber Jacket",

@@ -62,6 +62,38 @@
     "avgPrice": "カテゴリ別平均単価"
   },
   "comingSoon": "近日公開",
+  "messages": {
+    "title": "メッセージ",
+    "subtitle": "在庫から自動生成されるアラート",
+    "empty": "メッセージはありません。在庫は良好です。",
+    "filter": {
+      "all": "すべて",
+      "unread": "未読",
+      "critical": "重要"
+    },
+    "actions": {
+      "markRead": "既読にする",
+      "markUnread": "未読にする",
+      "dismiss": "却下",
+      "markAllRead": "すべて既読にする"
+    },
+    "type": {
+      "outOfStock": "在庫切れ",
+      "lowStock": "在庫不足",
+      "highValue": "高額アラート"
+    },
+    "severity": {
+      "critical": "重要",
+      "warning": "警告",
+      "info": "情報"
+    },
+    "body": {
+      "outOfStock": "{{name}} は在庫切れです。早急に補充してください。",
+      "lowStock": "{{name}} の残りは {{quantity}} 点です。",
+      "highValue": "{{name}} は現在、高額な在庫項目です。"
+    },
+    "unreadBadge": "{{count}} 件未読"
+  },
   "item": {
     "blazerFemale": "ブレザー（女性用）",
     "bomberJacket": "ボンバージャケット",
