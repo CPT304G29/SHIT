@@ -22,7 +22,7 @@ export const APP_STORAGE_KEYS = [
   'shit-messages',
   'shit-messages-settings',
   'shit-messages-history',
-  'shit-theme',
+  'shit-theme-preference',
   'shit-language',
   'i18nextLng',
 ] as const;
