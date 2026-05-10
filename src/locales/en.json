@@ -127,6 +127,17 @@
       "newCritical_one": "New critical alert: {{count}} item needs attention",
       "newCritical_other": "New critical alerts: {{count}} items need attention",
       "view": "View"
+    },
+    "help": {
+      "title": "Keyboard shortcuts",
+      "next": "Next message",
+      "prev": "Previous message",
+      "open": "Open detail",
+      "toggleRead": "Toggle read / unread",
+      "snooze": "Snooze for 24 hours",
+      "dismiss": "Dismiss",
+      "search": "Focus search",
+      "help": "Show this help"
     }
   },
   "item": {
