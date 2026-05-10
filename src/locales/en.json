@@ -92,7 +92,11 @@
     "amount": "Amount",
     "time": "Time",
     "noActivity": "No inventory activity recorded for this date.",
-    "syntheticHint": "Derived from current inventory structure"
+    "syntheticHint": "Derived from current inventory structure",
+    "previousPage": "Previous",
+    "nextPage": "Next",
+    "pageIndicator": "Page {{current}} / {{total}}",
+    "pageSummary": "Showing {{start}}-{{end}} of {{total}} transactions"
   },
   "comingSoon": "Coming Soon",
   "item": {
