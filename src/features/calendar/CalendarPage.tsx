@@ -32,7 +32,9 @@ import {
   getDefaultDateKey,
   getLast30DaysSeries,
   getMonthLabel,
+  getTodayDateKey,
   getWeekdayLabels,
+  parseDateKey,
 } from './calendar.utils';
 import {
   badge,
@@ -45,6 +47,7 @@ import {
   chartsGrid,
   dayButton,
   dayButtonActive,
+  dayButtonDisabled,
   dayButtonMuted,
   dayButtonSelected,
   dayMeta,
@@ -161,7 +164,23 @@ function GlassTooltip({
   );
 }
 
-function buildSelectedDayCharts(selectedDay: CalendarDaySummary, t: (key: string) => string, locale: string) {
+function buildSelectedDayCharts(
+  selectedDay: CalendarDaySummary | undefined,
+  t: (key: string) => string,
+  locale: string
+) {
+  if (!selectedDay) {
+    return {
+      flowData: [
+        { name: t('calendar.inbound'), value: 0, fill: '#1E8E3E' },
+        { name: t('calendar.outbound'), value: 0, fill: '#E50012' },
+      ],
+      categoryData: [],
+      priceTrend: [],
+      itemChangeData: [],
+    };
+  }
+
   const flowData = [
     { name: t('calendar.inbound'), value: selectedDay.inboundQty, fill: '#1E8E3E' },
     { name: t('calendar.outbound'), value: selectedDay.outboundQty, fill: '#E50012' },
@@ -212,22 +231,18 @@ function buildSelectedDayCharts(selectedDay: CalendarDaySummary, t: (key: string
   };
 }
 
-function getSelectedDaySummary(day: CalendarDaySummary | undefined, locale: string) {
-  if (!day) {
-    return null;
-  }
-
+function getSelectedDaySummary(date: Date, locale: string) {
   return {
     dateLabel: new Intl.DateTimeFormat(locale, {
       weekday: 'long',
       month: 'long',
       day: 'numeric',
-    }).format(day.date),
+    }).format(date),
     dateMeta: new Intl.DateTimeFormat(locale, {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
-    }).format(day.date),
+    }).format(date),
   };
 }
 
@@ -248,19 +263,33 @@ export function CalendarPage() {
     () => new Map(summaries.map((summary) => [summary.dateKey, summary])),
     [summaries]
   );
+  const todayDateKey = useMemo(() => getTodayDateKey(), []);
 
   const [selectedDateKey, setSelectedDateKey] = useState(() => getDefaultDateKey(summaries, monthDate));
 
   useEffect(() => {
+    if (selectedDateKey > todayDateKey) {
+      setSelectedDateKey(getDefaultDateKey(summaries, monthDate));
+      return;
+    }
+
     if (!summaryMap.has(selectedDateKey)) {
+      const selectedMonthKey = selectedDateKey.slice(0, 7);
+      if (selectedMonthKey === formatMonthKey(monthDate)) {
+        return;
+      }
       setSelectedDateKey(getDefaultDateKey(summaries, monthDate));
     }
-  }, [monthDate, selectedDateKey, summaries, summaryMap]);
+  }, [monthDate, selectedDateKey, summaries, summaryMap, todayDateKey]);
 
   const selectedDay = summaryMap.get(selectedDateKey);
-  const selectedDayInfo = getSelectedDaySummary(selectedDay, i18n.language);
+  const selectedDateValue = useMemo(() => parseDateKey(selectedDateKey), [selectedDateKey]);
+  const selectedDayInfo = useMemo(
+    () => getSelectedDaySummary(selectedDateValue, i18n.language),
+    [i18n.language, selectedDateValue]
+  );
   const chartData = useMemo(
-    () => (selectedDay ? buildSelectedDayCharts(selectedDay, t, i18n.language) : null),
+    () => buildSelectedDayCharts(selectedDay, t, i18n.language),
     [i18n.language, selectedDay, t]
   );
 
@@ -316,9 +345,9 @@ export function CalendarPage() {
 
         <aside className={summaryPanel}>
           <span className={panelEyebrow}>{t('calendar.selectedDay')}</span>
-          <div className={selectedDate}>{selectedDayInfo?.dateLabel ?? t('calendar.noActivity')}</div>
+          <div className={selectedDate}>{selectedDayInfo.dateLabel}</div>
           <div style={{ color: isDark ? '#888888' : '#666666', fontSize: 13 }}>
-            {selectedDayInfo?.dateMeta ?? t('calendar.selectDateHint')}
+            {selectedDayInfo.dateMeta}
           </div>
           <div className={selectedMeta}>
             <div className={selectedMetric}>
@@ -394,19 +423,28 @@ export function CalendarPage() {
               const summary = summaryMap.get(dateKey);
               const isCurrentMonth = date.getMonth() === monthDate.getMonth();
               const isSelected = dateKey === selectedDateKey;
+              const isFuture = dateKey > todayDateKey;
               const netQty = summary?.netQty ?? 0;
 
               return (
                 <button
                   key={dateKey}
                   type="button"
+                  disabled={isFuture}
                   className={[
                     dayButton,
                     !isCurrentMonth ? dayButtonMuted : '',
+                    isFuture ? dayButtonDisabled : '',
                     summary ? dayButtonActive : '',
                     isSelected ? dayButtonSelected : '',
                   ].join(' ')}
-                  onClick={() => setSelectedDateKey(dateKey)}
+                  onClick={() => {
+                    if (isFuture) return;
+                    if (!isCurrentMonth) {
+                      setMonthDate(new Date(date.getFullYear(), date.getMonth(), 1));
+                    }
+                    setSelectedDateKey(dateKey);
+                  }}
                 >
                   <span className={dayNumber}>{date.getDate()}</span>
                   <span className={`${dayNet} ${getSignedToneClass(netQty)}`}>
@@ -491,8 +529,7 @@ export function CalendarPage() {
         </div>
       </section>
 
-      {selectedDay && chartData && (
-        <section className={chartsGrid}>
+      <section className={chartsGrid}>
           <div className={chartNarrow}>
             <ChartCard title={t('calendar.flowChart')}>
               <ResponsiveContainer width="100%" height="100%">
@@ -705,7 +742,6 @@ export function CalendarPage() {
             </ChartCard>
           </div>
         </section>
-      )}
     </div>
   );
 }

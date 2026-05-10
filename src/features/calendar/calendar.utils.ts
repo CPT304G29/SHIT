@@ -39,6 +39,10 @@ export function parseDateKey(dateKey: string) {
   return new Date(year, month - 1, day);
 }
 
+export function getTodayDateKey(now = Date.now()) {
+  return formatDateKey(startOfDay(now));
+}
+
 export function formatMonthKey(date: Date) {
   const year = date.getFullYear();
   const month = `${date.getMonth() + 1}`.padStart(2, '0');
