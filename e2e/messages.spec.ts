@@ -213,6 +213,84 @@ test.describe('Messages', () => {
     await expect(page.getByTestId('message-search')).toBeFocused();
   });
 
+  test('detail drawer: Restock +50 increases quantity and clears the message', async ({ page }) => {
+    await page.hover('nav');
+    await page.getByRole('button', { name: /Messages/ }).click();
+
+    // Find a low-stock or out-of-stock row (Restock button only shows for those types).
+    // Seed data has Nike Air Force at qty 6 → lowStock. Open it via search.
+    await page.getByTestId('message-search').fill('Nike');
+    const items = page.getByTestId('message-item');
+    if ((await items.count()) === 0) return;
+
+    await items.first().getByTestId('open-detail').click();
+    await expect(page.getByTestId('quick-restock')).toBeVisible();
+    const qtyText = await page.getByTestId('detail-quantity').textContent();
+    const beforeQty = Number(qtyText ?? '0');
+
+    await page.getByTestId('quick-restock').click();
+
+    // Drawer closes; underlying lowStock message disappears since qty is now ≥ threshold
+    await expect(page.getByTestId('quick-restock')).toHaveCount(0);
+
+    // Re-open via inventory page to confirm the new quantity persisted
+    await page.getByTestId('message-search').fill('');
+    await page.hover('nav');
+    await page.getByRole('button', { name: /Inventory/ }).click();
+    await expect(
+      page.getByRole('row').filter({ hasText: 'Nike Air Force' }).first()
+    ).toContainText(String(beforeQty + 50));
+  });
+
+  test('detail drawer: highValue alert hides Restock button', async ({ page }) => {
+    await page.hover('nav');
+    await page.getByRole('button', { name: /Messages/ }).click();
+
+    // Seed has Briefs Male qty 3000 × 4599 = ~£137k → highValue.
+    await page.getByTestId('message-search').fill('Briefs');
+    const items = page.getByTestId('message-item');
+    if ((await items.count()) === 0) return;
+
+    await items.first().getByTestId('open-detail').click();
+    await expect(page.getByTestId('jump-to-inventory')).toBeVisible();
+    // Restock should NOT be present for highValue
+    await expect(page.getByTestId('quick-restock')).toHaveCount(0);
+  });
+
+  test('detail drawer: View in inventory highlights the matching row', async ({ page }) => {
+    await page.hover('nav');
+    await page.getByRole('button', { name: /Messages/ }).click();
+
+    const items = page.getByTestId('message-item');
+    if ((await items.count()) === 0) return;
+
+    await items.first().getByTestId('open-detail').click();
+    await page.getByTestId('jump-to-inventory').click();
+
+    // We're back on the inventory page; the matching row has data-highlighted
+    await expect(page.locator('tr[data-highlighted="true"]')).toBeVisible();
+  });
+
+  test('toast fires when an inventory edit creates a new critical', async ({ page }) => {
+    await page.hover('nav');
+    await page.getByRole('button', { name: /Inventory/ }).click();
+
+    // Edit the first row to set quantity = 0 → outOfStock critical
+    const firstRow = page.getByRole('row').nth(1); // [0] is the header row
+    await firstRow.getByRole('button').first().click(); // edit pencil
+
+    const qtyInput = page.getByLabel(/Quantity/i).first();
+    await qtyInput.fill('0');
+    await page.getByRole('button', { name: /Save/i }).click();
+
+    // Toast appears with View action
+    await expect(page.getByTestId('toast-action')).toBeVisible();
+
+    // Click the View action — should jump to messages page
+    await page.getByTestId('toast-action').click();
+    await expect(page.getByRole('heading', { name: 'Messages' })).toBeVisible();
+  });
+
   test('settings drawer opens and persists threshold change', async ({ page }) => {
     await page.hover('nav');
     await page.getByRole('button', { name: /Messages/ }).click();
