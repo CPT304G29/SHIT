@@ -382,7 +382,9 @@ export function CalendarPage() {
         <div className={calendarCard}>
           <div className={calendarHeader}>
             <div>
-              <div className={monthTitle}>{getMonthLabel(monthDate, i18n.language)}</div>
+              <div className={monthTitle} data-testid="calendar-month-title">
+                {getMonthLabel(monthDate, i18n.language)}
+              </div>
               <div className={monthHint}>{t('calendar.monthHint')}</div>
             </div>
             <div className={monthActions}>
@@ -417,7 +419,7 @@ export function CalendarPage() {
             ))}
           </div>
 
-          <div className={monthGrid}>
+          <div className={monthGrid} data-testid="calendar-grid">
             {calendarDays.map((date) => {
               const dateKey = `${date.getFullYear()}-${`${date.getMonth() + 1}`.padStart(2, '0')}-${`${date.getDate()}`.padStart(2, '0')}`;
               const summary = summaryMap.get(dateKey);
@@ -431,6 +433,9 @@ export function CalendarPage() {
                   key={dateKey}
                   type="button"
                   disabled={isFuture}
+                  data-testid={`calendar-day-${dateKey}`}
+                  data-date-key={dateKey}
+                  data-in-month={isCurrentMonth ? 'true' : 'false'}
                   className={[
                     dayButton,
                     !isCurrentMonth ? dayButtonMuted : '',
@@ -473,7 +478,9 @@ export function CalendarPage() {
             </div>
 
             {!selectedDay || selectedDay.events.length === 0 ? (
-              <div className={emptyCard}>{t('calendar.noActivity')}</div>
+              <div className={emptyCard} data-testid="calendar-empty-state">
+                {t('calendar.noActivity')}
+              </div>
             ) : (
               <div className={tableWrap}>
                 <table className={detailTable}>
