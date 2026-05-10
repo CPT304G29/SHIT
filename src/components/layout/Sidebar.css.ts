@@ -96,6 +96,10 @@ export const navList = style({
   flex: 1,
 });
 
+export const navItemWrap = style({
+  position: 'relative',
+});
+
 export const navItem = style({
   display: 'flex',
   alignItems: 'center',
@@ -110,6 +114,7 @@ export const navItem = style({
   gap: 14,
   width: '100%',
   position: 'relative',
+  zIndex: 1,
 });
 
 export const navItemExpanded = style({
@@ -127,14 +132,20 @@ export const navItemHover = style({
 
 export const navItemActive = style({
   color: '#FFFFFF',
-  backgroundColor: 'rgba(0, 0, 0, 0.14)',
-  boxShadow: 'inset 3px 0 0 0 #FFFFFF',
   selectors: {
     '&:hover': {
-      backgroundColor: 'rgba(0, 0, 0, 0.18)',
       color: '#FFFFFF',
     },
   },
+});
+
+export const navItemActiveBackdrop = style({
+  position: 'absolute',
+  inset: 0,
+  borderRadius: 10,
+  backgroundColor: 'rgba(0, 0, 0, 0.16)',
+  boxShadow: 'inset 3px 0 0 0 #FFFFFF',
+  pointerEvents: 'none',
 });
 
 export const iconBox = style({

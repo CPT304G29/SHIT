@@ -5,13 +5,14 @@ import { Shell } from '@/components/layout/Shell';
 import { useThemeTransition } from '@/hooks/useThemeTransition';
 import { InventoryTable } from '@/features/inventory/InventoryTable';
 import { ChartsPage } from '@/features/charts/ChartsPage';
+import { CalendarPage } from '@/features/calendar/CalendarPage';
 import { InventoryForm } from '@/features/inventory/InventoryForm';
 import { DeleteConfirmation } from '@/features/inventory/DeleteConfirmation';
 import { ToastContainer, type ToastItem } from '@/components/Toast';
 import { useInventoryStore } from '@/features/inventory/inventory.store';
 import type { InventoryItem, InventoryFormData } from '@/features/inventory/inventory.types';
 
-type Page = 'inventory' | 'charts';
+type Page = 'inventory' | 'charts' | 'calendar';
 
 function App() {
   const { theme, isTransitioning, toggleTheme } = useThemeTransition();
@@ -85,6 +86,7 @@ function App() {
           <InventoryTable onEdit={handleEdit} onDelete={handleDelete} onAdd={handleAdd} />
         )}
         {page === 'charts' && <ChartsPage />}
+        {page === 'calendar' && <CalendarPage />}
       </Shell>
 
       <InventoryForm
