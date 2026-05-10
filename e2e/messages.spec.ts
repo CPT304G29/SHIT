@@ -117,7 +117,9 @@ test.describe('Messages', () => {
     }
   });
 
-  test('keyboard shortcuts: cursor starts on first row and j moves it down', async ({ page }) => {
+  test('keyboard shortcuts: focus ring hidden until first keypress, then j/k navigate', async ({
+    page,
+  }) => {
     await page.hover('nav');
     await page.getByRole('button', { name: /Messages/ }).click();
 
@@ -125,13 +127,90 @@ test.describe('Messages', () => {
     const total = await items.count();
     if (total < 2) return;
 
-    // Initial cursor is 0
-    await expect(items.first()).toHaveAttribute('data-focused', 'true');
+    // No focus ring before any keyboard interaction
+    await expect(items.first()).not.toHaveAttribute('data-focused', 'true');
 
     await page.locator('h1').click();
+    // First j press lands cursor on row 0 (was -1 / hidden)
+    await page.keyboard.press('j');
+    await expect(items.first()).toHaveAttribute('data-focused', 'true');
+
+    // Second j press advances to row 1
     await page.keyboard.press('j');
     await expect(items.nth(1)).toHaveAttribute('data-focused', 'true');
-    await expect(items.first()).not.toHaveAttribute('data-focused', 'true');
+
+    // k moves cursor back to row 0
+    await page.keyboard.press('k');
+    await expect(items.first()).toHaveAttribute('data-focused', 'true');
+  });
+
+  test('keyboard: e toggles read on focused row', async ({ page }) => {
+    await page.hover('nav');
+    await page.getByRole('button', { name: /Messages/ }).click();
+
+    const items = page.getByTestId('message-item');
+    if ((await items.count()) === 0) return;
+
+    await page.locator('h1').click();
+    await page.keyboard.press('j'); // cursor → 0
+    const wasUnread = (await items.first().getAttribute('data-unread')) === 'true';
+    await page.keyboard.press('e');
+    if (wasUnread) {
+      await expect(items.first()).not.toHaveAttribute('data-unread', 'true');
+    } else {
+      await expect(items.first()).toHaveAttribute('data-unread', 'true');
+    }
+  });
+
+  test('keyboard: x dismisses the focused row', async ({ page }) => {
+    await page.hover('nav');
+    await page.getByRole('button', { name: /Messages/ }).click();
+
+    const items = page.getByTestId('message-item');
+    const before = await items.count();
+    if (before === 0) return;
+
+    await page.locator('h1').click();
+    await page.keyboard.press('j'); // cursor → 0
+    await page.keyboard.press('x');
+
+    if (before === 1) {
+      await expect(page.getByText('No messages. Your inventory looks healthy.')).toBeVisible();
+    } else {
+      await expect(items).toHaveCount(before - 1);
+    }
+  });
+
+  test('keyboard: Enter opens detail drawer', async ({ page }) => {
+    await page.hover('nav');
+    await page.getByRole('button', { name: /Messages/ }).click();
+
+    const items = page.getByTestId('message-item');
+    if ((await items.count()) === 0) return;
+
+    await page.locator('h1').click();
+    await page.keyboard.press('j'); // cursor → 0
+    await page.keyboard.press('Enter');
+
+    await expect(page.getByTestId('jump-to-inventory')).toBeVisible();
+  });
+
+  test('keyboard: ? opens help dialog', async ({ page }) => {
+    await page.hover('nav');
+    await page.getByRole('button', { name: /Messages/ }).click();
+
+    await page.locator('h1').click();
+    await page.keyboard.press('?');
+    await expect(page.getByRole('heading', { name: 'Keyboard shortcuts' })).toBeVisible();
+  });
+
+  test('keyboard: / focuses search input', async ({ page }) => {
+    await page.hover('nav');
+    await page.getByRole('button', { name: /Messages/ }).click();
+
+    await page.locator('h1').click();
+    await page.keyboard.press('/');
+    await expect(page.getByTestId('message-search')).toBeFocused();
   });
 
   test('settings drawer opens and persists threshold change', async ({ page }) => {
