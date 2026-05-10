@@ -7,6 +7,10 @@ export interface ToastItem {
   id: string;
   message: string;
   type: 'success' | 'error';
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
 }
 
 interface ToastContainerProps {
@@ -69,9 +73,32 @@ function Toast({ toast, onRemove }: { toast: ToastItem; onRemove: (id: string) =
     >
       {toast.type === 'success' ? <Check size={16} /> : <X size={16} />}
       <span style={{ flex: 1 }}>{toast.message}</span>
+      {toast.action && (
+        <button
+          type="button"
+          onClick={() => {
+            toast.action!.onClick();
+            onRemove(toast.id);
+          }}
+          data-testid="toast-action"
+          style={{
+            background: 'rgba(255,255,255,0.2)',
+            border: 'none',
+            color: 'inherit',
+            cursor: 'pointer',
+            padding: '4px 10px',
+            borderRadius: 6,
+            fontSize: 12,
+            fontWeight: 600,
+          }}
+        >
+          {toast.action.label}
+        </button>
+      )}
       <button
         type="button"
         onClick={() => onRemove(toast.id)}
+        aria-label="Close notification"
         style={{
           background: 'none',
           border: 'none',

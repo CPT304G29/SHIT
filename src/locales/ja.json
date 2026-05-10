@@ -122,6 +122,10 @@
       "message": "メッセージ",
       "quickRestock": "+{{count}} 補充",
       "viewInInventory": "在庫で表示"
+    },
+    "toast": {
+      "newCritical": "緊急アラートが {{count}} 件あります",
+      "view": "表示"
     }
   },
   "item": {

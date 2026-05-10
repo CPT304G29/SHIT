@@ -122,6 +122,11 @@
       "message": "Message",
       "quickRestock": "Restock +{{count}} units",
       "viewInInventory": "View in inventory"
+    },
+    "toast": {
+      "newCritical_one": "New critical alert: {{count}} item needs attention",
+      "newCritical_other": "New critical alerts: {{count}} items need attention",
+      "view": "View"
     }
   },
   "item": {
