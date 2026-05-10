@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { appShell } from '@/styles/global.css';
@@ -58,9 +59,21 @@ export function Shell({
             padding: '28px 32px',
             backgroundColor: vars.color.surface,
             transition: 'background-color 0.3s ease',
+            overflow: 'hidden',
           }}
         >
-          {children}
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={activePage}
+              initial={{ opacity: 0, y: 16, filter: 'blur(6px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              style={{ minHeight: '100%' }}
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
         </main>
         <footer
           style={{
