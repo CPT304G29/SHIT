@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useConsentStore, APP_STORAGE_KEYS } from './consent.store';
+import { useConsentStore, APP_STORAGE_KEYS, CONSENT_STORAGE_KEY } from './consent.store';
 import {
   page,
   header,
@@ -22,7 +22,7 @@ import {
 } from './PrivacyPolicy.css';
 
 const STORAGE_KEY_DOCS: Array<{
-  key: (typeof APP_STORAGE_KEYS)[number];
+  key: (typeof APP_STORAGE_KEYS)[number] | typeof CONSENT_STORAGE_KEY;
   purposeKey: string;
 }> = [
   { key: 'shit-inventory', purposeKey: 'legal.policy.storage.purpose.inventory' },
@@ -35,9 +35,10 @@ const STORAGE_KEY_DOCS: Array<{
     key: 'shit-messages-history',
     purposeKey: 'legal.policy.storage.purpose.messagesHistory',
   },
-  { key: 'shit-theme', purposeKey: 'legal.policy.storage.purpose.theme' },
+  { key: 'shit-theme-preference', purposeKey: 'legal.policy.storage.purpose.theme' },
   { key: 'shit-language', purposeKey: 'legal.policy.storage.purpose.language' },
   { key: 'i18nextLng', purposeKey: 'legal.policy.storage.purpose.i18next' },
+  { key: CONSENT_STORAGE_KEY, purposeKey: 'legal.policy.storage.purpose.consent' },
 ];
 
 export function PrivacyPolicy() {
@@ -64,7 +65,7 @@ export function PrivacyPolicy() {
       <div className={header}>
         <h1 className={title}>{t('legal.policy.title')}</h1>
         <p className={subtitle}>
-          {t('legal.policy.lastUpdated', { date: '2026-05-10' })}
+          {t('legal.policy.lastUpdated', { date: '2026-05-11' })}
         </p>
       </div>
 
