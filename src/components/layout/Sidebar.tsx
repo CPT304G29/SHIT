@@ -1,5 +1,5 @@
 import { LayoutList, BarChart3, Calendar, MessageSquare, FolderOpen } from 'lucide-react';
-import * as Tooltip from '@radix-ui/react-tooltip';
+import { LayoutGroup, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useUnreadCount } from '@/features/messages/useMessages';
 import {
@@ -12,10 +12,12 @@ import {
   sectionLabel,
   sectionLabelVisible,
   navList,
+  navItemWrap,
   navItem,
   navItemExpanded,
   navItemHover,
   navItemActive,
+  navItemActiveBackdrop,
   iconBox,
   navLabel,
   navLabelVisible,
@@ -36,7 +38,7 @@ const navItems = [
   { id: 'files', icon: FolderOpen, labelKey: 'nav.files' },
 ];
 
-const ENABLED_PAGES = new Set(['inventory', 'charts', 'messages']);
+const ENABLED_PAGES = new Set(['inventory', 'charts', 'calendar', 'messages']);
 
 interface SidebarProps {
   expanded: boolean;
@@ -50,23 +52,20 @@ export function Sidebar({ expanded, onExpand, activePage, onNavigate }: SidebarP
   const unreadCount = useUnreadCount();
 
   return (
-    <Tooltip.Provider delayDuration={200}>
-      <nav
-        className={`${sidebar} ${expanded ? sidebarExpanded : ''}`}
-        aria-label="Main navigation"
-        onMouseEnter={() => onExpand(true)}
-        onMouseLeave={() => onExpand(false)}
-      >
-        {/* Brand */}
-        <div className={brand}>
-          <div className={brandMark}>U</div>
-          <span className={`${brandText} ${expanded ? brandTextVisible : ''}`}>UNIQLO</span>
-        </div>
+    <nav
+      className={`${sidebar} ${expanded ? sidebarExpanded : ''}`}
+      aria-label="Main navigation"
+      onMouseEnter={() => onExpand(true)}
+      onMouseLeave={() => onExpand(false)}
+    >
+      <div className={brand}>
+        <div className={brandMark}>U</div>
+        <span className={`${brandText} ${expanded ? brandTextVisible : ''}`}>UNIQLO</span>
+      </div>
 
-        {/* Section Label */}
-        <div className={`${sectionLabel} ${expanded ? sectionLabelVisible : ''}`}>Main Menu</div>
+      <div className={`${sectionLabel} ${expanded ? sectionLabelVisible : ''}`}>Main Menu</div>
 
-        {/* Navigation */}
+      <LayoutGroup>
         <div className={navList}>
           {navItems.map(({ id, icon: Icon, labelKey }) => {
             const isActive = activePage === id;
@@ -76,79 +75,70 @@ export function Sidebar({ expanded, onExpand, activePage, onNavigate }: SidebarP
               ? `${t(labelKey)}, ${t('messages.unreadBadge', { count: unreadCount })}`
               : t(labelKey);
 
-            const button = (
-              <button
-                type="button"
-                aria-label={ariaLabel}
-                aria-current={isActive ? 'page' : undefined}
-                disabled={isDisabled}
-                onClick={() => {
-                  if (isDisabled) return;
-                  onNavigate(id);
-                }}
-                className={`${navItem} ${navItemHover} ${isActive ? navItemActive : ''} ${expanded ? navItemExpanded : ''}`}
-                style={{
-                  opacity: isDisabled ? 0.4 : 1,
-                  cursor: isDisabled ? 'not-allowed' : 'pointer',
-                }}
-              >
-                <span className={iconBox}>
-                  <Icon size={18} strokeWidth={isActive ? 2.2 : 1.8} />
-                </span>
-                <span className={`${navLabel} ${expanded ? navLabelVisible : ''}`}>
-                  {t(labelKey)}
-                </span>
-                {showBadge && (
-                  <span
-                    className={`${badge} ${expanded ? badgeExpanded : ''}`}
-                    aria-hidden="true"
-                    data-testid="sidebar-unread-badge"
-                  >
-                    {unreadCount > 99 ? '99+' : unreadCount}
-                  </span>
-                )}
-              </button>
-            );
-
-            if (expanded) {
-              return <div key={id}>{button}</div>;
-            }
-
             return (
-              <Tooltip.Root key={id}>
-                <Tooltip.Trigger asChild>{button}</Tooltip.Trigger>
-                <Tooltip.Portal>
-                  <Tooltip.Content
-                    side="right"
-                    sideOffset={10}
-                    style={{
-                      backgroundColor: '#1A1A1A',
-                      color: '#FFFFFF',
-                      padding: '6px 12px',
-                      borderRadius: 8,
-                      fontSize: 12,
-                      fontWeight: 500,
-                      whiteSpace: 'nowrap',
-                      zIndex: 101,
-                      boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
+              <div key={id} className={navItemWrap}>
+                <button
+                  type="button"
+                  aria-label={ariaLabel}
+                  aria-current={isActive ? 'page' : undefined}
+                  disabled={isDisabled}
+                  title={isDisabled ? `${t(labelKey)} - ${t('comingSoon')}` : undefined}
+                  onClick={() => {
+                    if (isDisabled) return;
+                    onNavigate(id);
+                  }}
+                  className={`${navItem} ${navItemHover} ${isActive ? navItemActive : ''} ${expanded ? navItemExpanded : ''}`}
+                  style={{
+                    opacity: isDisabled ? 0.4 : 1,
+                    cursor: isDisabled ? 'not-allowed' : 'pointer',
+                  }}
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId="sidebar-active-pill"
+                      className={navItemActiveBackdrop}
+                      transition={{ type: 'spring', stiffness: 420, damping: 34, mass: 0.9 }}
+                    />
+                  )}
+                  <motion.span
+                    className={iconBox}
+                    animate={{
+                      x: isActive ? 1 : 0,
+                      scale: isActive ? 1.06 : 1,
                     }}
+                    transition={{ duration: 0.26, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <Icon size={18} strokeWidth={isActive ? 2.2 : 1.8} />
+                  </motion.span>
+                  <motion.span
+                    className={`${navLabel} ${expanded ? navLabelVisible : ''}`}
+                    animate={{
+                      x: isActive && expanded ? 2 : 0,
+                    }}
+                    transition={{ duration: 0.26, ease: [0.16, 1, 0.3, 1] }}
                   >
                     {t(labelKey)}
-                    {isDisabled && ` — ${t('comingSoon')}`}
-                    <Tooltip.Arrow style={{ fill: '#1A1A1A' }} />
-                  </Tooltip.Content>
-                </Tooltip.Portal>
-              </Tooltip.Root>
+                  </motion.span>
+                  {showBadge && (
+                    <span
+                      className={`${badge} ${expanded ? badgeExpanded : ''}`}
+                      aria-hidden="true"
+                      data-testid="sidebar-unread-badge"
+                    >
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </span>
+                  )}
+                </button>
+              </div>
             );
           })}
         </div>
+      </LayoutGroup>
 
-        {/* Bottom */}
-        <div className={`${divider} ${expanded ? dividerVisible : ''}`} />
-        <div className={bottomArea}>
-          <span className={`${versionText} ${expanded ? versionTextVisible : ''}`}>SHIT v1.0</span>
-        </div>
-      </nav>
-    </Tooltip.Provider>
+      <div className={`${divider} ${expanded ? dividerVisible : ''}`} />
+      <div className={bottomArea}>
+        <span className={`${versionText} ${expanded ? versionTextVisible : ''}`}>SHIT v1.0</span>
+      </div>
+    </nav>
   );
 }

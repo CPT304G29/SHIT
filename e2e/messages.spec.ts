@@ -53,6 +53,7 @@ test.describe('Messages', () => {
     await page.getByRole('button', { name: /Messages/ }).click();
 
     const items = page.getByTestId('message-item');
+    await expect(items.first()).toBeVisible(); // wait for page transition to settle
     const before = await items.count();
     await items.first().getByTestId('dismiss').click();
 
@@ -67,13 +68,15 @@ test.describe('Messages', () => {
     await page.hover('nav');
     await page.getByRole('button', { name: /Messages/ }).click();
 
-    const all = await page.getByTestId('message-item').count();
+    const items = page.getByTestId('message-item');
+    await expect(items.first()).toBeVisible();
+    const all = await items.count();
     await page.getByRole('tab', { name: 'Critical' }).click();
-    const criticalOnly = await page.getByTestId('message-item').count();
+    const criticalOnly = await items.count();
     expect(criticalOnly).toBeLessThanOrEqual(all);
 
     await page.getByRole('tab', { name: 'All' }).click();
-    expect(await page.getByTestId('message-item').count()).toBe(all);
+    await expect(items).toHaveCount(all);
   });
 
   test('mark all read clears the badge', async ({ page }) => {
@@ -89,13 +92,15 @@ test.describe('Messages', () => {
     await page.hover('nav');
     await page.getByRole('button', { name: /Messages/ }).click();
 
-    const all = await page.getByTestId('message-item').count();
+    const items = page.getByTestId('message-item');
+    await expect(items.first()).toBeVisible();
+    const all = await items.count();
     await page.getByTestId('message-search').fill('Nike');
 
-    const filtered = await page.getByTestId('message-item').count();
+    const filtered = await items.count();
     expect(filtered).toBeLessThanOrEqual(all);
     if (filtered > 0) {
-      await expect(page.getByTestId('message-item').first()).toContainText(/Nike|Air Force/i);
+      await expect(items.first()).toContainText(/Nike|Air Force/i);
     }
   });
 

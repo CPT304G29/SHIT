@@ -5,6 +5,7 @@ import { Shell } from '@/components/layout/Shell';
 import { useThemeTransition } from '@/hooks/useThemeTransition';
 import { InventoryTable } from '@/features/inventory/InventoryTable';
 import { ChartsPage } from '@/features/charts/ChartsPage';
+import { CalendarPage } from '@/features/calendar/CalendarPage';
 import { MessagesPage } from '@/features/messages/MessagesPage';
 import { InventoryForm } from '@/features/inventory/InventoryForm';
 import { DeleteConfirmation } from '@/features/inventory/DeleteConfirmation';
@@ -15,7 +16,7 @@ import { useMessagesStore } from '@/features/messages/messages.store';
 import { useTrackInventoryHistory } from '@/features/messages/useTrackInventoryHistory';
 import type { InventoryItem, InventoryFormData } from '@/features/inventory/inventory.types';
 
-type Page = 'inventory' | 'charts' | 'messages';
+type Page = 'inventory' | 'charts' | 'calendar' | 'messages';
 
 function App() {
   const { theme, isTransitioning, toggleTheme } = useThemeTransition();
@@ -141,6 +142,7 @@ function App() {
           />
         )}
         {page === 'charts' && <ChartsPage />}
+        {page === 'calendar' && <CalendarPage />}
         {page === 'messages' && <MessagesPage onJumpToInventory={handleJumpToInventory} />}
       </Shell>
 
