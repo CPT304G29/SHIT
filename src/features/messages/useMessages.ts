@@ -42,6 +42,31 @@ export function useMessages(): Message[] {
   }, [items, read, dismissed, snoozed, thresholds, enabledTypes, history, now]);
 }
 
+/**
+ * Returns the raw derived messages without read/dismissed/snoozed filters.
+ * Useful for the toast / pruning effect in App that needs to know which ids
+ * are *currently* active in the underlying inventory state.
+ */
+export function useAllDerivedMessages() {
+  const now = useNow();
+  const items = useInventoryStore((s) => s.items);
+  const thresholds = useMessagesSettingsStore((s) => s.thresholds);
+  const enabledTypes = useMessagesSettingsStore((s) => s.enabledTypes);
+  const history = useMessagesHistoryStore((s) => s.history);
+
+  return useMemo(
+    () =>
+      deriveMessages(items, {
+        thresholds,
+        enabledTypes,
+        history,
+        now,
+        rapidDecreaseWindowMs: RAPID_WINDOW_MS,
+      }),
+    [items, thresholds, enabledTypes, history, now]
+  );
+}
+
 export function useUnreadCount(): number {
   const messages = useMessages();
   return messages.filter((m) => !m.read).length;

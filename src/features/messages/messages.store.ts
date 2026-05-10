@@ -13,6 +13,7 @@ interface MessagesState {
   snooze: (id: string, untilEpochMs: number) => void;
   snoozeMany: (ids: string[], untilEpochMs: number) => void;
   unsnooze: (id: string) => void;
+  pruneDismissed: (activeIds: string[]) => void;
   reset: () => void;
 }
 
@@ -55,6 +56,15 @@ export const useMessagesStore = create<MessagesState>()(
           const { [id]: _drop, ...rest } = s.snoozed;
           void _drop;
           return { snoozed: rest };
+        }),
+      pruneDismissed: (activeIds) =>
+        set((s) => {
+          const active = new Set(activeIds);
+          const next: Record<string, true> = {};
+          for (const id of Object.keys(s.dismissed)) {
+            if (active.has(id)) next[id] = true;
+          }
+          return { dismissed: next };
         }),
       reset: () => set({ read: {}, dismissed: {}, snoozed: {} }),
     }),
