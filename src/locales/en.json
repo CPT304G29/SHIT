@@ -236,7 +236,8 @@
           "messagesHistory": "Up to 8 quantity snapshots per item over a 14-day window — used to detect rapid stock decreases.",
           "theme": "Whether you prefer light or dark UI.",
           "language": "Your selected interface language (English / 中文 / 日本語).",
-          "i18next": "Cache used by the i18n library to remember the chosen language across tabs."
+          "i18next": "Cache used by the i18n library to remember the chosen language across tabs.",
+          "consent": "Your cookie/storage consent decision and the timestamp when that decision was made."
         }
       },
       "retention": {
