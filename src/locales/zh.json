@@ -80,7 +80,21 @@
     "type": {
       "outOfStock": "缺货",
       "lowStock": "库存不足",
-      "highValue": "高价值提醒"
+      "highValue": "高价值提醒",
+      "rapidDecrease": "库存骤降"
+    },
+    "settings": {
+      "button": "设置",
+      "title": "通知设置",
+      "lowStock": "库存不足阈值（件）",
+      "lowStockHelp": "数量低于此值的商品将触发库存不足警告。",
+      "highValue": "高价值阈值（货币）",
+      "highValueHelp": "商品总价值超过此值时会触发高价值提醒。",
+      "rapidDecrease": "骤降阈值（%）",
+      "rapidDecreaseHelp": "若商品数量与最近快照相比下降不低于该百分比，将触发骤降提醒。",
+      "enableTypes": "启用的提醒类型",
+      "save": "保存",
+      "reset": "恢复默认"
     },
     "severity": {
       "critical": "严重",
@@ -90,7 +104,8 @@
     "body": {
       "outOfStock": "{{name}} 已缺货，需要立即补货。",
       "lowStock": "{{name}} 仅剩 {{quantity}} 件。",
-      "highValue": "{{name}} 在当前库存中价值占比较高。"
+      "highValue": "{{name}} 在当前库存中价值占比较高。",
+      "rapidDecrease": "{{name}} 近期下降了 {{percent}}%，请尽快确认补货安排。"
     },
     "unreadBadge": "{{count}} 条未读"
   },

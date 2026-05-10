@@ -80,7 +80,21 @@
     "type": {
       "outOfStock": "Out of stock",
       "lowStock": "Low stock",
-      "highValue": "High-value alert"
+      "highValue": "High-value alert",
+      "rapidDecrease": "Rapid stock decrease"
+    },
+    "settings": {
+      "button": "Settings",
+      "title": "Notification settings",
+      "lowStock": "Low-stock threshold (units)",
+      "lowStockHelp": "Items with quantity below this number trigger a low-stock warning.",
+      "highValue": "High-value threshold (currency)",
+      "highValueHelp": "Items whose total inventory value crosses this number raise a high-value alert.",
+      "rapidDecrease": "Rapid decrease (% drop)",
+      "rapidDecreaseHelp": "If an item's quantity drops by at least this percent compared to a recent snapshot, raise a rapid-decrease alert.",
+      "enableTypes": "Enabled alert types",
+      "save": "Save",
+      "reset": "Reset to defaults"
     },
     "severity": {
       "critical": "Critical",
@@ -90,7 +104,8 @@
     "body": {
       "outOfStock": "{{name}} is out of stock and needs immediate restocking.",
       "lowStock": "{{name}} has only {{quantity}} units left.",
-      "highValue": "{{name}} now represents a high-value position in your inventory."
+      "highValue": "{{name}} now represents a high-value position in your inventory.",
+      "rapidDecrease": "{{name}} dropped by {{percent}}% recently — investigate before it runs out."
     },
     "unreadBadge": "{{count}} unread"
   },

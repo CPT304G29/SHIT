@@ -76,4 +76,32 @@ describe('deriveMessages', () => {
     const b = deriveMessages(items);
     expect(a.map((m) => m.id)).toEqual(b.map((m) => m.id));
   });
+
+  it('honors a custom lowStock threshold', () => {
+    const items = [makeItem({ id: '9', quantity: 25 })];
+    const def = deriveMessages(items);
+    expect(def).toHaveLength(0);
+
+    const tighter = deriveMessages(items, {
+      thresholds: { lowStock: 50, highValue: 1_000_000, rapidDecreasePercent: 30 },
+    });
+    expect(tighter[0]?.type).toBe('lowStock');
+  });
+
+  it('honors a custom highValue threshold', () => {
+    const items = [makeItem({ id: '10', quantity: 50, unitPrice: 1000 })]; // 50,000
+    const def = deriveMessages(items);
+    expect(def.filter((m) => m.type === 'highValue')).toHaveLength(0);
+
+    const lowered = deriveMessages(items, {
+      thresholds: { lowStock: 10, highValue: 10_000, rapidDecreasePercent: 30 },
+    });
+    expect(lowered.some((m) => m.type === 'highValue')).toBe(true);
+  });
+
+  it('respects enabledTypes flag to suppress a category', () => {
+    const items = [makeItem({ id: '11', quantity: 0 })];
+    const muted = deriveMessages(items, { enabledTypes: { outOfStock: false } });
+    expect(muted).toHaveLength(0);
+  });
 });
