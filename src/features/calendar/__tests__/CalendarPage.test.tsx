@@ -198,4 +198,11 @@ describe('CalendarPage', () => {
     expect(screen.getAllByTestId('calendar-detail-row-blank')).toHaveLength(10);
     expect(screen.getByText('No inventory activity recorded for this date.')).toBeInTheDocument();
   });
+
+  it('adds hover titles for detail cells so truncated content can reveal the full value', () => {
+    render(<CalendarPage />);
+
+    expect(screen.getByTitle('Hoodie')).toBeInTheDocument();
+    expect(screen.getByTitle('Outerwear')).toBeInTheDocument();
+  });
 });
