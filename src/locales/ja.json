@@ -182,6 +182,55 @@
       "help": "ヘルプを表示"
     }
   },
+  "files": {
+    "title": "ファイル",
+    "subtitle": "在庫から算出した売上のエクスポート、Excel 売上表のインポート、チャート画像の保存を行います。",
+    "period": {
+      "day": "日別",
+      "month": "月別",
+      "quarter": "四半期別"
+    },
+    "export": {
+      "title": "売上エクスポート",
+      "description": "日別、月別、四半期別の売上サマリーを含む Excel ブックを生成します。売上は数量 × 単価で算出し、商品の更新日時で集計します。",
+      "button": "売上ブックをエクスポート",
+      "working": "エクスポート中…",
+      "hint": "ブックには売上サマリー、在庫明細、カレンダー移動明細が含まれます。",
+      "detailsTitle": "含まれるセクター",
+      "detailsRevenue": "売上: 概要、日別、月別、四半期別、カテゴリ別シート。",
+      "detailsInventory": "在庫: 商品別の数量、単価、総額、在庫状態。",
+      "detailsCalendar": "カレンダー: 日別移動サマリーと生成された取引明細。"
+    },
+    "import": {
+      "title": "売上インポート",
+      "description": "date、periodType、revenue 列を含む Excel シートをアップロードし、在庫データを変更せずに売上をプレビューします。",
+      "button": "売上ブックをインポート",
+      "working": "ブックを読み込み中…",
+      "template": "インポートテンプレートをダウンロード",
+      "templateWorking": "テンプレートを準備中…",
+      "hint": "対応列: date, periodType, revenue, source, note。",
+      "clear": "プレビューをクリア",
+      "confirm": "このページに適用",
+      "confirmHint": "Files ページの売上データだけを一時的に変更します。更新またはリセットで戻ります。",
+      "inventorySource": "現在の売上カードは在庫から算出したデータを使用しています。",
+      "appliedSource": "現在の売上カードは {{rows}} 件のインポート行を一時的に使用しています。",
+      "resetApplied": "インポート売上をリセット",
+      "previewTitle": "インポートプレビュー",
+      "previewSummary": "{{rows}} 件の有効行、{{errors}} 件のエラー",
+      "errorRow": "{{row}} 行目: {{message}}"
+    },
+    "charts": {
+      "title": "チャート保存",
+      "description": "チャートページを開き、各カードの保存ボタンから SVG ファイルとしてダウンロードできます。"
+    },
+    "table": {
+      "period": "期間",
+      "periodType": "種別",
+      "revenue": "売上",
+      "rows": "行数",
+      "lastUpdated": "最終更新"
+    }
+  },
   "item": {
     "blazerFemale": "ブレザー（女性用）",
     "bomberJacket": "ボンバージャケット",
