@@ -7,6 +7,7 @@ interface InventoryState {
   items: InventoryItem[];
   addItem: (data: InventoryFormData) => void;
   updateItem: (id: string, data: InventoryFormData) => void;
+  applyQuantityAdjustments: (adjustments: Array<{ id: string; delta: number; at?: number }>) => void;
   deleteItem: (id: string) => void;
 }
 
@@ -133,6 +134,21 @@ export const useInventoryStore = create<InventoryState>()(
         set((state) => ({
           items: state.items.map((item) => (item.id === id ? updateItem(item, data) : item)),
         })),
+      applyQuantityAdjustments: (adjustments) =>
+        set((state) => {
+          const byId = new Map(adjustments.map((adjustment) => [adjustment.id, adjustment]));
+          return {
+            items: state.items.map((item) => {
+              const adjustment = byId.get(item.id);
+              if (!adjustment) return item;
+              return {
+                ...item,
+                quantity: Math.max(0, item.quantity + adjustment.delta),
+                updatedAt: adjustment.at ?? Date.now(),
+              };
+            }),
+          };
+        }),
       deleteItem: (id) =>
         set((state) => ({
           items: state.items.filter((item) => item.id !== id),
