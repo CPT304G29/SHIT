@@ -182,6 +182,55 @@
       "help": "显示帮助"
     }
   },
+  "files": {
+    "title": "文件",
+    "subtitle": "导出由库存推导的营业额，导入 Excel 营业额表，并保存图表可视化结果。",
+    "period": {
+      "day": "按日",
+      "month": "按月",
+      "quarter": "按季度"
+    },
+    "export": {
+      "title": "营业额导出",
+      "description": "生成包含日、月、季度营业额汇总的 Excel 工作簿。营业额按数量 × 单价计算，并按商品更新时间归类。",
+      "button": "导出营业额工作簿",
+      "working": "正在导出…",
+      "hint": "工作簿包含营业额汇总、库存明细和日历流转明细。",
+      "detailsTitle": "包含的板块",
+      "detailsRevenue": "营业额：概览、按日、按月、按季度和分类汇总。",
+      "detailsInventory": "库存：商品级数量、单价、总价值和库存状态。",
+      "detailsCalendar": "日历：每日流转汇总和生成的逐笔交易明细。"
+    },
+    "import": {
+      "title": "营业额导入",
+      "description": "上传包含 date、periodType、revenue 列的 Excel 表，预览导入营业额，不会修改库存数据。",
+      "button": "导入营业额工作簿",
+      "working": "正在读取工作簿…",
+      "template": "下载导入模板",
+      "templateWorking": "正在准备模板…",
+      "hint": "支持列：date、periodType、revenue、source、note。",
+      "clear": "清空预览",
+      "confirm": "确认应用到本页面",
+      "confirmHint": "这只会临时修改 Files 页面的营业额数据，刷新或重置后恢复。",
+      "inventorySource": "当前营业额卡片使用库存推导数据。",
+      "appliedSource": "当前营业额卡片正临时使用 {{rows}} 条导入记录。",
+      "resetApplied": "重置导入营业额",
+      "previewTitle": "导入预览",
+      "previewSummary": "{{rows}} 条有效记录，{{errors}} 条错误",
+      "errorRow": "第 {{row}} 行：{{message}}"
+    },
+    "charts": {
+      "title": "图表保存",
+      "description": "打开图表页面，使用每个图表卡片上的保存按钮，将图表下载为 SVG 文件。"
+    },
+    "table": {
+      "period": "周期",
+      "periodType": "类型",
+      "revenue": "营业额",
+      "rows": "记录数",
+      "lastUpdated": "最后更新"
+    }
+  },
   "item": {
     "blazerFemale": "女式西装外套",
     "bomberJacket": "飞行员夹克",

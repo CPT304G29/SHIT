@@ -184,6 +184,55 @@
       "help": "Show this help"
     }
   },
+  "files": {
+    "title": "Files",
+    "subtitle": "Export revenue derived from inventory, import Excel revenue sheets, and save chart visuals.",
+    "period": {
+      "day": "Daily",
+      "month": "Monthly",
+      "quarter": "Quarterly"
+    },
+    "export": {
+      "title": "Revenue export",
+      "description": "Generate an Excel workbook with daily, monthly and quarterly revenue summaries. Revenue is calculated from quantity × unit price and grouped by the item update date.",
+      "button": "Export revenue workbook",
+      "working": "Exporting…",
+      "hint": "The workbook includes revenue summaries, inventory details and calendar movement details.",
+      "detailsTitle": "Included sectors",
+      "detailsRevenue": "Revenue: overview, daily, monthly, quarterly and category sheets.",
+      "detailsInventory": "Inventory: item-level quantity, price, total value and stock status.",
+      "detailsCalendar": "Calendar: daily movement summaries and generated transaction details."
+    },
+    "import": {
+      "title": "Revenue import",
+      "description": "Upload an Excel sheet with date, periodType and revenue columns to preview imported revenue without changing inventory data.",
+      "button": "Import revenue workbook",
+      "working": "Reading workbook…",
+      "template": "Download import template",
+      "templateWorking": "Preparing template…",
+      "hint": "Accepted columns: date, periodType, revenue, source, note.",
+      "clear": "Clear preview",
+      "confirm": "Apply preview to this page",
+      "confirmHint": "This only changes the Files page revenue data until you refresh or reset it.",
+      "inventorySource": "Revenue cards currently use inventory-derived data.",
+      "appliedSource": "Revenue cards are using {{rows}} imported rows temporarily.",
+      "resetApplied": "Reset imported revenue",
+      "previewTitle": "Import preview",
+      "previewSummary": "{{rows}} valid rows, {{errors}} errors",
+      "errorRow": "Row {{row}}: {{message}}"
+    },
+    "charts": {
+      "title": "Chart exports",
+      "description": "Open the Charts page and use the save button on each chart card to download the visual as an SVG file."
+    },
+    "table": {
+      "period": "Period",
+      "periodType": "Type",
+      "revenue": "Revenue",
+      "rows": "Rows",
+      "lastUpdated": "Last updated"
+    }
+  },
   "item": {
     "blazerFemale": "Blazer (Female)",
     "bomberJacket": "Bomber Jacket",

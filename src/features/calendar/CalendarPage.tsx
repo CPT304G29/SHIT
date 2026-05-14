@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useInventoryStore } from '@/features/inventory/inventory.store';
 import { useCurrentTheme } from '@/hooks/useCurrentTheme';
+import { useCalendarImportStore } from './calendar.import.store';
 import { CalendarCharts } from './CalendarCharts';
 import { CalendarDetailTable } from './CalendarDetailTable';
 import { CalendarHero } from './CalendarHero';
@@ -24,6 +25,7 @@ import { detailsColumn, emptyCard, layout, page } from './CalendarPage.css';
 export function CalendarPage() {
   const { t, i18n } = useTranslation();
   const items = useInventoryStore((state) => state.items);
+  const importedEvents = useCalendarImportStore((state) => state.events);
   const theme = useCurrentTheme();
   const isDark = theme === 'dark';
   const calendarCardRef = useRef<HTMLDivElement | null>(null);
@@ -38,7 +40,10 @@ export function CalendarPage() {
   const [detailPage, setDetailPage] = useState(1);
   const [detailRowHeight, setDetailRowHeight] = useState<number | null>(null);
 
-  const events = useMemo(() => buildInventoryHistory(items), [items]);
+  const events = useMemo(
+    () => [...buildInventoryHistory(items), ...importedEvents].sort((left, right) => left.timestamp - right.timestamp),
+    [importedEvents, items]
+  );
   const summaries = useMemo(() => buildDailySummaries(events), [events]);
   const summaryMap = useMemo(
     () => new Map(summaries.map((summary) => [summary.dateKey, summary])),
