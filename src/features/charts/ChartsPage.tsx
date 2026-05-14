@@ -79,32 +79,32 @@ export function ChartsPage() {
     <div className={page}>
       <div className={grid}>
         <div className={narrow}>
-          <ChartCard title={t('chart.categoryQty')}>
+          <ChartCard title={t('chart.categoryQty')} exportName="category-quantity">
             <CategoryDonut data={categoryQty} isDark={isDark} />
           </ChartCard>
         </div>
         <div className={wide}>
-          <ChartCard title={t('chart.categoryValue')}>
+          <ChartCard title={t('chart.categoryValue')} exportName="category-value">
             <ValueBarChart data={categoryValue} formatValue={formatValue} isDark={isDark} />
           </ChartCard>
         </div>
         <div className={medium}>
-          <ChartCard title={t('chart.stockLevels')}>
+          <ChartCard title={t('chart.stockLevels')} exportName="stock-levels">
             <StockBarChart data={topItems} isDark={isDark} />
           </ChartCard>
         </div>
         <div className={medium}>
-          <ChartCard title={t('chart.priceScatter')}>
+          <ChartCard title={t('chart.priceScatter')} exportName="price-scatter">
             <PriceScatter data={scatter} isDark={isDark} />
           </ChartCard>
         </div>
         <div className={narrow}>
-          <ChartCard title={t('chart.topValue')}>
+          <ChartCard title={t('chart.topValue')} exportName="top-value-items">
             <TopValueItems data={topValues} formatValue={formatValue} isDark={isDark} />
           </ChartCard>
         </div>
         <div className={wide}>
-          <ChartCard title={t('chart.avgPrice')}>
+          <ChartCard title={t('chart.avgPrice')} exportName="average-price-by-category">
             <AvgPriceByCategory data={avgPrices} formatValue={formatValue} isDark={isDark} />
           </ChartCard>
         </div>
