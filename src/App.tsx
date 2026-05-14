@@ -8,6 +8,7 @@ import { InventoryTable } from '@/features/inventory/InventoryTable';
 import { ChartsPage } from '@/features/charts/ChartsPage';
 import { CalendarPage } from '@/features/calendar/CalendarPage';
 import { MessagesPage } from '@/features/messages/MessagesPage';
+import { FilesPage } from '@/features/Files/FilesPage';
 import { PrivacyPolicy } from '@/features/legal/PrivacyPolicy';
 import { CookieBanner } from '@/features/legal/CookieBanner';
 import { enforceConsentOnBoot } from '@/features/legal/consent.store';
@@ -21,7 +22,7 @@ import { useTrackInventoryHistory } from '@/features/messages/useTrackInventoryH
 import type { InventoryItem, InventoryFormData } from '@/features/inventory/inventory.types';
 import { ParticleGalaxy } from '@/components/EasterEgg/ParticleGalaxy';
 
-type Page = 'inventory' | 'charts' | 'calendar' | 'messages' | 'privacy';
+type Page = 'inventory' | 'charts' | 'calendar' | 'messages' | 'files' | 'privacy';
 
 // Run once at module evaluation so a refused user does not have stale data
 // silently re-persisted by the various stores during the first render pass.
@@ -155,6 +156,7 @@ function App() {
         {page === 'charts' && <ChartsPage />}
         {page === 'calendar' && <CalendarPage />}
         {page === 'messages' && <MessagesPage onJumpToInventory={handleJumpToInventory} />}
+        {page === 'files' && <FilesPage />}
         {page === 'privacy' && <PrivacyPolicy />}
       </Shell>
 

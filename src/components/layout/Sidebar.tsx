@@ -38,7 +38,7 @@ const navItems = [
   { id: 'files', icon: FolderOpen, labelKey: 'nav.files' },
 ];
 
-const ENABLED_PAGES = new Set(['inventory', 'charts', 'calendar', 'messages']);
+const ENABLED_PAGES = new Set(['inventory', 'charts', 'calendar', 'messages', 'files']);
 
 interface SidebarProps {
   expanded: boolean;
