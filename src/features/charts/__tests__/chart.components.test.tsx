@@ -68,6 +68,7 @@ vi.mock('recharts', () => {
     if (!content || typeof content !== 'object' || !('type' in content)) return null;
 
     const TooltipContent = content.type as ComponentType<Record<string, unknown>>;
+    const tooltipProps = content.props as Record<string, unknown>;
     const payload = [
       {
         value: 12345,
@@ -85,10 +86,10 @@ vi.mock('recharts', () => {
 
     return (
       <foreignObject data-testid="tooltip">
-        <TooltipContent {...content.props} active payload={payload} label="Tooltip label" />
-        <TooltipContent {...content.props} active={false} payload={payload} label="Tooltip label" />
-        <TooltipContent {...content.props} active payload={undefined} label="Tooltip label" />
-        <TooltipContent {...content.props} active payload={[]} label="Tooltip label" />
+        <TooltipContent {...tooltipProps} active payload={payload} label="Tooltip label" />
+        <TooltipContent {...tooltipProps} active={false} payload={payload} label="Tooltip label" />
+        <TooltipContent {...tooltipProps} active payload={undefined} label="Tooltip label" />
+        <TooltipContent {...tooltipProps} active payload={[]} label="Tooltip label" />
       </foreignObject>
     );
   };
