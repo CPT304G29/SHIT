@@ -35,6 +35,45 @@ describe('parseRevenueRows', () => {
     ]);
   });
 
+  it('accepts spreadsheet date variants, column aliases and formatted currency strings', () => {
+    const timestamp = new Date('2026-05-16T00:00:00Z').getTime();
+    const result = parseRevenueRows([
+      {
+        Period: new Date('2026-05-14T10:00:00Z'),
+        Type: 'DAY',
+        Amount: '$1,234.56',
+        Note: 'Launch',
+      },
+      { DATE: timestamp, period_type: 'month', REVENUE: '800.10', Source: 'Flagship' },
+      { period: 'May 17, 2026', type: 'quarter', amount: '300' },
+    ]);
+
+    expect(result.errors).toEqual([]);
+    expect(result.rows).toEqual([
+      {
+        date: '2026-05-14',
+        periodType: 'day',
+        revenueCents: 123456,
+        source: undefined,
+        note: 'Launch',
+      },
+      {
+        date: '2026-05-16',
+        periodType: 'month',
+        revenueCents: 80010,
+        source: 'Flagship',
+        note: undefined,
+      },
+      {
+        date: 'May 17, 2026',
+        periodType: 'quarter',
+        revenueCents: 30000,
+        source: undefined,
+        note: undefined,
+      },
+    ]);
+  });
+
   it('reports invalid rows without importing them', () => {
     const result = parseRevenueRows([
       { date: '', periodType: 'day', revenue: 10 },
