@@ -88,4 +88,4 @@ Yes, the acronym is intentional. No, we're not changing it.
 
 ---
 
-MIT
+MIT Licensed
