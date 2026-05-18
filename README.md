@@ -7,6 +7,8 @@
 
 This isn't trying to be the next ERP giant. It's a clean, fast interface for tracking stock: add items, edit quantities, delete dead SKUs, sort columns, search the table, toggle between light/dark themes, and switch languages (English, Chinese, Japanese). Data persists to localStorage so you won't lose everything on refresh.
 
+Currently deployed at: [SHIT](https://acyr2526cpt304g29.vercel.app/)
+
 ## Tech stack
 
 - React 19 + TypeScript + Vite
