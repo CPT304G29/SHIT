@@ -6,7 +6,7 @@ import { codecovVitePlugin } from "@codecov/vite-plugin";
 export default defineConfig({
   plugins: [react(), vanillaExtractPlugin(), codecovVitePlugin({
       enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
-      bundleName: "<bundle project name>",
+      bundleName: "SHIT",
       uploadToken: process.env.CODECOV_TOKEN,
     }),],
   resolve: {
